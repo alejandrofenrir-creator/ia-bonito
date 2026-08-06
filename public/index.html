@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IA Bonito - Club JoGGa Bonito | EA FC 26</title>
+    <meta name="description" content="IA Bonito: Tu asistente táctico inteligente para EA Sports FC 26 Pro Clubs.">
+    <meta property="og:title" content="IA Bonito - Club JoGGa Bonito">
+    <meta property="og:description" content="Asistente táctico IA para EA FC 26 Pro Clubs. Gestiona tu plantilla, genera tácticas y chatea con tu DT virtual.">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#0a0a0f">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 'sf': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'], 'orbitron': ['Orbitron', 'sans-serif'] },
+                    colors: {
+                        'ios': {
+                            'bg': '#F2F2F7', 'card': '#FFFFFF', 'blue': '#007AFF', 'green': '#34C759',
+                            'red': '#FF3B30', 'orange': '#FF9500', 'yellow': '#FFCC00', 'purple': '#AF52DE',
+                            'pink': '#FF2D55', 'teal': '#5AC8FA', 'indigo': '#5856D6',
+                            'gray1': '#8E8E93', 'gray2': '#AEAEB2', 'gray3': '#C7C7CC',
+                            'gray4': '#D1D1D6', 'gray5': '#E5E5EA', 'gray6': '#F2F2F7',
+                        }
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-elevated: #1a1a25;
+            --text-primary: #FFFFFF;
+            --text-secondary: #EBEBF5;
+            --accent-blue: #0A84FF;
+            --accent-green: #32D74B;
+            --accent-gold: #FFD700;
+            --accent-purple: #BF5AF2;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            background-image: radial-gradient(ellipse at 20% 0%, rgba(10,132,255,0.06) 0%, transparent 50%),
+                              radial-gradient(ellipse at 80% 100%, rgba(191,90,242,0.04) 0%, transparent 50%);
+            color: var(--text-primary);
+            margin: 0; padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+        }
+
+        /* Cards Base */
+        .ios-card {
+            background: var(--bg-card);
+            border-radius: 1rem;
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03) inset;
+        }
+
+        .ios-input {
+            background: rgba(255,255,255,0.05);
+            border-radius: 0.6rem;
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 0.65rem 0.9rem;
+            font-size: 0.9rem;
+            color: white;
+            width: 100%;
+            transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+        }
+        .ios-input:focus { outline: none; border-color: var(--accent-blue); background: rgba(10,132,255,0.08); box-shadow: 0 0 0 3px rgba(10,132,255,0.15); }
+        .ios-input:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .ios-btn {
+            background: linear-gradient(135deg, #0A84FF 0%, #0055D4 100%);
+            color: white; font-weight: 700; border-radius: 0.75rem;
+            padding: 0.8rem 1.5rem; border: none; cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .ios-btn::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+            opacity: 0; transition: opacity 0.2s;
+        }
+        .ios-btn:hover:not(:disabled) { box-shadow: 0 0 25px rgba(10,132,255,0.4), 0 4px 15px rgba(0,0,0,0.3); transform: translateY(-2px); }
+        .ios-btn:hover:not(:disabled)::after { opacity: 1; }
+        .ios-btn:active:not(:disabled) { transform: scale(0.97); }
+        .ios-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .ios-btn-secondary {
+            background: rgba(255,255,255,0.06); color: white;
+            border: 1px solid rgba(255,255,255,0.12); font-weight: 600;
+            border-radius: 0.75rem; padding: 0.8rem 1.5rem; cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .ios-btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+
+        .segmented-control {
+            background: rgba(255,255,255,0.04); padding: 0.25rem;
+            border-radius: 0.7rem; display: flex; overflow-x: auto;
+            scrollbar-width: none; border: 1px solid rgba(255,255,255,0.06);
+        }
+        .segmented-control::-webkit-scrollbar { display: none; }
+        .segment-btn {
+            flex: 1; min-width: 70px; text-align: center;
+            padding: 0.55rem 0.4rem; font-size: 0.75rem; font-weight: 600;
+            color: rgba(255,255,255,0.4); border-radius: 0.5rem;
+            cursor: pointer; white-space: nowrap;
+            transition: color 0.2s, background 0.2s; user-select: none;
+        }
+        .segment-btn.active {
+            color: white; background: rgba(255,255,255,0.12);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .glass-header {
+            background: rgba(10,10,15,0.8);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        /* ===== FUT CARD STYLES ===== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.25rem;
+        }
+        @media (max-width: 640px) {
+            .card-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+        }
+
+        .fut-card {
+            position: relative;
+            aspect-ratio: 0.68;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.35s;
+            transform-style: preserve-3d;
+            perspective: 800px;
+        }
+        .fut-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            z-index: 10;
+        }
+
+        .fut-card-inner {
+            position: relative; width: 100%; height: 100%;
+            border-radius: 12px; overflow: hidden;
+            display: flex; flex-direction: column;
+            padding: 10px 10px 8px;
+        }
+
+        /* Card tiers */
+        .card-gold .fut-card-inner {
+            background: linear-gradient(160deg, #2a1f0a 0%, #3d2e11 25%, #5a4320 50%, #3d2e11 75%, #2a1f0a 100%);
+            border: 1.5px solid rgba(255,215,0,0.35);
+        }
+        .card-gold .fut-card-inner::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,215,0,0.08) 0%, transparent 40%, rgba(255,215,0,0.05) 100%);
+            pointer-events: none;
+        }
+
+        .card-rare .fut-card-inner {
+            background: linear-gradient(160deg, #0c0a20 0%, #141030 25%, #1a1545 50%, #141030 75%, #0c0a20 100%);
+            border: 1.5px solid rgba(100,80,220,0.35);
+        }
+        .card-rare .fut-card-inner::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(100,80,220,0.08) 0%, transparent 40%, rgba(100,80,220,0.05) 100%);
+            pointer-events: none;
+        }
+
+        .card-base .fut-card-inner {
+            background: linear-gradient(160deg, #101015 0%, #18181f 25%, #1f1f28 50%, #18181f 75%, #101015 100%);
+            border: 1.5px solid rgba(150,150,170,0.2);
+        }
+        .card-base .fut-card-inner::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(150,150,170,0.04) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        /* Holographic shine */
+        .fut-card::after {
+            content: ''; position: absolute; inset: 0; z-index: 5;
+            background: linear-gradient(
+                115deg,
+                transparent 0%, transparent 25%,
+                rgba(255,255,255,0.06) 45%,
+                rgba(255,255,255,0.12) 50%,
+                rgba(255,255,255,0.06) 55%,
+                transparent 75%, transparent 100%
+            );
+            background-size: 250% 250%;
+            background-position: 200% 200%;
+            transition: background-position 0.8s ease;
+            pointer-events: none; border-radius: 12px;
+        }
+        .fut-card:hover::after {
+            background-position: -50% -50%;
+        }
+
+        .card-ovr {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900; font-size: 1.75rem; line-height: 1;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+        .card-pos {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700; font-size: 0.6rem;
+            letter-spacing: 0.1em;
+            opacity: 0.8;
+        }
+        .card-photo {
+            width: 60%; aspect-ratio: 1; margin: 0 auto;
+            border-radius: 50%; overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.15);
+            background: rgba(0,0,0,0.4);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .card-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .card-name {
+            font-weight: 900; font-size: 0.7rem;
+            text-transform: uppercase; letter-spacing: 0.12em;
+            text-align: center; margin-top: 4px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        }
+        .card-stats-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 1px 8px; margin-top: auto; padding-top: 4px;
+        }
+        .card-stat-row {
+            display: flex; justify-content: space-between;
+            align-items: center; padding: 0.5px 0;
+        }
+        .card-stat-label {
+            font-size: 0.5rem; font-weight: 800;
+            letter-spacing: 0.08em; opacity: 0.55;
+            text-transform: uppercase;
+        }
+        .card-stat-val {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.6rem; font-weight: 800;
+        }
+        .card-badges {
+            display: flex; justify-content: center;
+            gap: 3px; margin-top: 3px; flex-wrap: wrap;
+        }
+        .card-stars {
+            display: flex; align-items: center; gap: 4px;
+            justify-content: center; margin-top: 2px;
+        }
+        .card-stars span { font-size: 0.45rem; opacity: 0.6; letter-spacing: 0.05em; font-weight: 700; }
+
+        /* Gold stat color */
+        .card-gold .card-stat-val { color: #FFD700; }
+        .card-gold .card-ovr { color: #FFD700; }
+        .card-gold .card-name { color: #FFE566; }
+        .card-rare .card-stat-val { color: #a78bfa; }
+        .card-rare .card-ovr { color: #c4b5fd; }
+        .card-rare .card-name { color: #ddd6fe; }
+        .card-base .card-stat-val { color: #a1a1aa; }
+        .card-base .card-ovr { color: #d4d4d8; }
+        .card-base .card-name { color: #e4e4e7; }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex; flex-wrap: wrap; gap: 0.5rem;
+            align-items: center; margin-bottom: 1rem;
+        }
+        .filter-pill {
+            padding: 0.4rem 0.8rem; border-radius: 2rem;
+            font-size: 0.7rem; font-weight: 700;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.04);
+            color: rgba(255,255,255,0.5);
+            cursor: pointer; transition: all 0.2s;
+            user-select: none; white-space: nowrap;
+        }
+        .filter-pill:hover { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); }
+        .filter-pill.active {
+            border-color: var(--accent-blue);
+            background: rgba(10,132,255,0.15);
+            color: white;
+            box-shadow: 0 0 12px rgba(10,132,255,0.15);
+        }
+        .filter-select {
+            padding: 0.4rem 0.6rem; border-radius: 0.5rem;
+            font-size: 0.7rem; font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.04);
+            color: rgba(255,255,255,0.7);
+            cursor: pointer; transition: all 0.2s;
+            outline: none;
+        }
+        .filter-select:focus { border-color: var(--accent-blue); }
+        .filter-select option { background: #1a1a25; color: white; }
+        .filter-divider {
+            width: 1px; height: 20px;
+            background: rgba(255,255,255,0.1);
+            margin: 0 0.25rem;
+        }
+
+        /* ===== DETAIL MODAL ===== */
+        .modal-backdrop {
+            position: fixed; inset: 0; z-index: 100;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center;
+            padding: 1rem;
+            animation: fadeIn 0.2s ease-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal-content {
+            background: var(--bg-elevated);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 1.25rem;
+            max-width: 600px; width: 100%;
+            max-height: 90vh; overflow-y: auto;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.7);
+            animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Pitch */
+        .pitch-container { width: 100%; aspect-ratio: 2/3; max-width: 340px; margin: 0 auto; background: linear-gradient(180deg, #0A2E16 0%, #0E4720 30%, #115927 60%, #0A2E16 100%); border: 2px solid rgba(255,255,255,0.2); border-radius: 8px; position: relative; overflow: hidden; }
+        .pitch-line { position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: rgba(255,255,255,0.3); transform: translateY(-50%); }
+        .pitch-circle { position: absolute; top: 50%; left: 50%; width: 70px; height: 70px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; transform: translate(-50%,-50%); }
+        .pitch-dot { position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; background: rgba(255,255,255,0.3); border-radius: 50%; transform: translate(-50%,-50%); }
+        .pitch-box-t { position: absolute; top: 0; left: 22%; width: 56%; height: 14%; border: 2px solid rgba(255,255,255,0.3); border-top: none; }
+        .pitch-box-b { position: absolute; bottom: 0; left: 22%; width: 56%; height: 14%; border: 2px solid rgba(255,255,255,0.3); border-bottom: none; }
+        .player-dot { position: absolute; width: 34px; height: 34px; border-radius: 50%; transform: translate(-50%,-50%); display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: white; z-index: 2; transition: top 0.3s, left 0.3s; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.9); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .player-dot.empty { border: 1px dashed rgba(255,255,255,0.4); background: rgba(0,0,0,0.5); }
+        .player-dot .pos-label { position: absolute; bottom: -18px; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px; font-size: 8px; white-space: nowrap; pointer-events: none; }
+
+        /* Chat */
+        .chat-container { display: flex; flex-direction: column; height: 600px; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 1rem; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+        .chat-bubble { max-width: 85%; padding: 0.75rem 1rem; border-radius: 1rem; font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.75rem; word-break: break-word; animation: fadeInUp 0.25s ease-out; }
+        .chat-bubble-user { background: #0A84FF; color: white; margin-left: auto; border-bottom-right-radius: 0.2rem; }
+        .chat-bubble-ai { background: rgba(255,255,255,0.07); color: white; margin-right: auto; border-bottom-left-radius: 0.2rem; border: 1px solid rgba(255,255,255,0.05); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-100px); z-index: 10000; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: none; }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* Stats Grid (scouting) */
+        .stat-grid-item { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .stat-grid-item:last-child { border-bottom: none; }
+        .stat-label { font-size: 0.7rem; color: rgba(255,255,255,0.5); }
+        .stat-val-input { width: 45px; background: transparent; border: 1px solid rgba(255,255,255,0.15); color: white; text-align: right; border-radius: 4px; padding: 2px 5px; font-size: 0.75rem; font-weight: 700; -moz-appearance: textfield; }
+        .stat-val-input::-webkit-outer-spin-button, .stat-val-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .stat-val-input:focus { border-color: #0A84FF; outline: none; background: rgba(0,122,255,0.08); }
+
+        /* PlayStyle slots */
+        .ps-slot { width: 36px; height: 36px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.4); cursor: pointer; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; position: relative; margin: 8px; user-select: none; }
+        .ps-slot.gold { border-color: #FFD700; box-shadow: 0 0 12px rgba(255,215,0,0.25); background: rgba(255,215,0,0.08); }
+        .ps-slot.silver { border-color: #C0C0C0; background: rgba(192,192,192,0.08); }
+        .ps-slot > i { transform: rotate(-45deg); font-size: 14px; }
+        .ps-slot:hover { transform: rotate(45deg) scale(1.1); }
+
+        .arch-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.25rem 0.6rem; border-radius: 0.3rem; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.15); }
+
+        /* Typing indicator */
+        .typing-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); margin: 0 2px; animation: typingBounce 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typingBounce { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
+
+        .ovr-elite { color: #32D74B; }
+        .ovr-good { color: #FFD60A; }
+        .ovr-avg { color: #FF9F0A; }
+        .ovr-low { color: #FF453A; }
+
+        .skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 0.5rem; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        .stat-bar { height: 3px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; margin-top: 2px; }
+        .stat-bar-fill { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
+
+        /* Detail modal stat bars */
+        .detail-stat-bar { height: 5px; border-radius: 3px; background: rgba(255,255,255,0.08); overflow: hidden; flex: 1; }
+        .detail-stat-bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+        /* Empty state */
+        .empty-state {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 4rem 2rem; text-align: center;
+            background: var(--bg-card); border-radius: 1rem;
+            border: 1px dashed rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useCallback, useMemo, useRef, memo } = React;
+
+        // ===== API PROXY =====
+        const callIA = async (system, prompt, base64Image = null) => {
+            try {
+                const body = { system, prompt };
+                if (base64Image) body.image = base64Image;
+                const res = await fetch('/api/ai', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                if (!res.ok) { console.error('[API Error]', data); return null; }
+                return data.text || null;
+            } catch(e) { console.error(e); return null; }
+        };
+
+        // ===== DATA DEFINITIONS =====
+        const POSITIONS = ['DC','MP','EI','ED','MCO','MC','MI','MD','MCD','CAI','CAD','LI','LD','DFC','POR'];
+        const POS_GROUPS = { attack: ['DC','MP','EI','ED'], midfield: ['MCO','MC','MI','MD','MCD'], defense: ['CAI','CAD','LI','LD','DFC'], gk: ['POR'] };
+        const POS_GROUP_LABELS = { all: 'Todos', attack: 'Delanteros', midfield: 'Medios', defense: 'Defensas', gk: 'Porteros' };
+
+        const DETAILED_STATS = {
+            pac: { label: 'RIT', color: '#0A84FF', fields: { acceleration: 'Aceleración', sprintSpeed: 'Vel. Sprint' } },
+            sho: { label: 'TIR', color: '#32D74B', fields: { attPosition: 'Pos. Ataque', finishing: 'Definición', shotPower: 'Potencia', longShots: 'Tiros Lejanos', volleys: 'Voleas', penalties: 'Penales' } },
+            pas: { label: 'PAS', color: '#FFD60A', fields: { vision: 'Visión', crossing: 'Centros', fkAcc: 'Prec. Tiro Libre', shortPass: 'Pase Corto', longPass: 'Pase Largo', curve: 'Efecto' } },
+            dri: { label: 'REG', color: '#BF5AF2', fields: { agility: 'Agilidad', balance: 'Equilibrio', reactions: 'Reacciones', ballControl: 'Control Balón', dribbling: 'Regates', composure: 'Compostura' } },
+            def: { label: 'DEF', color: '#FF9F0A', fields: { interceptions: 'Intercepciones', headingAcc: 'Prec. Cabeceo', defAware: 'Percepción Def.', standTackle: 'Robo', slideTackle: 'Barrida' } },
+            phy: { label: 'FIS', color: '#FF453A', fields: { jumping: 'Salto', stamina: 'Energía', strength: 'Fuerza', aggression: 'Agresividad' } }
+        };
+
+        const PLAYSTYLES_LIST = [
+            { cat: 'Definición', icon: 'fa-futbol', list: ['Tiro Colocado', 'Tiro Potente', 'Vaselina', 'Balón Parado', 'Acrobático', 'Tiro Raso', 'Cabezazo Preciso', 'Game Changer'] },
+            { cat: 'Pase', icon: 'fa-share', list: ['Pase Incisivo', 'Pase Ping', 'Pase Largo', 'Tiki Taka', 'Centro Rosca', 'Inventivo'] },
+            { cat: 'Control', icon: 'fa-magnet', list: ['Primer Toque', 'Técnico', 'Resistente a Presión', 'Veloz', 'Regateador'] },
+            { cat: 'Defensa', icon: 'fa-shield', list: ['Anticipación', 'Bloqueo', 'Intercepción', 'Fortaleza Aérea', 'Jockey', 'Barrida'] },
+            { cat: 'Físico', icon: 'fa-bolt', list: ['Paso Rápido', 'Implacable', 'Musculoso', 'Enforcer', 'Saque Largo'] },
+            { cat: 'Portero', icon: 'fa-hand', list: ['Salida Rápida', 'Desvío', 'Atrapa Centros', 'Saque Largo GK', 'Juego de Pies', 'Alcance Lejano'] }
+        ];
+
+        const ALL_PLAYSTYLES = PLAYSTYLES_LIST.flatMap(c => c.list);
+
+        const FORMATIONS = {
+            "4-2-3-1": { name: "4-2-3-1 (Balance)", pos: [{t:92,l:50,p:'POR'},{t:76,l:12,p:'LI'},{t:76,l:37,p:'DFC'},{t:76,l:63,p:'DFC'},{t:76,l:88,p:'LD'},{t:58,l:37,p:'MCD'},{t:58,l:63,p:'MCD'},{t:40,l:15,p:'MI'},{t:38,l:50,p:'MCO'},{t:40,l:85,p:'MD'},{t:18,l:50,p:'DC'}] },
+            "4-3-3": { name: "4-3-3 (Ofensiva)", pos: [{t:92,l:50,p:'POR'},{t:76,l:12,p:'LI'},{t:76,l:37,p:'DFC'},{t:76,l:63,p:'DFC'},{t:76,l:88,p:'LD'},{t:55,l:30,p:'MC'},{t:58,l:50,p:'MCD'},{t:55,l:70,p:'MC'},{t:24,l:15,p:'EI'},{t:18,l:50,p:'DC'},{t:24,l:85,p:'ED'}] },
+            "5-3-2": { name: "5-3-2 (Defensiva)", pos: [{t:92,l:50,p:'POR'},{t:76,l:8,p:'CAI'},{t:78,l:28,p:'DFC'},{t:78,l:50,p:'DFC'},{t:78,l:72,p:'DFC'},{t:76,l:92,p:'CAD'},{t:55,l:25,p:'MC'},{t:55,l:50,p:'MC'},{t:55,l:75,p:'MC'},{t:22,l:35,p:'DC'},{t:22,l:65,p:'DC'}] },
+        };
+
+        const ARCHETYPES = {
+            "Spark": { role: "Desequilibrante", icon: "fa-bolt", bg: "bg-blue-900 text-blue-200 border-blue-500" },
+            "Finisher": { role: "Goleador Letal", icon: "fa-crosshairs", bg: "bg-green-900 text-green-200 border-green-500" },
+            "Target": { role: "Faro Ofensivo", icon: "fa-bullseye", bg: "bg-orange-900 text-orange-200 border-orange-500" },
+            "Maestro": { role: "Director de Orquesta", icon: "fa-wand-magic-sparkles", bg: "bg-purple-900 text-purple-200 border-purple-500" },
+            "Box2Box": { role: "Motor del Equipo", icon: "fa-arrows-up-down", bg: "bg-teal-900 text-teal-200 border-teal-500" },
+            "Recycler": { role: "Destructor", icon: "fa-shield-halved", bg: "bg-gray-800 text-gray-200 border-gray-500" },
+            "Boss": { role: "Líder Defensivo", icon: "fa-chess-rook", bg: "bg-indigo-900 text-indigo-200 border-indigo-500" },
+            "Marauder": { role: "Carrilero Ofensivo", icon: "fa-person-running", bg: "bg-pink-900 text-pink-200 border-pink-500" },
+            "Wall": { role: "Portero", icon: "fa-hand", bg: "bg-cyan-900 text-cyan-200 border-cyan-500" }
+        };
+
+        const DEFAULT_ATTRS = (() => {
+            const a = {};
+            Object.keys(DETAILED_STATS).forEach(g => { a[g]={}; Object.keys(DETAILED_STATS[g].fields).forEach(f => a[g][f] = 75); });
+            return a;
+        })();
+
+        const getDefaultAttrs = () => JSON.parse(JSON.stringify(DEFAULT_ATTRS));
+
+        const calcMainStats = (attrs) => {
+            const res = {};
+            Object.keys(attrs).forEach(g => {
+                const vals = Object.values(attrs[g]).map(v => parseInt(v)||0);
+                res[g] = Math.round(vals.reduce((a,b)=>a+b,0) / (vals.length||1));
+            });
+            return res;
+        };
+
+        const getOvrClass = (ovr) => ovr >= 85 ? 'ovr-elite' : ovr >= 75 ? 'ovr-good' : ovr >= 65 ? 'ovr-avg' : 'ovr-low';
+        const getCardTier = (ovr) => ovr >= 85 ? 'card-gold' : ovr >= 75 ? 'card-rare' : 'card-base';
+
+        const analyzePosition = (posData) => {
+            const { pac, sho, pas, dri, def, phy } = calcMainStats(posData.attributes);
+            const pos = posData.position;
+            let archetype="Box2Box", role="Jugador", ovr=0;
+            if (pos === 'POR') { ovr = Math.round(def*0.3+phy*0.25+pac*0.15+pas*0.15+sho*0.05+dri*0.1); archetype="Wall"; role="Guardameta"; }
+            else if (POS_GROUPS.attack.includes(pos)) {
+                ovr = Math.round(pac*0.2+sho*0.25+pas*0.1+dri*0.25+def*0.05+phy*0.15);
+                if(pac>84 && dri>81) { archetype="Spark"; role="Extremo/Media Punta"; }
+                else if(sho>84 && phy>77) { archetype="Target"; role="Hombre Objetivo"; }
+                else if(sho>80) { archetype="Finisher"; role="Cazagoles"; }
+                else { archetype="Spark"; role="Móvil"; }
+            } else if (POS_GROUPS.midfield.includes(pos)) {
+                ovr = Math.round(pac*0.1+sho*0.1+pas*0.25+dri*0.2+def*0.15+phy*0.2);
+                if(pas>84 && dri>79) { archetype="Maestro"; role="Playmaker"; }
+                else if(def>79 && phy>77) { archetype="Recycler"; role="Pivote"; }
+                else { archetype="Box2Box"; role="Todoterreno"; }
+            } else {
+                ovr = Math.round(pac*0.15+sho*0.02+pas*0.1+dri*0.08+def*0.35+phy*0.3);
+                if(['LI','LD','CAI','CAD'].includes(pos)) { archetype = pac>83?"Marauder":"Boss"; role = pac>83?"Carrilero":"Defensor Cierre"; }
+                else { archetype="Boss"; role="Central Marcador"; }
+            }
+            return { archetype, role, ovr: Math.min(99, Math.max(1, ovr)), archData: ARCHETYPES[archetype] };
+        };
+
+        // ===== HOOKS =====
+        const useLocalStorage = (key, init) => {
+            const [val, setVal] = useState(() => { try { const i = localStorage.getItem(key); return i ? JSON.parse(i) : init; } catch { return init; } });
+            const set = useCallback((v) => {
+                setVal(prev => {
+                    const nv = v instanceof Function ? v(prev) : v;
+                    try { localStorage.setItem(key, JSON.stringify(nv)); } catch(e) { console.warn('localStorage full', e); }
+                    return nv;
+                });
+            }, [key]);
+            return [val, set];
+        };
+
+        // ===== COMPONENTS =====
+        const Toast = memo(({ msg, show }) => (
+            <div className={`toast ${show?'show':''}`}>
+                <div className="ios-card px-5 py-3 flex items-center gap-3 shadow-lg border border-white/10" style={{background:'rgba(18,18,26,0.95)'}}>
+                    <i className="fas fa-check-circle text-ios-green text-lg"></i>
+                    <span className="text-sm font-bold text-white">{msg}</span>
+                </div>
+            </div>
+        ));
+
+        const InputGroup = memo(({ label, children }) => (
+            <div className="mb-3">
+                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">{label}</label>
+                {children}
+            </div>
+        ));
+
+        const TypingIndicator = memo(() => (
+            <div className="flex justify-start">
+                <div className="chat-bubble chat-bubble-ai flex items-center gap-1 py-3 px-4">
+                    <span className="typing-dot"></span>
+                    <span className="typing-dot"></span>
+                    <span className="typing-dot"></span>
+                </div>
+            </div>
+        ));
+
+        const StatBar = memo(({ value, color }) => (
+            <div className="stat-bar">
+                <div className="stat-bar-fill" style={{ width: `${Math.min(99, Math.max(1, value))}%`, background: color }}></div>
+            </div>
+        ));
+
+        const Stars = memo(({ count, max = 5, size = 'text-[8px]' }) => (
+            <span className={`${size} flex gap-0.5`}>
+                {Array.from({length: max}, (_, i) => (
+                    <i key={i} className={`fas fa-star ${i < count ? 'text-yellow-400' : 'text-white/15'}`}></i>
+                ))}
+            </span>
+        ));
+
+        // ===== FUT CARD COMPONENT =====
+        const FutCard = memo(({ player, posIndex = 0, onClick }) => {
+            const pos = player.positions[posIndex];
+            if (!pos) return null;
+            const stats = calcMainStats(pos.attributes);
+            const ovr = pos.report.ovr;
+            const tier = getCardTier(ovr);
+
+            return (
+                <div className={`fut-card ${tier}`} onClick={() => onClick(player)}>
+                    <div className="fut-card-inner">
+                        {/* OVR + Position */}
+                        <div className="flex justify-between items-start" style={{zIndex:2, position:'relative'}}>
+                            <div>
+                                <div className="card-ovr">{ovr}</div>
+                                <div className="card-pos">{pos.position}</div>
+                            </div>
+                            <div className="card-stars flex-col items-end gap-0.5" style={{display:'flex'}}>
+                                <div className="flex items-center gap-1">
+                                    <span style={{fontSize:'0.4rem',opacity:0.4,fontWeight:700}}>SM</span>
+                                    <Stars count={player.skillMoves} max={5} size="text-[6px]" />
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <span style={{fontSize:'0.4rem',opacity:0.4,fontWeight:700}}>PM</span>
+                                    <Stars count={player.weakFoot} max={5} size="text-[6px]" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Photo */}
+                        <div className="card-photo" style={{zIndex:2, position:'relative'}}>
+                            {player.photo
+                                ? <img src={player.photo} alt={player.name} loading="lazy" />
+                                : <i className="fas fa-user text-2xl text-white/20"></i>
+                            }
+                        </div>
+
+                        {/* Name */}
+                        <div className="card-name" style={{zIndex:2, position:'relative'}}>{player.name}</div>
+
+                        {/* Divider */}
+                        <div style={{height:'1px', background:'rgba(255,255,255,0.1)', margin:'4px 0', zIndex:2, position:'relative'}}></div>
+
+                        {/* Stats grid */}
+                        <div className="card-stats-grid" style={{zIndex:2, position:'relative'}}>
+                            {Object.entries(DETAILED_STATS).map(([key, data]) => (
+                                <div key={key} className="card-stat-row">
+                                    <span className="card-stat-label">{key}</span>
+                                    <span className="card-stat-val">{stats[key]}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* PlayStyle badges */}
+                        {(pos.psGold.length > 0 || pos.psSilver.length > 0) && (
+                            <div className="card-badges" style={{zIndex:2, position:'relative'}}>
+                                {pos.psGold.slice(0,3).map(g => (
+                                    <span key={g} style={{fontSize:'0.4rem',fontWeight:800,background:'rgba(255,215,0,0.2)',color:'#FFD700',border:'1px solid rgba(255,215,0,0.3)',padding:'1px 4px',borderRadius:'3px',display:'flex',alignItems:'center',gap:'2px'}}>
+                                        <i className="fas fa-star" style={{fontSize:'0.35rem'}}></i>{g.length > 10 ? g.substring(0,8)+'…' : g}
+                                    </span>
+                                ))}
+                                {pos.psGold.length > 3 && <span style={{fontSize:'0.4rem',opacity:0.4}}>+{pos.psGold.length-3}</span>}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        });
+
+        // ===== PLAYER DETAIL MODAL =====
+        const PlayerDetailModal = memo(({ player, onClose, onEdit, onAddPos, onDelete, onExport }) => {
+            if (!player) return null;
+            const [activePosIdx, setActivePosIdx] = useState(0);
+            const pos = player.positions[activePosIdx];
+            const stats = calcMainStats(pos.attributes);
+            const ovr = pos.report.ovr;
+
+            return (
+                <div className="modal-backdrop" onClick={onClose}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        {/* Header */}
+                        <div className="p-5 border-b border-white/5" style={{background: 'linear-gradient(135deg, rgba(10,132,255,0.08), rgba(191,90,242,0.05))'}}>
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-16 h-16 rounded-xl overflow-hidden border border-white/10 bg-black/30 flex-shrink-0">
+                                        {player.photo ? <img src={player.photo} className="w-full h-full object-cover" alt="" /> : <i className="fas fa-user text-2xl text-white/20 m-auto mt-4"></i>}
+                                    </div>
+                                    <div>
+                                        <h2 className="text-2xl font-black uppercase tracking-tight">{player.name}</h2>
+                                        <div className="flex gap-3 mt-1">
+                                            <div className="flex items-center gap-1"><span className="text-[10px] text-gray-500 font-bold">SM</span><Stars count={player.skillMoves} size="text-[9px]" /></div>
+                                            <div className="flex items-center gap-1"><span className="text-[10px] text-gray-500 font-bold">PM</span><Stars count={player.weakFoot} size="text-[9px]" /></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition text-gray-400 hover:text-white">
+                                    <i className="fas fa-times"></i>
+                                </button>
+                            </div>
+
+                            {/* Position tabs */}
+                            {player.positions.length > 1 && (
+                                <div className="segmented-control mb-0">
+                                    {player.positions.map((p, i) => (
+                                        <div key={i} className={`segment-btn ${activePosIdx===i?'active':''}`} onClick={() => setActivePosIdx(i)}>
+                                            {p.position} ({p.report.ovr})
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Body */}
+                        <div className="p-5 space-y-4">
+                            {/* OVR + Archetype */}
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <span className={`text-4xl font-black font-orbitron ${getOvrClass(ovr)}`}>{ovr}</span>
+                                    <div>
+                                        <span className="text-xl font-black bg-white/10 px-2 py-0.5 rounded">{pos.position}</span>
+                                        <span className={`arch-badge ${pos.report.archData.bg} ml-2`}>
+                                            <i className={`fas ${pos.report.archData.icon} text-[8px]`}></i>{pos.report.archetype}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Detailed stats */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                {Object.entries(DETAILED_STATS).map(([grp, data]) => {
+                                    const main = stats[grp];
+                                    return (
+                                        <div key={grp} className="bg-black/20 p-3 rounded-lg border border-white/5">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <span className="text-[10px] font-bold uppercase tracking-wider" style={{color: data.color}}>{data.label}</span>
+                                                <span className={`text-lg font-black font-orbitron ${getOvrClass(main)}`}>{main}</span>
+                                            </div>
+                                            {Object.entries(data.fields).map(([f, label]) => {
+                                                const v = pos.attributes[grp][f];
+                                                return (
+                                                    <div key={f} className="flex items-center gap-2 mb-1">
+                                                        <span className="text-[10px] text-gray-500 w-24 truncate">{label}</span>
+                                                        <div className="detail-stat-bar">
+                                                            <div className="detail-stat-bar-fill" style={{width:`${v}%`, background: data.color}}></div>
+                                                        </div>
+                                                        <span className="text-[11px] font-bold w-6 text-right">{v}</span>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            {/* PlayStyles */}
+                            {(pos.psGold.length > 0 || pos.psSilver.length > 0) && (
+                                <div className="bg-black/20 p-3 rounded-lg border border-white/5">
+                                    <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">PlayStyles</h4>
+                                    <div className="flex flex-wrap gap-1.5">
+                                        {pos.psGold.map(g => <span key={g} className="text-[9px] font-bold bg-yellow-600/20 text-yellow-300 border border-yellow-500/40 px-2 py-0.5 rounded flex items-center gap-1"><i className="fas fa-star text-[7px]"></i>{g}</span>)}
+                                        {pos.psSilver.map(s => <span key={s} className="text-[9px] font-bold bg-gray-600/20 text-gray-300 border border-gray-500/40 px-2 py-0.5 rounded">{s}</span>)}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Notes */}
+                            {pos.notes && (
+                                <div className="bg-blue-900/15 p-3 rounded-lg border border-blue-500/15">
+                                    <h4 className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1"><i className="fas fa-clipboard mr-1"></i>Nota del DT</h4>
+                                    <p className="text-sm text-gray-300">{pos.notes}</p>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Actions */}
+                        <div className="p-5 border-t border-white/5 flex flex-wrap gap-2">
+                            <button onClick={() => { onClose(); onExport(player); }} className="ios-btn flex-1 !text-sm !px-2" title="Generar código para compartir"><i className="fas fa-share-nodes mr-1"></i>Exportar</button>
+                            <button onClick={() => { onClose(); onEdit(player, activePosIdx); }} className="ios-btn-secondary flex-1 !text-sm !px-2"><i className="fas fa-pen mr-1"></i>Editar</button>
+                            <button onClick={() => { onClose(); onAddPos(player); }} className="ios-btn-secondary flex-1 !text-sm !px-2"><i className="fas fa-plus mr-1"></i>Nueva Pos.</button>
+                            <button onClick={() => { onClose(); onDelete(player.id, player.name); }} className="px-4 py-2 rounded-xl bg-red-900/20 border border-red-500/20 text-red-400 hover:bg-red-900/30 transition text-sm font-bold"><i className="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            );
+        });
+
+        // ===== FILTER BAR =====
+        const FilterBar = memo(({ filters, setFilters, playerCount, filteredCount }) => {
+            return (
+                <div className="ios-card p-4 mb-4">
+                    <div className="flex justify-between items-center mb-3">
+                        <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest"><i className="fas fa-filter mr-1"></i>Filtros</h3>
+                        <span className="text-[10px] text-gray-500 font-bold">{filteredCount}/{playerCount} jugadores</span>
+                    </div>
+
+                    {/* Position filters */}
+                    <div className="filter-bar">
+                        {Object.entries(POS_GROUP_LABELS).map(([key, label]) => (
+                            <div key={key} className={`filter-pill ${filters.posGroup === key ? 'active' : ''}`} onClick={() => setFilters(f => ({...f, posGroup: key}))}>
+                                {label}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Secondary filters */}
+                    <div className="filter-bar">
+                        <select className="filter-select" value={filters.minSkill} onChange={e => setFilters(f => ({...f, minSkill: parseInt(e.target.value)}))}>
+                            <option value="0">Filigranas: Todas</option>
+                            <option value="1">SM ≥ 1★</option>
+                            <option value="2">SM ≥ 2★</option>
+                            <option value="3">SM ≥ 3★</option>
+                            <option value="4">SM ≥ 4★</option>
+                            <option value="5">SM = 5★</option>
+                        </select>
+
+                        <select className="filter-select" value={filters.minWF} onChange={e => setFilters(f => ({...f, minWF: parseInt(e.target.value)}))}>
+                            <option value="0">Pierna Mala: Todas</option>
+                            <option value="1">PM ≥ 1★</option>
+                            <option value="2">PM ≥ 2★</option>
+                            <option value="3">PM ≥ 3★</option>
+                            <option value="4">PM ≥ 4★</option>
+                            <option value="5">PM = 5★</option>
+                        </select>
+
+                        <select className="filter-select" value={filters.playstyle} onChange={e => setFilters(f => ({...f, playstyle: e.target.value}))}>
+                            <option value="">PlayStyle: Todos</option>
+                            {ALL_PLAYSTYLES.map(ps => <option key={ps} value={ps}>{ps}</option>)}
+                        </select>
+
+                        <div className="filter-divider hidden sm:block"></div>
+
+                        <select className="filter-select" value={filters.sortBy} onChange={e => setFilters(f => ({...f, sortBy: e.target.value}))}>
+                            <option value="ovr-desc">OVR ↓</option>
+                            <option value="ovr-asc">OVR ↑</option>
+                            <option value="name-asc">Nombre A-Z</option>
+                            <option value="name-desc">Nombre Z-A</option>
+                            <option value="pac">PAC ↓</option>
+                            <option value="sho">SHO ↓</option>
+                            <option value="pas">PAS ↓</option>
+                            <option value="dri">DRI ↓</option>
+                            <option value="def">DEF ↓</option>
+                            <option value="phy">PHY ↓</option>
+                        </select>
+
+                        {(filters.posGroup !== 'all' || filters.minSkill > 0 || filters.minWF > 0 || filters.playstyle) && (
+                            <button className="filter-pill text-red-400 border-red-500/20 hover:border-red-500/40" onClick={() => setFilters({posGroup:'all',minSkill:0,minWF:0,playstyle:'',sortBy:filters.sortBy})}>
+                                <i className="fas fa-times mr-1"></i>Limpiar
+                            </button>
+                        )}
+                    </div>
+                </div>
+            );
+        });
+
+        // ===== APP COMPONENT =====
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('squad');
+            const [players, setPlayers] = useLocalStorage('jogga-players-v42', []);
+            const [chatHistory, setChatHistory] = useLocalStorage('jogga-chat-v2', [{ role: 'model', text: 'Bienvenido, Míster. Soy IA Bonito. Conozco las notas y stats detallados de toda tu plantilla. ¿Qué planeamos para hoy?' }]);
+            const [toast, setToast] = useState({ show: false, msg: '' });
+            const showToast = useCallback((msg) => setToast({ show: true, msg }), []);
+
+            // Form State
+            const [editingId, setEditingId] = useState(null);
+            const [formPosIndex, setFormPosIndex] = useState(-1);
+            const [form, setForm] = useState({ name: '', photo: null, skillMoves: 3, weakFoot: 3,
+                currentPos: { position: 'DC', notes: '', psGold: [], psSilver: [], attributes: getDefaultAttrs() }
+            });
+
+            // Tactics State
+            const [activeIds, setActiveIds] = useState([]);
+            const [tacticalPlans, setTacticalPlans] = useState(null);
+            const [selectedPlanIdx, setSelectedPlanIdx] = useState(0);
+            const [isTacticsLoading, setIsTacticsLoading] = useState(false);
+
+            // Chat State
+            const [chatInp, setChatInp] = useState('');
+            const [isChatLoading, setIsChatLoading] = useState(false);
+            const chatEndRef = useRef(null);
+
+            // Squad Filters
+            const [filters, setFilters] = useState({ posGroup: 'all', minSkill: 0, minWF: 0, playstyle: '', sortBy: 'ovr-desc' });
+            const [selectedPlayer, setSelectedPlayer] = useState(null);
+
+            useEffect(() => { if(toast.show) { const t = setTimeout(()=>setToast({show:false}), 3000); return ()=>clearTimeout(t); } }, [toast.show]);
+            useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [chatHistory, isChatLoading]);
+
+            const resetForm = useCallback(() => {
+                setEditingId(null); setFormPosIndex(-1);
+                setForm({ name: '', photo: null, skillMoves: 3, weakFoot: 3, currentPos: { position: 'DC', notes: '', psGold: [], psSilver: [], attributes: getDefaultAttrs() } });
+            }, []);
+
+            // Form Handlers
+            const handleAttrChange = useCallback((group, field, val) => {
+                const numVal = Math.min(99, Math.max(1, parseInt(val) || 1));
+                setForm(p => ({ ...p, currentPos: { ...p.currentPos, attributes: { ...p.currentPos.attributes, [group]: { ...p.currentPos.attributes[group], [field]: numVal } } } }));
+            }, []);
+
+            const cyclePS = useCallback((ps) => {
+                setForm(p => {
+                    const c = { ...p.currentPos, psGold: [...p.currentPos.psGold], psSilver: [...p.currentPos.psSilver] };
+                    const isGold = c.psGold.includes(ps);
+                    const isSilver = c.psSilver.includes(ps);
+                    if (isGold) { c.psGold = c.psGold.filter(x => x !== ps); }
+                    else if (isSilver) { c.psSilver = c.psSilver.filter(x => x !== ps); if (c.psGold.length < 4) c.psGold.push(ps); }
+                    else { if (c.psSilver.length < 6) c.psSilver.push(ps); }
+                    return { ...p, currentPos: c };
+                });
+            }, []);
+
+            const saveForm = useCallback((e) => {
+                e.preventDefault();
+                if (!form.name.trim()) return;
+                const r = analyzePosition(form.currentPos);
+                const posToSave = { ...form.currentPos, report: r };
+                const playerData = { name: form.name.trim(), photo: form.photo, skillMoves: Math.min(5, Math.max(1, parseInt(form.skillMoves)||3)), weakFoot: Math.min(5, Math.max(1, parseInt(form.weakFoot)||3)) };
+
+                if (editingId) {
+                    setPlayers(prev => prev.map(pl => {
+                        if (pl.id === editingId) {
+                            const newPosArr = [...pl.positions];
+                            if (formPosIndex >= 0) newPosArr[formPosIndex] = posToSave;
+                            else newPosArr.push(posToSave);
+                            return { ...pl, ...playerData, positions: newPosArr };
+                        }
+                        return pl;
+                    }));
+                } else {
+                    setPlayers(prev => [{ id: Date.now().toString(), ...playerData, positions: [posToSave] }, ...prev]);
+                }
+                showToast('Datos guardados');
+                setActiveTab('squad');
+                resetForm();
+            }, [form, editingId, formPosIndex, setPlayers, showToast, resetForm]);
+
+            const startEdit = useCallback((player, posIdx = 0) => {
+                setEditingId(player.id); setFormPosIndex(posIdx);
+                setForm({ name: player.name, photo: player.photo, skillMoves: player.skillMoves, weakFoot: player.weakFoot, currentPos: JSON.parse(JSON.stringify(player.positions[posIdx])) });
+                setActiveTab('scouting');
+            }, []);
+
+            const startAddPos = useCallback((player) => {
+                setEditingId(player.id); setFormPosIndex(-1);
+                setForm({ name: player.name, photo: player.photo, skillMoves: player.skillMoves, weakFoot: player.weakFoot, currentPos: { position: 'DC', notes: '', psGold: [], psSilver: [], attributes: getDefaultAttrs() } });
+                setActiveTab('scouting');
+            }, []);
+
+            const deletePlayer = useCallback((playerId, playerName) => {
+                if (window.confirm(`¿Eliminar a ${playerName} de la plantilla?`)) {
+                    setPlayers(prev => prev.filter(x => x.id !== playerId));
+                    setActiveIds(prev => prev.filter(x => x !== playerId));
+                    showToast(`${playerName} eliminado`);
+                }
+            }, [setPlayers, showToast]);
+
+            const exportPlayer = useCallback((player) => {
+                try {
+                    const { id, ...playerData } = player;
+                    const jsonStr = JSON.stringify(playerData);
+                    const base64Str = btoa(encodeURIComponent(jsonStr));
+                    const code = `JOGGA-${base64Str}`;
+                    navigator.clipboard.writeText(code).then(() => {
+                        showToast(`Código de ${player.name} copiado al portapapeles`);
+                    }).catch(e => {
+                        prompt("Copia este código:", code);
+                    });
+                } catch(e) {
+                    showToast('Error al exportar jugador');
+                }
+            }, [showToast]);
+
+            const importPlayer = useCallback(() => {
+                const code = window.prompt("Pega el código del jugador exportado (empieza por JOGGA-):");
+                if (!code) return;
+                
+                try {
+                    const base64Str = code.replace(/^JOGGA-/, '');
+                    const jsonStr = decodeURIComponent(atob(base64Str));
+                    const playerData = JSON.parse(jsonStr);
+                    
+                    if (!playerData.name || !playerData.positions) throw new Error("Formato inválido");
+                    
+                    playerData.id = Date.now().toString(); // Asignar nuevo ID
+                    setPlayers(prev => [playerData, ...prev]);
+                    showToast(`¡${playerData.name} importado con éxito!`);
+                } catch (e) {
+                    showToast('Código inválido o corrupto');
+                }
+            }, [setPlayers, showToast]);
+
+            const OCR = useCallback(async (e) => {
+                const file = e.target.files[0]; if(!file) return;
+                e.target.value = '';
+                const reader = new FileReader();
+                reader.onloadend = async () => {
+                    showToast('Analizando imagen con IA...');
+                    const sys = "Extrae los 6 atributos principales (PAC, SHO, PAS, DRI, DEF, PHY) de esta pantalla de FC. Devuelve SOLO JSON: {pac:80,sho:80...}";
+                    const res = await callIA(sys, "Extrae atributos", reader.result);
+                    if (res) {
+                        try {
+                            const stats = JSON.parse(res.replace(/```json/g,'').replace(/```/g,'').trim());
+                            if (stats.pac) {
+                                setForm(p => {
+                                    const c = JSON.parse(JSON.stringify(p.currentPos.attributes));
+                                    Object.keys(DETAILED_STATS).forEach(k => { if(stats[k]) { Object.keys(c[k]).forEach(sub => c[k][sub] = parseInt(stats[k])||75); } });
+                                    return {...p, currentPos: {...p.currentPos, attributes: c}};
+                                });
+                                showToast('Stats base actualizados');
+                            }
+                        } catch { showToast('Fallo al leer stats'); }
+                    } else { showToast('Error al analizar la imagen'); }
+                };
+                reader.readAsDataURL(file);
+            }, [showToast]);
+
+            // Tactics Engine
+            const generateTactics = useCallback(async () => {
+                const act = players.filter(p => activeIds.includes(p.id));
+                if (act.length < 2) return showToast('Selecciona más jugadores');
+                setIsTacticsLoading(true);
+                const ctx = act.map(p => `Jugador: ${p.name}\n` + p.positions.map(pos =>
+                    `- Pos: ${pos.position} (OVR ${pos.report.ovr}, Arquetipo: ${pos.report.archetype})\n  PlayStyles+: ${pos.psGold.join(', ') || 'Ninguno'}\n  Notas del DT: ${pos.notes || 'Ninguna'}`
+                ).join('\n')).join('\n\n');
+                const sys = `Eres IA Bonito, DT táctico de FC 26 Clubes Pro. Se te dan los jugadores activos, sus posiciones secundarias, OVR, arquetipos, PlayStyles y las NOTAS CRÍTICAS DEL DT.\nMisión: Generar 3 planes (Plan A: Balance, Plan B: Ataque, Plan C: Defensa). Para cada plan, elige una formación y asigna a TODOS los jugadores.\nResponde ESTRICTAMENTE en formato JSON array, sin markdown, sin texto extra:\n[{"planName":"Plan A","formation":"4-2-3-1","reasoning":"...","assignments":[{"name":"...","spot":"MCO"}]},...]`;
+                const pr = `Genera 3 planes tácticos:\n${ctx}\nFormaciones: 4-2-3-1, 4-3-3, 5-3-2. Los 'spot' deben coincidir exactamente con las posiciones de la formación.`;
+                const res = await callIA(sys, pr);
+                if (res) {
+                    try {
+                        const plans = JSON.parse(res.replace(/```json/g,'').replace(/```/g,'').trim());
+                        if (Array.isArray(plans) && plans.length > 0) { setTacticalPlans(plans); setSelectedPlanIdx(0); }
+                        else { showToast('Formato de respuesta inválido'); }
+                    } catch { showToast('Error al generar táctica (JSON inválido)'); }
+                } else { showToast('Error de conexión con el servidor'); }
+                setIsTacticsLoading(false);
+            }, [players, activeIds, showToast]);
+
+            // Chat
+            const sendChat = useCallback(async () => {
+                if(!chatInp.trim() || isChatLoading) return;
+                const uMsg = chatInp.trim(); setChatInp('');
+                setChatHistory(p => [...p, {role:'user', text:uMsg}]);
+                setIsChatLoading(true);
+                const ctx = players.map(p => `${p.name}: ` + p.positions.map(pos => `[${pos.position}] OVR ${pos.report.ovr}. Notas: ${pos.notes || 'N/A'}`).join(' | ')).join('\n');
+                const sys = `Eres IA Bonito, asistente táctico de Club JoGGa Bonito en FC 26 Pro Clubs. Responde de forma concisa, útil y con personalidad futbolística. Contexto plantilla:\n${ctx}`;
+                const reply = await callIA(sys, uMsg);
+                setChatHistory(p => [...p, {role:'model', text: reply||'Error al conectar con el servidor. Inténtalo de nuevo.'}]);
+                setIsChatLoading(false);
+            }, [chatInp, isChatLoading, players, setChatHistory]);
+
+            const clearChat = useCallback(() => {
+                if (window.confirm('¿Limpiar todo el historial de chat?')) {
+                    setChatHistory([{ role: 'model', text: 'Chat reiniciado. ¿En qué te ayudo, Míster?' }]);
+                }
+            }, [setChatHistory]);
+
+            const toggleAllPlayers = useCallback(() => {
+                setActiveIds(prev => prev.length === players.length ? [] : players.map(p => p.id));
+            }, [players]);
+
+            // ===== FILTERED + SORTED PLAYERS =====
+            const filteredPlayers = useMemo(() => {
+                let result = [...players];
+
+                // Position filter
+                if (filters.posGroup !== 'all') {
+                    const groupPositions = POS_GROUPS[filters.posGroup];
+                    result = result.filter(p => p.positions.some(pos => groupPositions.includes(pos.position)));
+                }
+
+                // Skill moves filter
+                if (filters.minSkill > 0) {
+                    result = result.filter(p => parseInt(p.skillMoves) >= filters.minSkill);
+                }
+
+                // Weak foot filter
+                if (filters.minWF > 0) {
+                    result = result.filter(p => parseInt(p.weakFoot) >= filters.minWF);
+                }
+
+                // PlayStyle filter
+                if (filters.playstyle) {
+                    result = result.filter(p => p.positions.some(pos =>
+                        pos.psGold.includes(filters.playstyle) || pos.psSilver.includes(filters.playstyle)
+                    ));
+                }
+
+                // Sorting
+                const getBestOvr = (p) => Math.max(...p.positions.map(pos => pos.report.ovr));
+                const getStatVal = (p, stat) => {
+                    const bestPos = p.positions.reduce((a, b) => a.report.ovr > b.report.ovr ? a : b);
+                    return calcMainStats(bestPos.attributes)[stat] || 0;
+                };
+
+                switch(filters.sortBy) {
+                    case 'ovr-desc': result.sort((a,b) => getBestOvr(b) - getBestOvr(a)); break;
+                    case 'ovr-asc': result.sort((a,b) => getBestOvr(a) - getBestOvr(b)); break;
+                    case 'name-asc': result.sort((a,b) => a.name.localeCompare(b.name)); break;
+                    case 'name-desc': result.sort((a,b) => b.name.localeCompare(a.name)); break;
+                    case 'pac': result.sort((a,b) => getStatVal(b,'pac') - getStatVal(a,'pac')); break;
+                    case 'sho': result.sort((a,b) => getStatVal(b,'sho') - getStatVal(a,'sho')); break;
+                    case 'pas': result.sort((a,b) => getStatVal(b,'pas') - getStatVal(a,'pas')); break;
+                    case 'dri': result.sort((a,b) => getStatVal(b,'dri') - getStatVal(a,'dri')); break;
+                    case 'def': result.sort((a,b) => getStatVal(b,'def') - getStatVal(a,'def')); break;
+                    case 'phy': result.sort((a,b) => getStatVal(b,'phy') - getStatVal(a,'phy')); break;
+                }
+
+                return result;
+            }, [players, filters]);
+
+            // Get the best position index for display (based on filter)
+            const getBestPosIndex = useCallback((player) => {
+                if (filters.posGroup === 'all') return 0;
+                const groupPositions = POS_GROUPS[filters.posGroup];
+                const idx = player.positions.findIndex(pos => groupPositions.includes(pos.position));
+                return idx >= 0 ? idx : 0;
+            }, [filters.posGroup]);
+
+            return (
+                <div className="min-h-screen font-sf pb-16">
+                    <Toast msg={toast.msg} show={toast.show} />
+                    {selectedPlayer && <PlayerDetailModal player={selectedPlayer} onClose={() => setSelectedPlayer(null)} onEdit={startEdit} onAddPos={startAddPos} onDelete={deletePlayer} onExport={exportPlayer} />}
+
+                    <header className="glass-header sticky top-0 z-50 p-4">
+                        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full flex items-center justify-center border-2 border-white/10" style={{background:'linear-gradient(135deg, #0A84FF, #BF5AF2)'}}>
+                                    <i className="fas fa-futbol text-white"></i>
+                                </div>
+                                <div>
+                                    <h1 className="text-xl font-black text-white leading-tight tracking-wide font-orbitron">IA BONITO</h1>
+                                    <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">JoGGa Bonito · FC 26</p>
+                                </div>
+                            </div>
+                            <div className="segmented-control w-full sm:w-auto">
+                                {[{id:'squad',i:'fa-id-card',label:'Plantilla'},{id:'scouting',i:'fa-user-plus',label:'Scouting'},{id:'tactics',i:'fa-chess-board',label:'Táctica'},{id:'chat',i:'fa-robot',label:'IA Chat'}].map(t => (
+                                    <div key={t.id} className={`segment-btn ${activeTab===t.id?'active':''}`} onClick={()=>{setActiveTab(t.id);if(t.id==='scouting' && !editingId) resetForm(); else if(t.id!=='scouting') setEditingId(null);}}>
+                                        <i className={`fas ${t.i} text-base mr-1.5`}></i>
+                                        <span className="hidden sm:inline text-xs">{t.label}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </header>
+
+                    <main className="max-w-7xl mx-auto p-4">
+                        {/* ===== SQUAD TAB ===== */}
+                        {activeTab === 'squad' && (
+                            <div>
+                                <div className="flex justify-between items-center mb-4">
+                                    <div>
+                                        <h2 className="text-2xl font-black uppercase tracking-tight">Plantilla</h2>
+                                        <p className="text-xs text-gray-500 mt-0.5">{players.length} jugadores registrados</p>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <button onClick={importPlayer} className="ios-btn-secondary !py-2.5 !px-4 !text-sm" title="Importar desde código">
+                                            <i className="fas fa-file-import md:mr-2"></i><span className="hidden md:inline">Importar</span>
+                                        </button>
+                                        <button onClick={()=>{resetForm();setActiveTab('scouting')}} className="ios-btn !py-2.5 !px-4 !text-sm">
+                                            <i className="fas fa-plus md:mr-2"></i><span className="hidden md:inline">Nuevo Jugador</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {players.length === 0 ? (
+                                    <div className="empty-state">
+                                        <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mb-4">
+                                            <i className="fas fa-users text-3xl text-gray-600"></i>
+                                        </div>
+                                        <h2 className="text-xl font-bold mb-2">Plantilla Vacía</h2>
+                                        <p className="text-gray-500 text-sm mb-4">Agrega tu primer jugador desde la pestaña de Scouting.</p>
+                                        <button onClick={()=>{resetForm();setActiveTab('scouting')}} className="ios-btn !text-sm">
+                                            <i className="fas fa-plus mr-2"></i>Agregar Jugador
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <FilterBar filters={filters} setFilters={setFilters} playerCount={players.length} filteredCount={filteredPlayers.length} />
+
+                                        {filteredPlayers.length === 0 ? (
+                                            <div className="empty-state">
+                                                <i className="fas fa-search text-3xl text-gray-600 mb-3"></i>
+                                                <h3 className="text-lg font-bold mb-1">Sin resultados</h3>
+                                                <p className="text-gray-500 text-sm">Ningún jugador coincide con los filtros seleccionados.</p>
+                                            </div>
+                                        ) : (
+                                            <div className="card-grid">
+                                                {filteredPlayers.map(p => (
+                                                    <FutCard key={p.id} player={p} posIndex={getBestPosIndex(p)} onClick={setSelectedPlayer} />
+                                                ))}
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                        )}
+
+                        {/* ===== SCOUTING TAB ===== */}
+                        {activeTab === 'scouting' && (
+                            <form onSubmit={saveForm} className="space-y-4">
+                                <div className="ios-card p-5">
+                                    <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">{editingId ? (formPosIndex >= 0 ? '✏️ Editando Posición' : '➕ Nueva Posición') : '🆕 Nuevo Jugador'}</h2>
+                                    <div className="flex flex-col sm:flex-row gap-6 items-center">
+                                        <div className="relative group">
+                                            <div className="w-24 h-24 rounded-full bg-gray-800 border-2 border-dashed border-gray-600 flex items-center justify-center overflow-hidden group-hover:border-ios-blue transition-colors">
+                                                {form.photo ? <img src={form.photo} className="w-full h-full object-cover"/> : <i className="fas fa-camera text-2xl text-gray-500"></i>}
+                                            </div>
+                                            <input type="file" accept="image/*" onChange={(e)=>{const f=e.target.files[0];if(f){const r=new FileReader();r.onloadend=()=>setForm(p=>({...p,photo:r.result}));r.readAsDataURL(f);}}} className="absolute inset-0 opacity-0 cursor-pointer"/>
+                                        </div>
+                                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
+                                            <div className="sm:col-span-3"><InputGroup label="GamerTag"><input type="text" value={form.name} onChange={e=>setForm(p=>({...p,name:e.target.value}))} className="ios-input font-bold" required disabled={editingId && formPosIndex >= 0} placeholder="Nombre del jugador" /></InputGroup></div>
+                                            <InputGroup label="Skill Moves (1-5)"><input type="number" min="1" max="5" value={form.skillMoves} onChange={e=>setForm(p=>({...p,skillMoves:parseInt(e.target.value)||1}))} className="ios-input text-center"/></InputGroup>
+                                            <InputGroup label="Pierna Mala (1-5)"><input type="number" min="1" max="5" value={form.weakFoot} onChange={e=>setForm(p=>({...p,weakFoot:parseInt(e.target.value)||1}))} className="ios-input text-center"/></InputGroup>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="ios-card p-5 border-2 border-ios-blue/20">
+                                    <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
+                                        <h2 className="text-sm font-bold text-ios-blue uppercase tracking-widest">2. Posición y Notas</h2>
+                                        <div className="relative">
+                                            <button type="button" className="ios-btn-secondary !py-1.5 !px-3 !text-xs"><i className="fas fa-camera mr-2"></i>Leer Stats con IA</button>
+                                            <input type="file" accept="image/*" onChange={OCR} className="absolute inset-0 opacity-0 cursor-pointer"/>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                                        <InputGroup label="Posición Principal">
+                                            <select value={form.currentPos.position} onChange={e=>setForm(p=>({...p,currentPos:{...p.currentPos,position:e.target.value}}))} className="ios-input font-black text-lg">
+                                                {POSITIONS.map(p=><option key={p}>{p}</option>)}
+                                            </select>
+                                        </InputGroup>
+                                        <div className="sm:col-span-2">
+                                            <InputGroup label="Notas del DT sobre esta posición">
+                                                <input type="text" value={form.currentPos.notes} onChange={e=>setForm(p=>({...p,currentPos:{...p.currentPos,notes:e.target.value}}))} className="ios-input" placeholder="Ej: No presiona mucho, pero es clave dando el último pase." maxLength="200" />
+                                            </InputGroup>
+                                        </div>
+                                    </div>
+
+                                    {/* Playstyles Selection */}
+                                    <div className="mb-6">
+                                        <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">PlayStyles <span className="text-gray-600">(⭐{form.currentPos.psGold.length}/4 Dorados · {form.currentPos.psSilver.length}/6 Grises)</span></h3>
+                                        <div className="bg-black/20 p-4 rounded-xl border border-white/5">
+                                            {PLAYSTYLES_LIST.map(cat => (
+                                                <div key={cat.cat} className="mb-3 last:mb-0">
+                                                    <div className="text-[9px] text-gray-500 font-bold uppercase mb-1">{cat.cat}</div>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {cat.list.map(ps => {
+                                                            const isGold = form.currentPos.psGold.includes(ps);
+                                                            const isSilver = form.currentPos.psSilver.includes(ps);
+                                                            return (
+                                                                <div key={ps} className="flex flex-col items-center">
+                                                                    <div className={`ps-slot ${isGold?'gold':isSilver?'silver':''}`} onClick={() => cyclePS(ps)}>
+                                                                        {isGold ? <i className="fas fa-star text-yellow-400"></i> : isSilver ? <i className="fas fa-check text-gray-300"></i> : <i className={`fas ${cat.icon} text-white/20`}></i>}
+                                                                    </div>
+                                                                    <span className="text-[8px] text-gray-400 text-center w-12 leading-tight">{ps}</span>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                            <p className="text-[10px] text-gray-500 mt-2"><i className="fas fa-info-circle mr-1"></i>Clic para ciclar: <span className="text-gray-400">Vacío</span> → <span className="text-gray-300">Gris</span> → <span className="text-yellow-400">Dorado</span> → <span className="text-gray-400">Vacío</span></p>
+                                        </div>
+                                    </div>
+
+                                    {/* Stats Grid */}
+                                    <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Atributos Detallados</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {Object.entries(DETAILED_STATS).map(([grp, data]) => {
+                                            const mainAvg = calcMainStats(form.currentPos.attributes)[grp];
+                                            return (
+                                                <div key={grp} className="bg-black/20 p-3 rounded-xl border border-white/5">
+                                                    <div className="flex justify-between items-end mb-2 border-b border-white/5 pb-2">
+                                                        <span className="text-[10px] font-bold uppercase tracking-wider" style={{color:data.color}}>{grp} - {data.label}</span>
+                                                        <span className={`text-lg font-black leading-none ${getOvrClass(mainAvg)}`}>{mainAvg}</span>
+                                                    </div>
+                                                    {Object.entries(data.fields).map(([f, label]) => (
+                                                        <div key={f} className="stat-grid-item">
+                                                            <span className="stat-label">{label}</span>
+                                                            <div className="flex items-center gap-2">
+                                                                <StatBar value={form.currentPos.attributes[grp][f]} color={data.color} />
+                                                                <input type="number" min="1" max="99" value={form.currentPos.attributes[grp][f]} onChange={e => handleAttrChange(grp, f, e.target.value)} className="stat-val-input" />
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                                <div className="flex gap-3">
+                                    {editingId && <button type="button" onClick={()=>{resetForm();setActiveTab('squad')}} className="ios-btn-secondary flex-1 text-lg"><i className="fas fa-times mr-2"></i>Cancelar</button>}
+                                    <button type="submit" className="ios-btn flex-1 text-lg shadow-xl"><i className="fas fa-save mr-2"></i>{editingId ? 'Guardar Cambios' : 'Agregar Jugador'}</button>
+                                </div>
+                            </form>
+                        )}
+
+                        {/* ===== TACTICS TAB ===== */}
+                        {activeTab === 'tactics' && (
+                            <div className="space-y-4">
+                                <div className="ios-card p-5">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <h2 className="text-sm font-bold text-ios-blue uppercase tracking-widest"><i className="fas fa-users mr-2"></i>Roster Activo <span className="text-gray-500 font-normal">({activeIds.length}/{players.length})</span></h2>
+                                        {players.length > 0 && <button onClick={toggleAllPlayers} className="text-xs text-ios-blue hover:underline">{activeIds.length === players.length ? 'Deseleccionar todos' : 'Seleccionar todos'}</button>}
+                                    </div>
+                                    {players.length === 0 && <p className="text-gray-500 text-sm mb-4">No hay jugadores. Agrega jugadores desde Scouting primero.</p>}
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        {players.map(p => (
+                                            <button key={p.id} onClick={() => setActiveIds(c => c.includes(p.id) ? c.filter(x=>x!==p.id) : [...c,p.id])}
+                                                className={`px-4 py-2 rounded-full border-2 text-sm font-bold transition-all flex items-center gap-2 ${activeIds.includes(p.id) ? 'border-ios-blue bg-blue-900/30 text-white shadow-[0_0_10px_rgba(10,132,255,0.2)]' : 'border-white/10 bg-transparent text-gray-500 hover:border-white/30'}`}>
+                                                {p.photo ? <img src={p.photo} className="w-6 h-6 rounded-full object-cover" loading="lazy" alt=""/> : <i className="fas fa-user"></i>} {p.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <button onClick={generateTactics} disabled={isTacticsLoading || activeIds.length < 2} className="ios-btn w-full"><i className={`fas ${isTacticsLoading?'fa-spinner fa-spin':'fa-brain'} mr-2`}></i>{isTacticsLoading?'Analizando combinaciones...':'Generar Planes Tácticos (IA Bonito)'}</button>
+                                </div>
+
+                                {tacticalPlans && (
+                                    <div className="ios-card p-5 border-2 border-ios-purple/20" style={{background:'linear-gradient(180deg, rgba(191,90,242,0.04), transparent)'}}>
+                                        <div className="segmented-control mb-6">
+                                            {tacticalPlans.map((pl, i) => (
+                                                <div key={i} className={`segment-btn ${selectedPlanIdx===i?'active !bg-ios-purple !text-white':''}`} onClick={()=>setSelectedPlanIdx(i)}>
+                                                    {pl.planName}
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {tacticalPlans[selectedPlanIdx] && (() => {
+                                            const plan = tacticalPlans[selectedPlanIdx];
+                                            const formDef = FORMATIONS[plan.formation];
+                                            if(!formDef) return <p className="text-red-400">Formación "{plan.formation}" no reconocida.</p>;
+
+                                            const vis = formDef.pos.map(spot => {
+                                                const match = plan.assignments.find(a => a.spot === spot.p);
+                                                if (match) {
+                                                    const player = players.find(x=>x.name === match.name);
+                                                    if(player) {
+                                                        const posData = player.positions.find(x=>x.position===spot.p) || player.positions[0];
+                                                        return { ...spot, active:true, name:player.name, photo:player.photo, ovr:posData.report.ovr };
+                                                    }
+                                                }
+                                                return { ...spot, active:false };
+                                            });
+
+                                            return (
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                    <div>
+                                                        <div className="text-center mb-4"><h3 className="text-2xl font-black font-orbitron">{plan.formation}</h3><p className="text-ios-purple font-bold uppercase text-xs">{plan.planName}</p></div>
+                                                        <div className="pitch-container">
+                                                            <div className="pitch-line"></div><div className="pitch-circle"></div><div className="pitch-dot"></div>
+                                                            <div className="pitch-box-t"></div><div className="pitch-box-b"></div>
+                                                            {vis.map((p,i) => (
+                                                                <div key={i} className={`player-dot ${p.active?'':'empty'}`} style={{top:`${p.t}%`,left:`${p.l}%`, backgroundImage: p.photo?`url(${p.photo})`:'none'}}>
+                                                                    {!p.photo && p.active && <i className="fas fa-user"></i>}
+                                                                    {!p.active && <span className="opacity-30">{p.p}</span>}
+                                                                    {p.active && <div className="pos-label">{p.name} ({p.ovr})</div>}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div className="bg-black/30 p-4 rounded-xl border border-white/5 mb-4">
+                                                            <h4 className="text-[10px] text-gray-400 font-bold uppercase mb-2"><i className="fas fa-comment-dots text-ios-purple mr-1"></i>Análisis de IA Bonito</h4>
+                                                            <p className="text-sm text-gray-200 leading-relaxed">{plan.reasoning}</p>
+                                                        </div>
+                                                        <h4 className="text-[10px] text-gray-400 font-bold uppercase mb-2">Asignaciones:</h4>
+                                                        <div className="space-y-2">
+                                                            {plan.assignments.map((a,i) => {
+                                                                const pl = players.find(x => x.name === a.name);
+                                                                return (
+                                                                    <div key={i} className="flex justify-between items-center border-b border-white/5 pb-1.5">
+                                                                        <div className="flex items-center gap-2">
+                                                                            {pl?.photo ? <img src={pl.photo} className="w-5 h-5 rounded-full object-cover" loading="lazy" alt=""/> : <i className="fas fa-user text-gray-600 text-xs"></i>}
+                                                                            <span className="font-bold text-sm">{a.name}</span>
+                                                                        </div>
+                                                                        <span className="text-xs bg-white/10 px-2 py-0.5 rounded text-ios-blue font-bold">{a.spot}</span>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })()}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* ===== CHAT TAB ===== */}
+                        {activeTab === 'chat' && (
+                            <div className="ios-card overflow-hidden">
+                                <div className="chat-container">
+                                    <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between" style={{background:'rgba(0,0,0,0.3)'}}>
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{background:'linear-gradient(135deg, #0A84FF, #BF5AF2)'}}><i className="fas fa-robot text-white"></i></div>
+                                            <div><h3 className="font-black text-white">IA Bonito</h3><p className="text-[10px] text-green-400 font-bold">{isChatLoading ? 'Pensando...' : 'Online'}</p></div>
+                                        </div>
+                                        <button onClick={clearChat} className="text-gray-500 hover:text-red-400 transition-colors text-xs" title="Limpiar chat"><i className="fas fa-trash-can"></i></button>
+                                    </div>
+                                    <div className="chat-messages bg-black/20">
+                                        {chatHistory.map((m,i) => (
+                                            <div key={i} className={`flex ${m.role==='user'?'justify-end':'justify-start'}`}>
+                                                <div className={`chat-bubble ${m.role==='user'?'chat-bubble-user':'chat-bubble-ai'}`}>{m.text.split('\n').map((l,j)=><span key={j}>{l}<br/></span>)}</div>
+                                            </div>
+                                        ))}
+                                        {isChatLoading && <TypingIndicator />}
+                                        <div ref={chatEndRef}></div>
+                                    </div>
+                                    <div className="p-3 border-t border-white/5 flex gap-2" style={{background:'rgba(0,0,0,0.3)'}}>
+                                        <input type="text" value={chatInp} onChange={e=>setChatInp(e.target.value)} onKeyDown={e=>{if(e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }}} className="ios-input flex-1" placeholder="Pregunta sobre tu equipo..." disabled={isChatLoading} maxLength="500" />
+                                        <button onClick={sendChat} disabled={isChatLoading || !chatInp.trim()} className="ios-btn !px-4"><i className={`fas ${isChatLoading?'fa-spinner fa-spin':'fa-paper-plane'}`}></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </main>
+                </div>
+            );
+        };
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>

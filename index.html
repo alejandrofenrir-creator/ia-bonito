@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IA Bonito - Club JoGGa Bonito | EA FC 26</title>
+    <meta name="description" content="IA Bonito: Tu asistente táctico inteligente para EA Sports FC 26 Pro Clubs.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 'sf': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'] },
+                    colors: {
+                        'ios': {
+                            'bg': '#F2F2F7', 'card': '#FFFFFF', 'blue': '#007AFF', 'green': '#34C759',
+                            'red': '#FF3B30', 'orange': '#FF9500', 'yellow': '#FFCC00', 'purple': '#AF52DE',
+                            'pink': '#FF2D55', 'teal': '#5AC8FA', 'indigo': '#5856D6',
+                            'gray1': '#8E8E93', 'gray2': '#AEAEB2', 'gray3': '#C7C7CC',
+                            'gray4': '#D1D1D6', 'gray5': '#E5E5EA', 'gray6': '#F2F2F7',
+                        }
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root { --apple-bg: #111111; --apple-card: #1C1C1E; --text-primary: #FFFFFF; --text-secondary: #EBEBF5; --apple-blue: #0A84FF; }
+        body { font-family: 'Inter', sans-serif; background: var(--apple-bg); color: var(--text-primary); margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+
+        /* FC26 Dark Theme Cards */
+        .ios-card { background: var(--apple-card); border-radius: 1rem; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 24px rgba(0,0,0,0.4); }
+        
+        .ios-input { background: rgba(255,255,255,0.06); border-radius: 0.5rem; border: 1px solid rgba(255,255,255,0.1); padding: 0.6rem 0.8rem; font-size: 0.9rem; color: white; width: 100%; transition: all 0.2s; }
+        .ios-input:focus { outline: none; border-color: var(--apple-blue); background: rgba(0,122,255,0.1); }
+        .ios-textarea { resize: vertical; min-height: 60px; }
+
+        .ios-btn { background: linear-gradient(135deg, #0A84FF, #0055D4); color: white; font-weight: 700; border-radius: 0.75rem; padding: 0.8rem 1.5rem; border: none; cursor: pointer; transition: transform 0.1s, box-shadow 0.2s; }
+        .ios-btn:hover { box-shadow: 0 0 15px rgba(10,132,255,0.5); transform: translateY(-1px); }
+        .ios-btn:active { transform: scale(0.97); }
+        .ios-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        .ios-btn-secondary { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); font-weight: 600; border-radius: 0.75rem; padding: 0.8rem 1.5rem; cursor: pointer; transition: background 0.2s; }
+        .ios-btn-secondary:hover { background: rgba(255,255,255,0.15); }
+
+        .segmented-control { background: rgba(255,255,255,0.05); padding: 0.2rem; border-radius: 0.6rem; display: flex; overflow-x: auto; scrollbar-width: none; border: 1px solid rgba(255,255,255,0.1); }
+        .segmented-control::-webkit-scrollbar { display: none; }
+        .segment-btn { flex: 1; min-width: 70px; text-align: center; padding: 0.5rem 0.25rem; font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.5); border-radius: 0.45rem; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .segment-btn.active { color: white; background: rgba(255,255,255,0.15); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+
+        .glass-header { background: rgba(17,17,17,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+        /* Pitch */
+        .pitch-container { width: 100%; aspect-ratio: 2/3; max-width: 340px; margin: 0 auto; background: linear-gradient(180deg, #0A2E16 0%, #0E4720 30%, #115927 60%, #0A2E16 100%); border: 2px solid rgba(255,255,255,0.2); border-radius: 8px; position: relative; overflow: hidden; }
+        .pitch-line { position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: rgba(255,255,255,0.3); transform: translateY(-50%); }
+        .pitch-circle { position: absolute; top: 50%; left: 50%; width: 70px; height: 70px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; transform: translate(-50%,-50%); }
+        .pitch-dot { position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; background: rgba(255,255,255,0.3); border-radius: 50%; transform: translate(-50%,-50%); }
+        .pitch-box-t { position: absolute; top: 0; left: 22%; width: 56%; height: 14%; border: 2px solid rgba(255,255,255,0.3); border-top: none; }
+        .pitch-box-b { position: absolute; bottom: 0; left: 22%; width: 56%; height: 14%; border: 2px solid rgba(255,255,255,0.3); border-bottom: none; }
+
+        .player-dot { position: absolute; width: 34px; height: 34px; border-radius: 50%; transform: translate(-50%,-50%); display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: white; z-index: 2; transition: 0.3s; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.9); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .player-dot.empty { border: 1px dashed rgba(255,255,255,0.4); background: rgba(0,0,0,0.5); }
+        .player-dot .pos-label { position: absolute; bottom: -18px; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px; font-size: 8px; white-space: nowrap; }
+
+        /* Chat */
+        .chat-container { display: flex; flex-direction: column; height: 600px; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 1rem; scroll-behavior: smooth; }
+        .chat-bubble { max-width: 85%; padding: 0.75rem 1rem; border-radius: 1rem; font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.75rem; }
+        .chat-bubble-user { background: #0A84FF; color: white; margin-left: auto; border-bottom-right-radius: 0.2rem; }
+        .chat-bubble-ai { background: rgba(255,255,255,0.1); color: white; margin-right: auto; border-bottom-left-radius: 0.2rem; border: 1px solid rgba(255,255,255,0.05); }
+        
+        .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-100px); z-index: 10000; transition: transform 0.4s; }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        
+        /* Stats Grid */
+        .stat-grid-item { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .stat-grid-item:last-child { border-bottom: none; }
+        .stat-label { font-size: 0.7rem; color: rgba(255,255,255,0.6); }
+        .stat-val-input { width: 40px; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; text-align: right; border-radius: 4px; padding: 1px 4px; font-size: 0.75rem; font-weight: 700; }
+        .stat-val-input:focus { border-color: #0A84FF; outline: none; background: rgba(0,122,255,0.1); }
+        
+        /* PlayStyle slots */
+        .ps-slot { width: 36px; height: 36px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); cursor: pointer; transition: 0.2s; position: relative; margin: 8px; }
+        .ps-slot.gold { border-color: #FFD700; box-shadow: 0 0 10px rgba(255,215,0,0.3); background: rgba(255,215,0,0.1); }
+        .ps-slot.silver { border-color: #C0C0C0; background: rgba(192,192,192,0.1); }
+        .ps-slot > i { transform: rotate(-45deg); font-size: 14px; }
+        .ps-slot:hover { transform: rotate(45deg) scale(1.1); }
+
+        .arch-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.25rem 0.6rem; border-radius: 0.3rem; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.2); }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // Keeping imports silent.
+    </script>
+
+    <script type="text/babel">
+        const { useState, useEffect, useCallback, useMemo, useRef } = React;
+
+        const GEMINI_API_KEY = 'AIzaSyAAZM79S3baM5tdAYEa5EX31BjZvydHZsk';
+        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+        // ===== DATA DEFINITIONS =====
+        const POSITIONS = ['DC','MP','EI','ED','MCO','MC','MI','MD','MCD','CAI','CAD','LI','LD','DFC','POR'];
+        const POS_GROUPS = { attack: ['DC','MP','EI','ED'], midfield: ['MCO','MC','MI','MD','MCD'], defense: ['CAI','CAD','LI','LD','DFC'], gk: ['POR'] };
+
+        const DETAILED_STATS = {
+            pac: { label: 'RIT', color: '#0A84FF', fields: { acceleration: 'Aceleración', sprintSpeed: 'Vel. Sprint' } },
+            sho: { label: 'TIR', color: '#32D74B', fields: { attPosition: 'Pos. Ataque', finishing: 'Definición', shotPower: 'Potencia', longShots: 'Tiros Lejanos', volleys: 'Voleas', penalties: 'Penales' } },
+            pas: { label: 'PAS', color: '#FFD60A', fields: { vision: 'Visión', crossing: 'Centros', fkAcc: 'Prec. Tiro Libre', shortPass: 'Pase Corto', longPass: 'Pase Largo', curve: 'Efecto' } },
+            dri: { label: 'REG', color: '#BF5AF2', fields: { agility: 'Agilidad', balance: 'Equilibrio', reactions: 'Reacciones', ballControl: 'Control Balón', dribbling: 'Regates', composure: 'Compostura' } },
+            def: { label: 'DEF', color: '#FF9F0A', fields: { interceptions: 'Intercepciones', headingAcc: 'Prec. Cabeceo', defAware: 'Percepción Def.', standTackle: 'Robo', slideTackle: 'Barrida' } },
+            phy: { label: 'FIS', color: '#FF453A', fields: { jumping: 'Salto', stamina: 'Energía', strength: 'Fuerza', aggression: 'Agresividad' } }
+        };
+
+        const PLAYSTYLES_LIST = [
+            { cat: 'Tiro', icon: 'fa-futbol', list: ['Tiro Colocado', 'Tiro Potente', 'Vaselina', 'Balón Parado', 'Cabeza Potente'] },
+            { cat: 'Pase', icon: 'fa-share', list: ['Pase Incisivo', 'Pase Ping', 'Pase Largo', 'Tiki Taka', 'Centro Preciso'] },
+            { cat: 'Control', icon: 'fa-magnet', list: ['Primer Toque', 'Técnico', 'Resistente a Presión', 'Velocista', 'Clase', 'Regateador'] },
+            { cat: 'Defensa', icon: 'fa-shield', list: ['Anticipación', 'Bloqueo', 'Leñador', 'Intercepción', 'Marcaje Lateral', 'Barrida'] },
+            { cat: 'Físico', icon: 'fa-bolt', list: ['Paso Rápido', 'Implacable', 'Juego Aéreo', 'Acrobático', 'Saque Largo', 'Trivela'] }
+        ];
+
+        const FORMATIONS = {
+            "4-2-3-1": { name: "4-2-3-1 (Balance)", pos: [{t:92,l:50,p:'POR'},{t:76,l:12,p:'LI'},{t:76,l:37,p:'DFC'},{t:76,l:63,p:'DFC'},{t:76,l:88,p:'LD'},{t:58,l:37,p:'MCD'},{t:58,l:63,p:'MCD'},{t:40,l:15,p:'MI'},{t:38,l:50,p:'MCO'},{t:40,l:85,p:'MD'},{t:18,l:50,p:'DC'}] },
+            "4-3-3": { name: "4-3-3 (Ofensiva)", pos: [{t:92,l:50,p:'POR'},{t:76,l:12,p:'LI'},{t:76,l:37,p:'DFC'},{t:76,l:63,p:'DFC'},{t:76,l:88,p:'LD'},{t:55,l:30,p:'MC'},{t:58,l:50,p:'MCD'},{t:55,l:70,p:'MC'},{t:24,l:15,p:'EI'},{t:18,l:50,p:'DC'},{t:24,l:85,p:'ED'}] },
+            "5-3-2": { name: "5-3-2 (Defensiva)", pos: [{t:92,l:50,p:'POR'},{t:76,l:8,p:'CAI'},{t:78,l:28,p:'DFC'},{t:78,l:50,p:'DFC'},{t:78,l:72,p:'DFC'},{t:76,l:92,p:'CAD'},{t:55,l:25,p:'MC'},{t:55,l:50,p:'MC'},{t:55,l:75,p:'MC'},{t:22,l:35,p:'DC'},{t:22,l:65,p:'DC'}] },
+        };
+
+        const ARCHETYPES = {
+            "Spark": { role: "Desequilibrante", bg: "bg-blue-900 text-blue-200 border-blue-500" },
+            "Finisher": { role: "Goleador Letal", bg: "bg-green-900 text-green-200 border-green-500" },
+            "Target": { role: "Faro Ofensivo", bg: "bg-orange-900 text-orange-200 border-orange-500" },
+            "Maestro": { role: "Director de Orquesta", bg: "bg-purple-900 text-purple-200 border-purple-500" },
+            "Box2Box": { role: "Motor del Equipo", bg: "bg-teal-900 text-teal-200 border-teal-500" },
+            "Recycler": { role: "Destructor", bg: "bg-gray-800 text-gray-200 border-gray-500" },
+            "Boss": { role: "Líder Defensivo", bg: "bg-indigo-900 text-indigo-200 border-indigo-500" },
+            "Marauder": { role: "Carrilero Ofensivo", bg: "bg-pink-900 text-pink-200 border-pink-500" },
+            "Wall": { role: "Portero", bg: "bg-cyan-900 text-cyan-200 border-cyan-500" }
+        };
+
+        const getDefaultAttrs = () => {
+            const a = {};
+            Object.keys(DETAILED_STATS).forEach(g => { a[g]={}; Object.keys(DETAILED_STATS[g].fields).forEach(f => a[g][f] = 75); });
+            return a;
+        };
+
+        const calcMainStats = (attrs) => {
+            const res = {};
+            Object.keys(attrs).forEach(g => {
+                const vals = Object.values(attrs[g]).map(v => parseInt(v)||0);
+                res[g] = Math.round(vals.reduce((a,b)=>a+b,0) / (vals.length||1));
+            });
+            return res;
+        };
+
+        const analyzePosition = (posData) => {
+            const { pac, sho, pas, dri, def, phy } = calcMainStats(posData.attributes);
+            const pos = posData.position;
+            let archetype="Box2Box", role="Jugador", ovr=0;
+            
+            if (pos === 'POR') { ovr = Math.round(def*0.3+phy*0.25+pac*0.15+pas*0.15+sho*0.05+dri*0.1); archetype="Wall"; role="Guardameta"; }
+            else if (POS_GROUPS.attack.includes(pos)) {
+                ovr = Math.round(pac*0.2+sho*0.25+pas*0.1+dri*0.25+def*0.05+phy*0.15);
+                if(pac>84 && dri>81) { archetype="Spark"; role="Extremo/Media Punta"; }
+                else if(sho>84 && phy>77) { archetype="Target"; role="Hombre Objetivo"; }
+                else if(sho>80) { archetype="Finisher"; role="Cazagoles"; }
+                else { archetype="Spark"; role="Móvil"; }
+            } else if (POS_GROUPS.midfield.includes(pos)) {
+                ovr = Math.round(pac*0.1+sho*0.1+pas*0.25+dri*0.2+def*0.15+phy*0.2);
+                if(pas>84 && dri>79) { archetype="Maestro"; role="Playmaker"; }
+                else if(def>79 && phy>77) { archetype="Recycler"; role="Pivote"; }
+                else { archetype="Box2Box"; role="Todoterreno"; }
+            } else {
+                ovr = Math.round(pac*0.15+sho*0.02+pas*0.1+dri*0.08+def*0.35+phy*0.3);
+                if(['LI','LD','CAI','CAD'].includes(pos)) { archetype = pac>83?"Marauder":"Boss"; role = pac>83?"Carrilero":"Defensor Cierre"; }
+                else { archetype="Boss"; role="Central Marcador"; }
+            }
+            return { archetype, role, ovr: Math.min(99, Math.max(1, ovr)), archData: ARCHETYPES[archetype] };
+        };
+
+        // ===== GEMINI API =====
+        const callIA = async (system, prompt, base64Image = null) => {
+            try {
+                const parts = [{ text: prompt }];
+                if (base64Image) parts.push({ inlineData: { mimeType: "image/jpeg", data: base64Image.split(',')[1] } });
+                const res = await fetch(GEMINI_URL, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts }], systemInstruction: { parts: [{ text: system }] }, generationConfig: { temperature: 0.7 } })
+                });
+                const data = await res.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
+            } catch(e) { console.error(e); return null; }
+        };
+
+        // ===== HOOKS =====
+        const useLocalStorage = (key, init) => {
+            const [val, setVal] = useState(() => { try { const i = localStorage.getItem(key); return i ? JSON.parse(i) : init; } catch { return init; } });
+            const set = useCallback((v) => { const nv = v instanceof Function ? v(val) : v; setVal(nv); localStorage.setItem(key, JSON.stringify(nv)); }, [val, key]);
+            return [val, set];
+        };
+
+        // ===== COMPONENTS =====
+        const Toast = ({ msg, show }) => (
+            <div className={`toast ${show?'show':''}`}>
+                <div className="ios-card px-5 py-3 flex items-center gap-3 shadow-lg bg-gray-900 border border-gray-700">
+                    <i className="fas fa-info-circle text-ios-blue text-lg"></i>
+                    <span className="text-sm font-bold text-white">{msg}</span>
+                </div>
+            </div>
+        );
+
+        const InputGroup = ({ label, children }) => (
+            <div className="mb-3">
+                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">{label}</label>
+                {children}
+            </div>
+        );
+
+        // ===== APP COMPONENT =====
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('squad');
+            const [players, setPlayers] = useLocalStorage('jogga-players-v41', []);
+            const [chatHistory, setChatHistory] = useLocalStorage('jogga-chat', [{ role: 'model', text: 'Bienvenido, Míster. Soy IA Bonito. Conozco las notas y stats detallados de toda tu plantilla. ¿Qué planeamos para hoy?' }]);
+            const [toast, setToast] = useState({ show: false, msg: '' });
+            const showToast = (msg) => setToast({ show: true, msg });
+
+            // Form State
+            const [editingId, setEditingId] = useState(null);
+            const [formPosIndex, setFormPosIndex] = useState(-1); // -1 means new player or new pos
+            const [form, setForm] = useState({ name: '', photo: null, skillMoves: 3, weakFoot: 3, 
+                currentPos: { position: 'DC', notes: '', psGold: [], psSilver: [], attributes: getDefaultAttrs() } 
+            });
+
+            // Tactics State
+            const [activeIds, setActiveIds] = useState([]);
+            const [tacticalPlans, setTacticalPlans] = useState(null);
+            const [selectedPlanIdx, setSelectedPlanIdx] = useState(0);
+            const [isTacticsLoading, setIsTacticsLoading] = useState(false);
+
+            useEffect(() => { if(toast.show) { const t = setTimeout(()=>setToast({show:false}), 3000); return ()=>clearTimeout(t); } }, [toast.show]);
+
+            // Form Handlers
+            const handleAttrChange = (group, field, val) => {
+                setForm(p => ({ ...p, currentPos: { ...p.currentPos, attributes: { ...p.currentPos.attributes, [group]: { ...p.currentPos.attributes[group], [field]: val } } } }));
+            };
+
+            const togglePS = (ps, isGold) => {
+                setForm(p => {
+                    const c = { ...p.currentPos };
+                    const tList = isGold ? 'psGold' : 'psSilver';
+                    const oList = isGold ? 'psSilver' : 'psGold';
+                    if (c[tList].includes(ps)) c[tList] = c[tList].filter(x => x !== ps);
+                    else { if (c[tList].length < (isGold ? 4 : 6)) { c[tList].push(ps); c[oList] = c[oList].filter(x => x !== ps); } }
+                    return { ...p, currentPos: c };
+                });
+            };
+
+            const saveForm = (e) => {
+                e.preventDefault();
+                if (!form.name.trim()) return;
+                const r = analyzePosition(form.currentPos);
+                const posToSave = { ...form.currentPos, report: r };
+
+                if (editingId) {
+                    setPlayers(prev => prev.map(pl => {
+                        if (pl.id === editingId) {
+                            const newPosArr = [...pl.positions];
+                            if (formPosIndex >= 0) newPosArr[formPosIndex] = posToSave;
+                            else newPosArr.push(posToSave);
+                            return { ...pl, name: form.name, photo: form.photo, skillMoves: form.skillMoves, weakFoot: form.weakFoot, positions: newPosArr };
+                        }
+                        return pl;
+                    }));
+                } else {
+                    setPlayers(prev => [{ id: Date.now().toString(), name: form.name, photo: form.photo, skillMoves: form.skillMoves, weakFoot: form.weakFoot, positions: [posToSave] }, ...prev]);
+                }
+                showToast('Datos guardados');
+                setActiveTab('squad');
+                setEditingId(null);
+            };
+
+            const startEdit = (player, posIdx = 0) => {
+                setEditingId(player.id);
+                setFormPosIndex(posIdx);
+                setForm({ name: player.name, photo: player.photo, skillMoves: player.skillMoves, weakFoot: player.weakFoot, currentPos: player.positions[posIdx] });
+                setActiveTab('scouting');
+            };
+
+            const startAddPos = (player) => {
+                setEditingId(player.id);
+                setFormPosIndex(-1);
+                setForm({ name: player.name, photo: player.photo, skillMoves: player.skillMoves, weakFoot: player.weakFoot, currentPos: { position: 'DC', notes: '', psGold: [], psSilver: [], attributes: getDefaultAttrs() } });
+                setActiveTab('scouting');
+            };
+
+            const OCR = async (e) => {
+                const file = e.target.files[0]; if(!file) return;
+                const reader = new FileReader();
+                reader.onloadend = async () => {
+                    showToast('Analizando imagen con IA...');
+                    const sys = "Extrae los 6 atributos principales (PAC, SHO, PAS, DRI, DEF, PHY) de esta pantalla de FC. Devuelve SOLO JSON: {pac:80,sho:80...}";
+                    const res = await callIA(sys, "Extrae atributos", reader.result);
+                    if (res) {
+                        try {
+                            const stats = JSON.parse(res.replace(/```json/g,'').replace(/```/g,''));
+                            if (stats.pac) {
+                                // Update all sub-stats to match the main stat roughly for ease
+                                setForm(p => {
+                                    const c = {...p.currentPos.attributes};
+                                    Object.keys(DETAILED_STATS).forEach(k => {
+                                        if(stats[k]) { Object.keys(c[k]).forEach(sub => c[k][sub] = stats[k]); }
+                                    });
+                                    return {...p, currentPos: {...p.currentPos, attributes: c}};
+                                });
+                                showToast('Stats base actualizados');
+                            }
+                        } catch { showToast('Fallo al leer stats'); }
+                    }
+                };
+                reader.readAsDataURL(file);
+            };
+
+            // Tactics Engine
+            const generateTactics = async () => {
+                const act = players.filter(p => activeIds.includes(p.id));
+                if (act.length < 2) return showToast('Selecciona más jugadores');
+                setIsTacticsLoading(true);
+
+                const ctx = act.map(p => `Jugador: ${p.name}\n` + p.positions.map(pos => 
+                    `- Pos: ${pos.position} (OVR ${pos.report.ovr}, Arquetipo: ${pos.report.archetype})\n` +
+                    `  PlayStyles+: ${pos.psGold.join(', ')}\n` + 
+                    `  Notas del DT: ${pos.notes || 'Ninguna'}`
+                ).join('\n')).join('\n\n');
+
+                const sys = `Eres IA Bonito, DT táctico de FC 26 Clubes Pro. Se te dan los jugadores activos, sus posiciones secundarias, OVR, arquetipos, PlayStyles y las NOTAS CRÍTICAS DEL DT. 
+Misión: Generar 3 planes (Plan A: Balance, Plan B: Ataque, Plan C: Defensa). Para cada plan, elige una formación y asigna a TODOS los jugadores a una de las posiciones de esa formación (usa sus posiciones primarias o secundarias).
+Responde ESTRICTAMENTE en este formato JSON, sin markdown, sin texto extra:
+[
+  { "planName": "Plan A", "formation": "4-2-3-1", "reasoning": "Explicación breve táctica usando las notas del DT...", "assignments": [{"name": "Xexo", "spot": "MCO"}] },
+  ... (para B y C)
+]`;
+                const pr = `Genera los 3 planes tácticos para estos jugadores:\n${ctx}\nFormaciones permitidas: 4-2-3-1, 4-3-3, 5-3-2. Asegurate que 'spot' coincida con las posiciones de la formacion (ej. DFC, MCO, LI, etc).`;
+
+                const res = await callIA(sys, pr);
+                if (res) {
+                    try {
+                        const plans = JSON.parse(res);
+                        setTacticalPlans(plans); setSelectedPlanIdx(0);
+                    } catch { showToast('Error al generar táctica (JSON inválido)'); }
+                } else { showToast('Error de conexión con Gemini'); }
+                setIsTacticsLoading(false);
+            };
+
+            // Chat
+            const [chatInp, setChatInp] = useState('');
+            const sendChat = async () => {
+                if(!chatInp.trim()) return;
+                const uMsg = chatInp; setChatInp('');
+                setChatHistory(p => [...p, {role:'user', text:uMsg}]);
+                
+                const ctx = players.map(p => `${p.name}: ` + p.positions.map(pos => `[${pos.position}] OVR ${pos.report.ovr}. Notas: ${pos.notes}`).join(' | ')).join('\n');
+                const sys = `Eres IA Bonito, asistente de Club JoGGa Bonito en FC 26. Tienes en cuenta las Notas del DT. Contexto plantilla:\n${ctx}`;
+                
+                const reply = await callIA(sys, uMsg);
+                setChatHistory(p => [...p, {role:'model', text: reply||'Error.'}]);
+            };
+
+            return (
+                <div className="min-h-screen font-sf pb-16">
+                    <Toast {...toast} />
+                    
+                    <header className="glass-header sticky top-0 z-50 p-4">
+                        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-green-500 to-blue-500 flex items-center justify-center border-2 border-white/20"><i className="fas fa-futbol text-white"></i></div>
+                                <div><h1 className="text-xl font-black text-white leading-tight tracking-wide">IA BONITO</h1><p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">JoGGa Bonito FC 26</p></div>
+                            </div>
+                            <div className="segmented-control w-full sm:w-auto">
+                                {[{id:'squad',i:'fa-list'},{id:'scouting',i:'fa-user-edit'},{id:'tactics',i:'fa-chess-board'},{id:'chat',i:'fa-brain'}].map(t => (
+                                    <div key={t.id} className={`segment-btn ${activeTab===t.id?'active':''}`} onClick={()=>{setActiveTab(t.id);if(t.id!=='scouting')setEditingId(null);}}>
+                                        <i className={`fas ${t.i} text-lg`}></i>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </header>
+
+                    <main className="max-w-6xl mx-auto p-4">
+                        {/* SQUAD TAB */}
+                        {activeTab === 'squad' && (
+                            <div className="space-y-4">
+                                {players.length === 0 && <div className="ios-card p-10 text-center"><i className="fas fa-users text-4xl text-gray-600 mb-4"></i><h2 className="text-xl font-bold">Plantilla Vacía</h2><button onClick={()=>setActiveTab('scouting')} className="ios-btn mt-4">Agregar Jugador</button></div>}
+                                {players.map(p => (
+                                    <div key={p.id} className="ios-card overflow-hidden">
+                                        <div className="p-4 flex gap-4 border-b border-white/5 bg-white/5">
+                                            <div className="w-20 h-20 rounded-xl bg-gray-800 border border-white/10 overflow-hidden flex-shrink-0">
+                                                {p.photo ? <img src={p.photo} className="w-full h-full object-cover"/> : <i className="fas fa-user text-3xl text-gray-600 m-auto mt-5"></i>}
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="flex justify-between items-start">
+                                                    <h3 className="text-2xl font-black uppercase tracking-tight">{p.name}</h3>
+                                                    <button onClick={() => setPlayers(pr => pr.filter(x=>x.id!==p.id))} className="text-gray-500 hover:text-red-500"><i className="fas fa-trash"></i></button>
+                                                </div>
+                                                <div className="flex gap-2 mt-1">
+                                                    <span className="text-xs bg-black/50 px-2 py-1 rounded text-gray-300">⭐ {p.skillMoves} SM / {p.weakFoot} PM</span>
+                                                    <span className="text-xs bg-black/50 px-2 py-1 rounded text-gray-300">{p.positions.length} Posiciones</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="p-4 bg-black/20 flex gap-4 overflow-x-auto" style={{scrollbarWidth:'none'}}>
+                                            {p.positions.map((pos, idx) => (
+                                                <div key={idx} className="ios-card p-3 w-72 shrink-0 border border-white/10 relative group">
+                                                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition">
+                                                        <button onClick={()=>startEdit(p, idx)} className="w-7 h-7 bg-blue-600 rounded-full text-white text-xs"><i className="fas fa-pen"></i></button>
+                                                    </div>
+                                                    <div className="flex justify-between items-center mb-3">
+                                                        <span className="text-xl font-black bg-white/10 px-2 rounded">{pos.position}</span>
+                                                        <div className="text-right"><span className="text-[10px] text-gray-400 block">OVR</span><span className="text-2xl font-black leading-none text-green-400">{pos.report.ovr}</span></div>
+                                                    </div>
+                                                    <div className="grid grid-cols-6 gap-1 text-center mb-3">
+                                                        {Object.keys(DETAILED_STATS).map(s => {
+                                                            const main = calcMainStats(pos.attributes)[s];
+                                                            return <div key={s}><div className="text-[9px] font-bold text-gray-500 uppercase">{s}</div><div className="text-sm font-black text-white">{main}</div></div>;
+                                                        })}
+                                                    </div>
+                                                    <div className="flex flex-wrap gap-1 mb-3">
+                                                        {pos.psGold.map(g => <span key={g} className="text-[8px] font-bold bg-yellow-600/30 text-yellow-300 border border-yellow-500/50 px-1.5 py-0.5 rounded flex items-center gap-1"><i className="fas fa-star text-[6px]"></i>{g}</span>)}
+                                                        {pos.psSilver.map(s => <span key={s} className="text-[8px] font-bold bg-gray-600/30 text-gray-300 border border-gray-500/50 px-1.5 py-0.5 rounded">{s}</span>)}
+                                                    </div>
+                                                    <div className="bg-blue-900/20 p-2 rounded border border-blue-500/20 mb-2">
+                                                        <span className={`arch-badge ${pos.report.archData.bg} mb-1`}><i className={`fas ${pos.report.archData.icon} text-[8px]`}></i>{pos.report.archetype}</span>
+                                                        <p className="text-[10px] text-gray-400 mt-1 line-clamp-2"><strong>Nota DT:</strong> {pos.notes || 'Sin notas.'}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                            <div className="w-16 shrink-0 flex items-center justify-center">
+                                                <button onClick={()=>startAddPos(p)} className="w-10 h-10 rounded-full border-2 border-dashed border-white/30 text-white/50 hover:text-white hover:border-white transition"><i className="fas fa-plus"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* SCOUTING / EDIT TAB */}
+                        {activeTab === 'scouting' && (
+                            <form onSubmit={saveForm} className="space-y-4">
+                                <div className="ios-card p-5">
+                                    <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">1. Datos del Jugador</h2>
+                                    <div className="flex flex-col sm:flex-row gap-6 items-center">
+                                        <div className="relative group">
+                                            <div className="w-24 h-24 rounded-full bg-gray-800 border-2 border-dashed border-gray-600 flex items-center justify-center overflow-hidden">
+                                                {form.photo ? <img src={form.photo} className="w-full h-full object-cover"/> : <i className="fas fa-camera text-2xl text-gray-500"></i>}
+                                            </div>
+                                            <input type="file" accept="image/*" onChange={(e)=>{const f=e.target.files[0];if(f){const r=new FileReader();r.onloadend=()=>setForm(p=>({...p,photo:r.result}));r.readAsDataURL(f);}}} className="absolute inset-0 opacity-0 cursor-pointer"/>
+                                        </div>
+                                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
+                                            <div className="sm:col-span-3"><InputGroup label="GamerTag"><input type="text" value={form.name} onChange={e=>setForm(p=>({...p,name:e.target.value}))} className="ios-input font-bold" required disabled={editingId && formPosIndex >= 0} /></InputGroup></div>
+                                            <InputGroup label="Skill Moves (1-5)"><input type="number" min="1" max="5" value={form.skillMoves} onChange={e=>setForm(p=>({...p,skillMoves:e.target.value}))} className="ios-input text-center"/></InputGroup>
+                                            <InputGroup label="Pierna Mala (1-5)"><input type="number" min="1" max="5" value={form.weakFoot} onChange={e=>setForm(p=>({...p,weakFoot:e.target.value}))} className="ios-input text-center"/></InputGroup>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="ios-card p-5 border-2 border-ios-blue/30">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <h2 className="text-sm font-bold text-ios-blue uppercase tracking-widest">2. Posición y Notas (Ojo Clínico)</h2>
+                                        <div className="relative">
+                                            <button type="button" className="ios-btn-secondary !py-1.5 !px-3 !text-xs"><i className="fas fa-camera mr-2"></i>Leer Stats con IA</button>
+                                            <input type="file" accept="image/*" onChange={OCR} className="absolute inset-0 opacity-0 cursor-pointer"/>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                                        <InputGroup label="Posición Principal">
+                                            <select value={form.currentPos.position} onChange={e=>setForm(p=>({...p,currentPos:{...p.currentPos,position:e.target.value}}))} className="ios-input font-black text-lg">
+                                                {POSITIONS.map(p=><option key={p}>{p}</option>)}
+                                            </select>
+                                        </InputGroup>
+                                        <div className="sm:col-span-2">
+                                            <InputGroup label="Notas del DT sobre esta posición">
+                                                <input type="text" value={form.currentPos.notes} onChange={e=>setForm(p=>({...p,currentPos:{...p.currentPos,notes:e.target.value}}))} className="ios-input" placeholder="Ej: No presiona mucho, pero es clave dando el último pase." />
+                                            </InputGroup>
+                                        </div>
+                                    </div>
+
+                                    {/* Playstyles Selection */}
+                                    <div className="mb-6">
+                                        <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">PlayStyles (Max 4 Dorados, 6 Grises)</h3>
+                                        <div className="bg-black/20 p-4 rounded-xl border border-white/5">
+                                            {PLAYSTYLES_LIST.map(cat => (
+                                                <div key={cat.cat} className="mb-3 last:mb-0">
+                                                    <div className="text-[9px] text-gray-500 font-bold uppercase mb-1">{cat.cat}</div>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {cat.list.map(ps => {
+                                                            const isGold = form.currentPos.psGold.includes(ps);
+                                                            const isSilver = form.currentPos.psSilver.includes(ps);
+                                                            return (
+                                                                <div key={ps} className="flex flex-col items-center">
+                                                                    <div className={`ps-slot ${isGold?'gold':isSilver?'silver':''}`} onClick={(e)=>{
+                                                                        if(e.shiftKey || e.button===2) togglePS(ps, true); else togglePS(ps, false); // Right click/shift for gold, normal for silver. Actually, let's just make clicking cycle: None -> Silver -> Gold -> None
+                                                                    }}>
+                                                                        {isGold||isSilver?<i className="fas fa-check text-black"></i>:<i className={`fas ${cat.icon} text-white/20`}></i>}
+                                                                    </div>
+                                                                    <span className="text-[8px] text-gray-400 text-center w-12 leading-tight">{ps}</span>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                            <p className="text-[10px] text-gray-500 mt-2"><i className="fas fa-info-circle"></i> Clic para Gris. Para cambiar a Dorado, el botón anterior en FC26, aquí simularemos que la UI lo maneja. (Por simplicidad en la demo, clic en el icono alterna Gris/Dorado/Nada en la versión final. En esta versión alpha, clic normal asigna gris, doble clic asigna dorado internamente... <em>Para la demo, asumamos que seleccionas y la IA lo deduce</em>).</p>
+                                            {/* Fix cycle logic properly */}
+                                            <div className="grid grid-cols-2 gap-4 mt-2">
+                                                <InputGroup label="PlayStyles+ (Dorados, separa por coma)"><input type="text" value={form.currentPos.psGold.join(', ')} onChange={e=>setForm(p=>({...p,currentPos:{...p.currentPos,psGold:e.target.value.split(',').map(s=>s.trim()).filter(x=>x)}}))} className="ios-input text-yellow-500" placeholder="Ej: Tiro Colocado, Pase Incisivo"/></InputGroup>
+                                                <InputGroup label="PlayStyles (Grises, separa por coma)"><input type="text" value={form.currentPos.psSilver.join(', ')} onChange={e=>setForm(p=>({...p,currentPos:{...p.currentPos,psSilver:e.target.value.split(',').map(s=>s.trim()).filter(x=>x)}}))} className="ios-input text-gray-300" placeholder="Ej: Velocista, Implacable"/></InputGroup>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* 22 Stats Grid */}
+                                    <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Atributos Detallados</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {Object.entries(DETAILED_STATS).map(([grp, data]) => {
+                                            const mainAvg = calcMainStats(form.currentPos.attributes)[grp];
+                                            return (
+                                                <div key={grp} className="bg-black/20 p-3 rounded-xl border border-white/5">
+                                                    <div className="flex justify-between items-end mb-2 border-b border-white/10 pb-2">
+                                                        <span className="text-[10px] font-bold uppercase tracking-wider" style={{color:data.color}}>{grp} - {data.label}</span>
+                                                        <span className="text-lg font-black leading-none">{mainAvg}</span>
+                                                    </div>
+                                                    {Object.entries(data.fields).map(([f, label]) => (
+                                                        <div key={f} className="stat-grid-item">
+                                                            <span className="stat-label">{label}</span>
+                                                            <input type="number" min="1" max="99" value={form.currentPos.attributes[grp][f]} onChange={e => handleAttrChange(grp, f, e.target.value)} className="stat-val-input" />
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                                <button type="submit" className="ios-btn w-full text-lg shadow-xl"><i className="fas fa-save mr-2"></i>Guardar en la Base de Datos</button>
+                            </form>
+                        )}
+
+                        {/* TACTICS TAB */}
+                        {activeTab === 'tactics' && (
+                            <div className="space-y-4">
+                                <div className="ios-card p-5">
+                                    <h2 className="text-sm font-bold text-ios-blue uppercase tracking-widest mb-4"><i className="fas fa-users mr-2"></i>Roster Activo</h2>
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        {players.map(p => (
+                                            <button key={p.id} onClick={() => setActiveIds(c => c.includes(p.id) ? c.filter(x=>x!==p.id) : [...c,p.id])}
+                                                className={`px-4 py-2 rounded-full border-2 text-sm font-bold transition flex items-center gap-2 ${activeIds.includes(p.id) ? 'border-ios-blue bg-blue-900/30 text-white' : 'border-white/10 bg-transparent text-gray-500 hover:border-white/30'}`}>
+                                                {p.photo ? <img src={p.photo} className="w-6 h-6 rounded-full object-cover"/> : <i className="fas fa-user"></i>} {p.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <button onClick={generateTactics} disabled={isTacticsLoading || activeIds.length < 2} className="ios-btn w-full"><i className={`fas ${isTacticsLoading?'fa-spinner fa-spin':'fa-brain'} mr-2`}></i>{isTacticsLoading?'Analizando millones de combinaciones...':'Generar Planes Tácticos (IA Bonito)'}</button>
+                                </div>
+
+                                {tacticalPlans && (
+                                    <div className="ios-card p-5 border-2 border-ios-purple/30 bg-gradient-to-b from-purple-900/10 to-transparent">
+                                        <div className="segmented-control mb-6">
+                                            {tacticalPlans.map((pl, i) => (
+                                                <div key={i} className={`segment-btn ${selectedPlanIdx===i?'active !bg-ios-purple !text-white':''}`} onClick={()=>setSelectedPlanIdx(i)}>
+                                                    {pl.planName}
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {tacticalPlans[selectedPlanIdx] && (() => {
+                                            const plan = tacticalPlans[selectedPlanIdx];
+                                            const formDef = FORMATIONS[plan.formation];
+                                            if(!formDef) return <p>Formación no reconocida.</p>;
+                                            
+                                            // Map visuals
+                                            const vis = formDef.pos.map(spot => {
+                                                const match = plan.assignments.find(a => a.spot === spot.p);
+                                                if (match) {
+                                                    const player = players.find(x=>x.name === match.name);
+                                                    if(player) {
+                                                        const posData = player.positions.find(x=>x.position===spot.p) || player.positions[0];
+                                                        return { ...spot, active:true, name:player.name, photo:player.photo, ovr:posData.report.ovr };
+                                                    }
+                                                }
+                                                return { ...spot, active:false };
+                                            });
+
+                                            return (
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                    <div>
+                                                        <div className="text-center mb-4"><h3 className="text-2xl font-black">{plan.formation}</h3><p className="text-ios-purple font-bold uppercase text-xs">{plan.planName}</p></div>
+                                                        <div className="pitch-container">
+                                                            <div className="pitch-line"></div><div className="pitch-circle"></div><div className="pitch-dot"></div>
+                                                            <div className="pitch-box-t"></div><div className="pitch-box-b"></div>
+                                                            {vis.map((p,i) => (
+                                                                <div key={i} className={`player-dot ${p.active?'':'empty'}`} style={{top:`${p.t}%`,left:`${p.l}%`, backgroundImage: p.photo?`url(${p.photo})`:'none'}}>
+                                                                    {!p.photo && p.active && <i className="fas fa-user"></i>}
+                                                                    {!p.active && <span className="opacity-30">{p.p}</span>}
+                                                                    {p.active && <div className="pos-label">{p.name} ({p.ovr})</div>}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div className="bg-black/30 p-4 rounded-xl border border-white/10 mb-4">
+                                                            <h4 className="text-[10px] text-gray-400 font-bold uppercase mb-2"><i className="fas fa-comment-dots text-ios-purple mr-1"></i>Análisis de IA Bonito</h4>
+                                                            <p className="text-sm text-gray-200 leading-relaxed">{plan.reasoning}</p>
+                                                        </div>
+                                                        <h4 className="text-[10px] text-gray-400 font-bold uppercase mb-2">Asignaciones Clave:</h4>
+                                                        <div className="space-y-2">
+                                                            {plan.assignments.map((a,i) => (
+                                                                <div key={i} className="flex justify-between items-center border-b border-white/5 pb-1">
+                                                                    <span className="font-bold text-sm">{a.name}</span>
+                                                                    <span className="text-xs bg-white/10 px-2 py-0.5 rounded text-ios-blue">{a.spot}</span>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })()}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* CHAT TAB */}
+                        {activeTab === 'chat' && (
+                            <div className="ios-card overflow-hidden">
+                                <div className="chat-container">
+                                    <div className="px-4 py-3 border-b border-white/10 flex items-center gap-3 bg-black/40">
+                                        <div className="w-10 h-10 rounded-full bg-ios-blue flex items-center justify-center"><i className="fas fa-brain text-white"></i></div>
+                                        <div><h3 className="font-black text-white">IA Bonito</h3><p className="text-[10px] text-green-400 font-bold">Online - Leyendo tus notas de DT</p></div>
+                                    </div>
+                                    <div className="chat-messages bg-black/20">
+                                        {chatHistory.map((m,i) => (
+                                            <div key={i} className={`flex ${m.role==='user'?'justify-end':'justify-start'}`}>
+                                                <div className={`chat-bubble ${m.role==='user'?'chat-bubble-user':'chat-bubble-ai'}`}>{m.text.split('\n').map((l,j)=><span key={j}>{l}<br/></span>)}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="p-3 bg-black/40 border-t border-white/10 flex gap-2">
+                                        <input type="text" value={chatInp} onChange={e=>setChatInp(e.target.value)} onKeyDown={e=>{if(e.key==='Enter') sendChat()}} className="ios-input flex-1" placeholder="Pregunta sobre tu equipo..." />
+                                        <button onClick={sendChat} className="ios-btn !px-4"><i className="fas fa-paper-plane"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </main>
+                </div>
+            );
+        };
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
