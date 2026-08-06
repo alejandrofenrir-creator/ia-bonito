@@ -94,6 +94,34 @@ app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok', service: 'IA Bonito Backend', timestamp: new Date().toISOString(), geminiConfigured: !!GEMINI_API_KEY });
 });
 
+app.get('/api/players', async (req, res) => {
+    try {
+        if (!process.env.KV_REST_API_URL) return res.status(500).json({ error: 'KV DB no configurada en Vercel.' });
+        const { kv } = require('@vercel/kv');
+        const players = await kv.get('jogga-players');
+        res.json(players || []);
+    } catch (err) {
+        console.error('KV GET Error:', err);
+        res.status(500).json({ error: 'Failed to fetch players' });
+    }
+});
+
+app.post('/api/players', async (req, res) => {
+    try {
+        if (!process.env.KV_REST_API_URL) return res.status(500).json({ error: 'KV DB no configurada en Vercel.' });
+        const { kv } = require('@vercel/kv');
+        const players = req.body;
+        if (!Array.isArray(players)) return res.status(400).json({ error: 'Se esperaba un array' });
+        if (players.length > 500) return res.status(400).json({ error: 'Límite de jugadores excedido' });
+        
+        await kv.set('jogga-players', players);
+        res.json({ success: true });
+    } catch (err) {
+        console.error('KV SET Error:', err);
+        res.status(500).json({ error: 'Failed to save players' });
+    }
+});
+
 // 4. Input sanitization helper
 const validateImage = (str) => {
     if (typeof str !== 'string') return false;

@@ -528,10 +528,25 @@
         // ===== HOOKS =====
         const useLocalStorage = (key, init) => {
             const [val, setVal] = useState(() => { try { const i = localStorage.getItem(key); return i ? JSON.parse(i) : init; } catch { return init; } });
+            
+            useEffect(() => {
+                if(key === 'jogga-players-v42') {
+                    fetch('/api/players').then(r => r.json()).then(data => {
+                        if(Array.isArray(data) && data.length > 0) {
+                            setVal(data);
+                            try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) {}
+                        }
+                    }).catch(e => console.error("Error fetching from DB", e));
+                }
+            }, [key]);
+
             const set = useCallback((v) => {
                 setVal(prev => {
                     const nv = v instanceof Function ? v(prev) : v;
                     try { localStorage.setItem(key, JSON.stringify(nv)); } catch(e) { console.warn('localStorage full', e); }
+                    if(key === 'jogga-players-v42') {
+                        fetch('/api/players', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(nv) }).catch(e => console.error("Error saving to DB", e));
+                    }
                     return nv;
                 });
             }, [key]);
@@ -866,6 +881,28 @@
             useEffect(() => { if(toast.show) { const t = setTimeout(()=>setToast({show:false}), 3000); return ()=>clearTimeout(t); } }, [toast.show]);
             useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [chatHistory, isChatLoading]);
 
+            const handleImageUpload = useCallback((e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_SIZE = 256;
+                        let w = img.width, h = img.height;
+                        if(w > h) { if(w > MAX_SIZE) { h *= MAX_SIZE/w; w = MAX_SIZE; } } 
+                        else { if(h > MAX_SIZE) { w *= MAX_SIZE/h; h = MAX_SIZE; } }
+                        canvas.width = w; canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        setForm(p => ({...p, photo: canvas.toDataURL('image/jpeg', 0.8)}));
+                    };
+                    img.src = reader.result;
+                };
+                reader.readAsDataURL(file);
+            }, []);
+
             const resetForm = useCallback(() => {
                 setEditingId(null); setFormPosIndex(-1);
                 setForm({ name: '', photo: null, skillMoves: 3, weakFoot: 3, currentPos: { position: 'DC', notes: '', psGold: [], psSilver: [], attributes: getDefaultAttrs() } });
@@ -1185,7 +1222,7 @@
                                             <div className="w-24 h-24 rounded-full bg-gray-800 border-2 border-dashed border-gray-600 flex items-center justify-center overflow-hidden group-hover:border-ios-blue transition-colors">
                                                 {form.photo ? <img src={form.photo} className="w-full h-full object-cover"/> : <i className="fas fa-camera text-2xl text-gray-500"></i>}
                                             </div>
-                                            <input type="file" accept="image/*" onChange={(e)=>{const f=e.target.files[0];if(f){const r=new FileReader();r.onloadend=()=>setForm(p=>({...p,photo:r.result}));r.readAsDataURL(f);}}} className="absolute inset-0 opacity-0 cursor-pointer"/>
+                                            <input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 opacity-0 cursor-pointer"/>
                                         </div>
                                         <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
                                             <div className="sm:col-span-3"><InputGroup label="GamerTag"><input type="text" value={form.name} onChange={e=>setForm(p=>({...p,name:e.target.value}))} className="ios-input font-bold" required disabled={editingId && formPosIndex >= 0} placeholder="Nombre del jugador" /></InputGroup></div>
