@@ -50,6 +50,25 @@
             --accent-gold: #FFD700;
             --accent-purple: #BF5AF2;
         }
+        body.light-mode {
+            --bg-primary: #f2f2f7;
+            --bg-card: #ffffff;
+            --bg-elevated: #e5e5ea;
+            --text-primary: #1c1c1e;
+            --text-secondary: #8e8e93;
+        }
+        body.light-mode .text-white { color: var(--text-primary) !important; }
+        body.light-mode .bg-black\/20 { background-color: rgba(0,0,0,0.05) !important; border-color: rgba(0,0,0,0.1) !important; }
+        body.light-mode .border-white\/10 { border-color: rgba(0,0,0,0.1) !important; }
+        body.light-mode .border-white\/5 { border-color: rgba(0,0,0,0.05) !important; }
+        body.light-mode .text-gray-300 { color: #48484a !important; }
+        body.light-mode .text-gray-400 { color: #636366 !important; }
+        body.light-mode .text-gray-500 { color: #8e8e93 !important; }
+        body.light-mode .bg-white\/5 { background-color: rgba(0,0,0,0.03) !important; }
+        body.light-mode .bg-white\/10 { background-color: rgba(0,0,0,0.08) !important; }
+        body.light-mode .ios-input { background: #ffffff !important; border-color: #d1d1d6 !important; color: #1c1c1e !important; }
+        body.light-mode .glass-header { background: rgba(255,255,255,0.8) !important; }
+        body.light-mode .ios-card { background: #ffffff !important; box-shadow: 0 4px 20px rgba(0,0,0,0.05) !important; }
         * { box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -136,97 +155,85 @@
         /* ===== FUT CARD STYLES ===== */
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1.25rem;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem 0;
         }
         @media (max-width: 640px) {
-            .card-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+            .card-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
         }
 
         .fut-card {
             position: relative;
-            aspect-ratio: 0.68;
-            border-radius: 12px;
+            aspect-ratio: 0.70;
+            border-radius: 4px;
             overflow: hidden;
             cursor: pointer;
-            transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.35s;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s;
             transform-style: preserve-3d;
-            perspective: 800px;
+            perspective: 1000px;
+            /* Premium FUT Shield shape */
+            clip-path: polygon(10% 0, 90% 0, 100% 10%, 100% 85%, 50% 100%, 0 85%, 0 10%);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
         .fut-card:hover {
-            transform: translateY(-8px) scale(1.03);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            transform: translateY(-10px) scale(1.05) rotateY(5deg);
+            filter: drop-shadow(0 25px 25px rgba(0,0,0,0.6));
             z-index: 10;
         }
 
         .fut-card-inner {
             position: relative; width: 100%; height: 100%;
-            border-radius: 12px; overflow: hidden;
             display: flex; flex-direction: column;
-            padding: 10px 10px 8px;
+            padding: 12px 10px;
+            background-size: cover;
+            background-position: center;
         }
 
         /* Card tiers */
         .card-gold .fut-card-inner {
-            background: linear-gradient(160deg, #2a1f0a 0%, #3d2e11 25%, #5a4320 50%, #3d2e11 75%, #2a1f0a 100%);
-            border: 1.5px solid rgba(255,215,0,0.35);
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23FFF5B8"/><stop offset="30%" stop-color="%23C5943B"/><stop offset="50%" stop-color="%23FFD700"/><stop offset="70%" stop-color="%238C611B"/><stop offset="100%" stop-color="%23FFE373"/></linearGradient></defs><rect width="100" height="150" fill="url(%23g)"/><path d="M0 0 L100 150 M100 0 L0 150" stroke="rgba(255,255,255,0.1)" stroke-width="20" fill="none"/></svg>');
+            background-size: cover;
+            border: 2px solid #FFD700;
         }
-        .card-gold .fut-card-inner::before {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(255,215,0,0.08) 0%, transparent 40%, rgba(255,215,0,0.05) 100%);
-            pointer-events: none;
-        }
-
         .card-rare .fut-card-inner {
-            background: linear-gradient(160deg, #0c0a20 0%, #141030 25%, #1a1545 50%, #141030 75%, #0c0a20 100%);
-            border: 1.5px solid rgba(100,80,220,0.35);
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150"><defs><linearGradient id="r" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23533887"/><stop offset="50%" stop-color="%231a103c"/><stop offset="100%" stop-color="%232c1c5e"/></linearGradient></defs><rect width="100" height="150" fill="url(%23r)"/><circle cx="50" cy="75" r="40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="10"/></svg>');
+            background-size: cover;
+            border: 2px solid #8e6ee3;
         }
-        .card-rare .fut-card-inner::before {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(100,80,220,0.08) 0%, transparent 40%, rgba(100,80,220,0.05) 100%);
-            pointer-events: none;
-        }
-
         .card-base .fut-card-inner {
-            background: linear-gradient(160deg, #101015 0%, #18181f 25%, #1f1f28 50%, #18181f 75%, #101015 100%);
-            border: 1.5px solid rgba(150,150,170,0.2);
+            background: linear-gradient(135deg, #2b2b36 0%, #1a1a24 50%, #111118 100%);
+            border: 2px solid #4a4a5a;
         }
-        .card-base .fut-card-inner::before {
+        
+        .fut-card-inner::after {
             content: ''; position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(150,150,170,0.04) 0%, transparent 40%);
+            background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.85) 85%);
             pointer-events: none;
         }
 
         /* Holographic shine */
         .fut-card::after {
-            content: ''; position: absolute; inset: 0; z-index: 5;
-            background: linear-gradient(
-                115deg,
-                transparent 0%, transparent 25%,
-                rgba(255,255,255,0.06) 45%,
-                rgba(255,255,255,0.12) 50%,
-                rgba(255,255,255,0.06) 55%,
-                transparent 75%, transparent 100%
-            );
-            background-size: 250% 250%;
-            background-position: 200% 200%;
-            transition: background-position 0.8s ease;
-            pointer-events: none; border-radius: 12px;
+            content: ''; position: absolute; inset: -20%; z-index: 5;
+            background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.4) 25%, rgba(255,255,255,0.8) 30%, transparent 35%);
+            transform: translateX(-150%);
+            transition: transform 0.6s ease;
+            pointer-events: none;
         }
         .fut-card:hover::after {
-            background-position: -50% -50%;
+            transform: translateX(150%);
         }
 
         .card-ovr {
             font-family: 'Orbitron', sans-serif;
-            font-weight: 900; font-size: 1.75rem; line-height: 1;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            font-weight: 900; font-size: 2.2rem; line-height: 0.9;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.4);
+            letter-spacing: -2px;
         }
         .card-pos {
             font-family: 'Orbitron', sans-serif;
-            font-weight: 700; font-size: 0.6rem;
-            letter-spacing: 0.1em;
-            opacity: 0.8;
+            font-weight: 700; font-size: 0.75rem;
+            letter-spacing: 0.05em; text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
         }
         .card-photo {
             width: 60%; aspect-ratio: 1; margin: 0 auto;
@@ -364,12 +371,12 @@
         .toast.show { transform: translateX(-50%) translateY(0); }
 
         /* Stats Grid (scouting) */
-        .stat-grid-item { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .stat-grid-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
         .stat-grid-item:last-child { border-bottom: none; }
-        .stat-label { font-size: 0.7rem; color: rgba(255,255,255,0.5); }
-        .stat-val-input { width: 45px; background: transparent; border: 1px solid rgba(255,255,255,0.15); color: white; text-align: right; border-radius: 4px; padding: 2px 5px; font-size: 0.75rem; font-weight: 700; -moz-appearance: textfield; }
+        .stat-label { font-size: 0.8rem; font-weight: 600; color: rgba(255,255,255,0.7); flex: 1; }
+        .stat-val-input { width: 60px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: white; text-align: center; border-radius: 6px; padding: 4px 6px; font-size: 0.9rem; font-weight: 800; -moz-appearance: textfield; transition: 0.2s; }
         .stat-val-input::-webkit-outer-spin-button, .stat-val-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        .stat-val-input:focus { border-color: #0A84FF; outline: none; background: rgba(0,122,255,0.08); }
+        .stat-val-input:focus { border-color: #0A84FF; outline: none; background: rgba(10,132,255,0.15); box-shadow: 0 0 0 2px rgba(10,132,255,0.2); }
 
         /* PlayStyle slots */
         .ps-slot { width: 36px; height: 36px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.4); cursor: pointer; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; position: relative; margin: 8px; user-select: none; }
@@ -711,13 +718,18 @@
 
                         {/* Body */}
                         <div className="p-5 space-y-4">
-                            {/* OVR + Archetype */}
+                            {/* OVR + Archetype + Rating */}
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <span className={`text-4xl font-black font-orbitron ${getOvrClass(ovr)}`}>{ovr}</span>
                                     <div>
-                                        <span className="text-xl font-black bg-white/10 px-2 py-0.5 rounded">{pos.position}</span>
-                                        <span className={`arch-badge ${pos.report.archData.bg} ml-2`}>
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="text-xl font-black bg-white/10 px-2 py-0.5 rounded leading-none">{pos.position}</span>
+                                            {(pos.rating > 0 && (localStorage.getItem('jogga_role') === 'admin' || localStorage.getItem('jogga_role') === 'capitan')) && (
+                                                <span className="text-yellow-400 text-sm"><i className="fas fa-star"></i> {pos.rating}/5</span>
+                                            )}
+                                        </div>
+                                        <span className={`arch-badge ${pos.report.archData.bg}`}>
                                             <i className={`fas ${pos.report.archData.icon} text-[8px]`}></i>{pos.report.archetype}
                                         </span>
                                     </div>
@@ -762,11 +774,27 @@
                                 </div>
                             )}
 
-                            {/* Notes */}
-                            {pos.notes && (
-                                <div className="bg-blue-900/15 p-3 rounded-lg border border-blue-500/15">
-                                    <h4 className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1"><i className="fas fa-clipboard mr-1"></i>Nota del DT</h4>
-                                    <p className="text-sm text-gray-300">{pos.notes}</p>
+                            {/* Notes, Pros, Cons */}
+                            {(localStorage.getItem('jogga_role') === 'admin' || localStorage.getItem('jogga_role') === 'capitan') && (
+                                <div className="space-y-2">
+                                    {pos.pros && (
+                                        <div className="bg-green-900/15 p-3 rounded-lg border border-green-500/20">
+                                            <h4 className="text-[10px] font-bold text-green-400 uppercase tracking-widest mb-1"><i className="fas fa-plus-circle mr-1"></i>Pros</h4>
+                                            <p className="text-sm text-gray-200">{pos.pros}</p>
+                                        </div>
+                                    )}
+                                    {pos.cons && (
+                                        <div className="bg-red-900/15 p-3 rounded-lg border border-red-500/20">
+                                            <h4 className="text-[10px] font-bold text-red-400 uppercase tracking-widest mb-1"><i className="fas fa-minus-circle mr-1"></i>Contras</h4>
+                                            <p className="text-sm text-gray-200">{pos.cons}</p>
+                                        </div>
+                                    )}
+                                    {pos.notes && (
+                                        <div className="bg-blue-900/15 p-3 rounded-lg border border-blue-500/20">
+                                            <h4 className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1"><i className="fas fa-clipboard mr-1"></i>Nota Privada del DT</h4>
+                                            <p className="text-sm text-gray-300">{pos.notes}</p>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -854,9 +882,16 @@
         // ===== MAIN APP COMPONENT =====
         const MainApp = ({ onLogout }) => {
             const role = localStorage.getItem('jogga_role');
-            
             const [activeTab, setActiveTab] = useState('squad');
             const [players, setPlayers] = useLocalStorage('jogga-players-v42', []);
+            const [selectedPlayer, setSelectedPlayer] = useState(null);
+            const [editingId, setEditingId] = useState(null);
+            const [formPosIndex, setFormPosIndex] = useState(-1);
+            const [isLight, setIsLight] = useState(false);
+
+            useEffect(() => {
+                document.body.classList.toggle('light-mode', isLight);
+            }, [isLight]);
             const [chatHistory, setChatHistory] = useLocalStorage('jogga-chat-v2', [{ role: 'model', text: 'Bienvenido, Míster. Soy IA Bonito. Conozco las notas y stats detallados de toda tu plantilla. ¿Qué planeamos para hoy?' }]);
             const [toast, setToast] = useState({ show: false, msg: '' });
             const showToast = useCallback((msg) => setToast({ show: true, msg }), []);
@@ -926,7 +961,7 @@
                     const isSilver = c.psSilver.includes(ps);
                     if (isGold) { c.psGold = c.psGold.filter(x => x !== ps); }
                     else if (isSilver) { c.psSilver = c.psSilver.filter(x => x !== ps); if (c.psGold.length < 4) c.psGold.push(ps); }
-                    else { if (c.psSilver.length < 6) c.psSilver.push(ps); }
+                    else { if (c.psSilver.length < 10) c.psSilver.push(ps); }
                     return { ...p, currentPos: c };
                 });
             }, []);
@@ -1168,9 +1203,14 @@
                                     </div>
                                 ))}
                             </div>
-                            <button onClick={onLogout} className="ios-btn !py-2 !px-3 !bg-red-500/20 hover:!bg-red-500/40 !text-red-400 !border-red-500/30" title="Cerrar sesión">
-                                <i className="fas fa-sign-out-alt"></i>
-                            </button>
+                            <div className="flex gap-2">
+                                <button onClick={() => setIsLight(!isLight)} className="ios-btn !py-2 !px-3 !bg-gray-500/20 hover:!bg-gray-500/40 !text-gray-300" title="Alternar tema">
+                                    <i className={`fas ${isLight ? 'fa-moon' : 'fa-sun'}`}></i>
+                                </button>
+                                <button onClick={onLogout} className="ios-btn !py-2 !px-3 !bg-red-500/20 hover:!bg-red-500/40 !text-red-400 !border-red-500/30" title="Cerrar sesión">
+                                    <i className="fas fa-sign-out-alt"></i>
+                                </button>
+                            </div>
                         </div>
                     </header>
 
@@ -1254,22 +1294,50 @@
                                             <input type="file" accept="image/*" onChange={OCR} className="absolute inset-0 opacity-0 cursor-pointer"/>
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-                                        <InputGroup label="Posición Principal">
-                                            <select value={form.currentPos.position} onChange={e=>setForm(p=>({...p,currentPos:{...p.currentPos,position:e.target.value}}))} className="ios-input font-black text-lg">
-                                                {POSITIONS.map(p=><option key={p}>{p}</option>)}
-                                            </select>
-                                        </InputGroup>
-                                        <div className="sm:col-span-2">
-                                            <InputGroup label="Notas del DT sobre esta posición">
-                                                <input type="text" value={form.currentPos.notes} onChange={e=>setForm(p=>({...p,currentPos:{...p.currentPos,notes:e.target.value}}))} className="ios-input" placeholder="Ej: No presiona mucho, pero es clave dando el último pase." maxLength="200" />
+                                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-4">
+                                        <div className="md:col-span-1">
+                                            <InputGroup label="Posición Principal">
+                                                <div className="relative">
+                                                    <select value={form.currentPos.position} onChange={e=>setForm(p=>({...p,currentPos:{...p.currentPos,position:e.target.value}}))} className="ios-input font-black text-2xl py-4 bg-black/40 text-center appearance-none border-ios-blue/50">
+                                                        {POSITIONS.map(p=><option key={p}>{p}</option>)}
+                                                    </select>
+                                                    <i className="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+                                                </div>
                                             </InputGroup>
+                                        </div>
+                                        <div className="md:col-span-3 space-y-4">
+                                            { (localStorage.getItem('jogga_role') === 'admin' || localStorage.getItem('jogga_role') === 'capitan') ? (
+                                                <>
+                                                    <InputGroup label="Valoración (1 a 5 Estrellas)">
+                                                        <div className="flex gap-2 items-center">
+                                                            {[1,2,3,4,5].map(star => (
+                                                                <i key={star} onClick={() => setForm(p=>({...p,currentPos:{...p.currentPos,rating:star}}))} className={`fas fa-star cursor-pointer text-2xl transition-colors ${star <= (form.currentPos.rating||0) ? 'text-yellow-400' : 'text-gray-600 hover:text-gray-400'}`}></i>
+                                                            ))}
+                                                        </div>
+                                                    </InputGroup>
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                        <InputGroup label="Pros">
+                                                            <textarea value={form.currentPos.pros||''} onChange={e=>setForm(p=>({...p,currentPos:{...p.currentPos,pros:e.target.value}}))} className="ios-input resize-none border-green-500/30 focus:border-green-500" rows="2" placeholder="Ej: Rápido, buen desmarque" maxLength="100"></textarea>
+                                                        </InputGroup>
+                                                        <InputGroup label="Contras">
+                                                            <textarea value={form.currentPos.cons||''} onChange={e=>setForm(p=>({...p,currentPos:{...p.currentPos,cons:e.target.value}}))} className="ios-input resize-none border-red-500/30 focus:border-red-500" rows="2" placeholder="Ej: Poca energía, débil" maxLength="100"></textarea>
+                                                        </InputGroup>
+                                                    </div>
+                                                    <InputGroup label="Notas Privadas del DT">
+                                                        <textarea value={form.currentPos.notes||''} onChange={e=>setForm(p=>({...p,currentPos:{...p.currentPos,notes:e.target.value}}))} className="ios-input resize-none border-blue-500/30 focus:border-blue-500" rows="2" placeholder="Ej: Usarlo solo en el segundo tiempo..." maxLength="300"></textarea>
+                                                    </InputGroup>
+                                                </>
+                                            ) : (
+                                                <div className="p-4 bg-white/5 rounded-xl border border-white/10 text-gray-400 text-sm italic h-full flex items-center">
+                                                    <p><i className="fas fa-lock mr-2 text-yellow-500"></i> Notas, Pros/Contras y Valoración restringidos a Capitanes y Administradores.</p>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 
                                     {/* Playstyles Selection */}
                                     <div className="mb-6">
-                                        <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">PlayStyles <span className="text-gray-600">(⭐{form.currentPos.psGold.length}/4 Dorados · {form.currentPos.psSilver.length}/6 Grises)</span></h3>
+                                        <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">PlayStyles <span className="text-gray-600">(⭐{form.currentPos.psGold.length}/4 Dorados · {form.currentPos.psSilver.length}/10 Grises)</span></h3>
                                         <div className="bg-black/20 p-4 rounded-xl border border-white/5">
                                             {PLAYSTYLES_LIST.map(cat => (
                                                 <div key={cat.cat} className="mb-3 last:mb-0">
@@ -1343,7 +1411,14 @@
                                             </button>
                                         ))}
                                     </div>
-                                    <button onClick={generateTactics} disabled={isTacticsLoading || activeIds.length < 2} className="ios-btn w-full"><i className={`fas ${isTacticsLoading?'fa-spinner fa-spin':'fa-brain'} mr-2`}></i>{isTacticsLoading?'Analizando combinaciones...':'Generar Planes Tácticos (IA Bonito)'}</button>
+                                    <div className="flex gap-3">
+                                        <button onClick={generateTactics} disabled={isTacticsLoading || activeIds.length < 2} className="ios-btn flex-1"><i className={`fas ${isTacticsLoading?'fa-spinner fa-spin':'fa-brain'} mr-2`}></i>{isTacticsLoading?'Analizando combinaciones...':'Plan IA'}</button>
+                                        <button onClick={() => {
+                                            const newPlan = { planName: 'Táctica Manual', formation: '4-3-3', reasoning: 'Táctica creada manualmente.', assignments: [], isManual: true };
+                                            setTacticalPlans(prev => prev ? [...prev, newPlan] : [newPlan]);
+                                            setSelectedPlanIdx(tacticalPlans ? tacticalPlans.length : 0);
+                                        }} className="ios-btn-secondary flex-1 border-ios-blue text-ios-blue hover:bg-ios-blue/10"><i className="fas fa-edit mr-2"></i>Manual</button>
+                                    </div>
                                 </div>
 
                                 {tacticalPlans && (
@@ -1390,21 +1465,78 @@
                                                         </div>
                                                     </div>
                                                     <div>
+                                                        {plan.isManual && (
+                                                            <div className="mb-4 flex items-center justify-between bg-black/20 p-3 rounded-lg border border-white/5">
+                                                                <span className="text-sm font-bold text-gray-400">Formación:</span>
+                                                                <select 
+                                                                    value={plan.formation} 
+                                                                    onChange={(e) => {
+                                                                        const newForm = e.target.value;
+                                                                        const newPlans = [...tacticalPlans];
+                                                                        newPlans[selectedPlanIdx].formation = newForm;
+                                                                        newPlans[selectedPlanIdx].assignments = [];
+                                                                        setTacticalPlans(newPlans);
+                                                                    }} 
+                                                                    className="ios-input !w-auto !py-1 !px-2 text-sm font-bold"
+                                                                >
+                                                                    {Object.keys(FORMATIONS).map(f => <option key={f} value={f}>{f}</option>)}
+                                                                </select>
+                                                            </div>
+                                                        )}
                                                         <div className="bg-black/30 p-4 rounded-xl border border-white/5 mb-4">
-                                                            <h4 className="text-[10px] text-gray-400 font-bold uppercase mb-2"><i className="fas fa-comment-dots text-ios-purple mr-1"></i>Análisis de IA Bonito</h4>
+                                                            <h4 className="text-[10px] text-gray-400 font-bold uppercase mb-2"><i className={`fas ${plan.isManual ? 'fa-user' : 'fa-comment-dots'} text-ios-purple mr-1`}></i>{plan.isManual ? 'Notas' : 'Análisis de IA Bonito'}</h4>
                                                             <p className="text-sm text-gray-200 leading-relaxed">{plan.reasoning}</p>
                                                         </div>
-                                                        <h4 className="text-[10px] text-gray-400 font-bold uppercase mb-2">Asignaciones:</h4>
+                                                        <div className="flex justify-between items-center mb-2">
+                                                            <h4 className="text-[10px] text-gray-400 font-bold uppercase">Asignaciones:</h4>
+                                                            {plan.isManual && (
+                                                                <button onClick={() => {
+                                                                    const newPlans = [...tacticalPlans];
+                                                                    newPlans.splice(selectedPlanIdx, 1);
+                                                                    setTacticalPlans(newPlans.length ? newPlans : null);
+                                                                    setSelectedPlanIdx(0);
+                                                                }} className="text-xs text-red-400 hover:underline"><i className="fas fa-trash mr-1"></i>Eliminar Táctica</button>
+                                                            )}
+                                                        </div>
                                                         <div className="space-y-2">
-                                                            {plan.assignments.map((a,i) => {
-                                                                const pl = players.find(x => x.name === a.name);
+                                                            {FORMATIONS[plan.formation].pos.map((spot, i) => {
+                                                                const assignment = plan.assignments.find(a => a.spot === spot.p);
                                                                 return (
                                                                     <div key={i} className="flex justify-between items-center border-b border-white/5 pb-1.5">
-                                                                        <div className="flex items-center gap-2">
-                                                                            {pl?.photo ? <img src={pl.photo} className="w-5 h-5 rounded-full object-cover" loading="lazy" alt=""/> : <i className="fas fa-user text-gray-600 text-xs"></i>}
-                                                                            <span className="font-bold text-sm">{a.name}</span>
-                                                                        </div>
-                                                                        <span className="text-xs bg-white/10 px-2 py-0.5 rounded text-ios-blue font-bold">{a.spot}</span>
+                                                                        <span className="text-xs bg-white/10 px-2 py-0.5 rounded text-ios-blue font-bold w-12 text-center">{spot.p}</span>
+                                                                        {plan.isManual ? (
+                                                                            <select 
+                                                                                className="ios-input !py-1 !px-2 text-xs flex-1 ml-3 bg-transparent border-white/10"
+                                                                                value={assignment ? assignment.name : ''}
+                                                                                onChange={(e) => {
+                                                                                    const playerName = e.target.value;
+                                                                                    const newPlans = [...tacticalPlans];
+                                                                                    const currPlan = newPlans[selectedPlanIdx];
+                                                                                    currPlan.assignments = currPlan.assignments.filter(a => a.spot !== spot.p);
+                                                                                    if (playerName) {
+                                                                                        currPlan.assignments = currPlan.assignments.filter(a => a.name !== playerName);
+                                                                                        currPlan.assignments.push({ name: playerName, spot: spot.p });
+                                                                                    }
+                                                                                    setTacticalPlans(newPlans);
+                                                                                }}
+                                                                            >
+                                                                                <option value="">-- Sin asignar --</option>
+                                                                                {players.filter(p => activeIds.includes(p.id)).map(p => (
+                                                                                    <option key={p.id} value={p.name}>{p.name}</option>
+                                                                                ))}
+                                                                            </select>
+                                                                        ) : (
+                                                                            <div className="flex items-center gap-2 flex-1 justify-end">
+                                                                                {assignment ? (
+                                                                                    <>
+                                                                                        <span className="font-bold text-sm">{assignment.name}</span>
+                                                                                        {players.find(x => x.name === assignment.name)?.photo ? <img src={players.find(x => x.name === assignment.name).photo} className="w-5 h-5 rounded-full object-cover" loading="lazy" alt=""/> : <i className="fas fa-user text-gray-600 text-xs"></i>}
+                                                                                    </>
+                                                                                ) : (
+                                                                                    <span className="text-gray-500 text-xs italic">Vacío</span>
+                                                                                )}
+                                                                            </div>
+                                                                        )}
                                                                     </div>
                                                                 );
                                                             })}
@@ -1492,25 +1624,38 @@
                 return (
                     <div className="login-wrapper" style={{
                         minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        background: '#f8f9fa', backgroundImage: 'radial-gradient(ellipse at center, rgba(212,175,55,0.15) 0%, transparent 70%)',
+                        background: '#0a0a0f', backgroundImage: 'radial-gradient(ellipse at center top, rgba(10, 46, 22, 0.4) 0%, transparent 70%), radial-gradient(ellipse at bottom, rgba(212,175,55,0.15) 0%, transparent 60%)',
+                        fontFamily: 'Inter, sans-serif'
                     }}>
+                        {/* Background Pitch lines effect */}
+                        <div style={{ position:'absolute', inset:0, backgroundSize:'100px 100px', backgroundImage:'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)', pointerEvents:'none', opacity:0.5 }}></div>
+                        
                         <div style={{
-                            background: '#ffffff', padding: '40px', borderRadius: '20px',
-                            boxShadow: '0 10px 40px rgba(0,0,0,0.08), 0 0 0 1px rgba(212,175,55,0.2) inset',
-                            width: '90%', maxWidth: '400px', textAlign: 'center', position: 'relative', overflow: 'hidden'
+                            background: 'rgba(18, 18, 26, 0.7)', padding: '50px 40px', borderRadius: '24px',
+                            backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+                            boxShadow: '0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,175,55,0.2) inset',
+                            width: '90%', maxWidth: '420px', textAlign: 'center', position: 'relative', overflow: 'hidden',
+                            zIndex: 10
                         }}>
                             <div style={{
-                                width: '80px', height: '80px', margin: '0 auto 20px', background: 'linear-gradient(135deg, #f8f9fa, #ffffff)',
+                                width: '90px', height: '90px', margin: '0 auto 24px', background: 'linear-gradient(135deg, #1f1f28, #101015)',
                                 borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                border: '2px solid #D4AF37', boxShadow: '0 4px 15px rgba(212,175,55,0.3)'
+                                border: '2px solid rgba(212,175,55,0.5)', boxShadow: '0 10px 25px rgba(212,175,55,0.2), inset 0 4px 10px rgba(0,0,0,0.5)',
+                                position: 'relative'
                             }}>
-                                <i className="fas fa-futbol" style={{ fontSize: '36px', color: '#D4AF37' }}></i>
+                                <i className="fas fa-futbol" style={{ fontSize: '42px', background: '-webkit-linear-gradient(45deg, #FFD700, #DAA520)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }}></i>
+                                <div style={{ position:'absolute', inset:'-5px', borderRadius:'50%', border:'1px solid rgba(212,175,55,0.2)', animation:'spin 10s linear infinite' }}></div>
                             </div>
-                            <h2 style={{ margin: '0 0 5px 0', color: '#1a1a1a', fontWeight: '900', fontSize: '24px' }}>IA Bonito</h2>
-                            <p style={{ margin: '0 0 30px 0', color: '#666', fontSize: '14px', fontWeight: '500' }}>Acceso Autorizado</p>
+                            
+                            <h2 style={{ margin: '0 0 8px 0', color: '#ffffff', fontWeight: '900', fontSize: '28px', letterSpacing: '0.05em', fontFamily: 'Orbitron, sans-serif' }}>IA BONITO</h2>
+                            <p style={{ margin: '0 0 35px 0', color: '#D4AF37', fontSize: '12px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.15em' }}>Acceso al Vestuario</p>
                             
                             <form onSubmit={async (e) => {
                                 e.preventDefault();
+                                const btn = e.target.querySelector('button');
+                                const originalText = btn.innerHTML;
+                                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
+                                btn.disabled = true;
                                 const u = e.target.u.value; const p = e.target.p.value;
                                 try {
                                     const res = await fetch('/api/login', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({username:u,password:p}) });
@@ -1519,20 +1664,29 @@
                                         localStorage.setItem('jogga_token', data.token);
                                         localStorage.setItem('jogga_role', data.role);
                                         setIsAuthenticated(true);
-                                    } else alert(data.error || 'Error');
-                                } catch(err) { alert('Error de red'); }
-                            }} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                                    } else {
+                                        alert(data.error || 'Error');
+                                        btn.innerHTML = originalText;
+                                        btn.disabled = false;
+                                    }
+                                } catch(err) { 
+                                    alert('Error de red'); 
+                                    btn.innerHTML = originalText;
+                                    btn.disabled = false;
+                                }
+                            }} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                                 <div style={{ position: 'relative' }}>
-                                    <i className="fas fa-user" style={{ position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', color: '#D4AF37' }}></i>
-                                    <input name="u" type="text" placeholder="Usuario" style={{ width: '100%', padding: '12px 15px 12px 45px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '10px', fontSize: '15px', outline: 'none' }} required />
+                                    <i className="fas fa-user" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.5)' }}></i>
+                                    <input name="u" type="text" placeholder="GAMERTAG" style={{ width: '100%', padding: '15px 15px 15px 48px', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '13px', outline: 'none', color: 'white', fontWeight: '600', letterSpacing: '0.05em', transition: '0.2s' }} onFocus={(e)=>e.target.style.borderColor='#D4AF37'} onBlur={(e)=>e.target.style.borderColor='rgba(255,255,255,0.1)'} required />
                                 </div>
                                 <div style={{ position: 'relative' }}>
-                                    <i className="fas fa-lock" style={{ position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', color: '#D4AF37' }}></i>
-                                    <input name="p" type="password" placeholder="Contraseña" style={{ width: '100%', padding: '12px 15px 12px 45px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '10px', fontSize: '15px', outline: 'none' }} required />
+                                    <i className="fas fa-lock" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.5)' }}></i>
+                                    <input name="p" type="password" placeholder="CONTRASEÑA" style={{ width: '100%', padding: '15px 15px 15px 48px', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '13px', outline: 'none', color: 'white', fontWeight: '600', letterSpacing: '0.05em', transition: '0.2s' }} onFocus={(e)=>e.target.style.borderColor='#D4AF37'} onBlur={(e)=>e.target.style.borderColor='rgba(255,255,255,0.1)'} required />
                                 </div>
-                                <button type="submit" style={{ background: 'linear-gradient(135deg, #D4AF37, #B8860B)', color: '#fff', border: 'none', padding: '14px', borderRadius: '10px', fontSize: '16px', fontWeight: '700', cursor: 'pointer', marginTop: '10px' }}>Entrar al Club</button>
+                                <button type="submit" style={{ background: 'linear-gradient(135deg, #FFD700, #B8860B)', color: '#000', border: 'none', padding: '16px', borderRadius: '12px', fontSize: '14px', fontWeight: '900', cursor: 'pointer', marginTop: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: '0 8px 20px rgba(212,175,55,0.3)', transition: 'transform 0.1s' }} onMouseDown={(e)=>e.target.style.transform='scale(0.97)'} onMouseUp={(e)=>e.target.style.transform='scale(1)'}>Saltar al Campo</button>
                             </form>
                         </div>
+                        <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
                     </div>
                 );
             }
