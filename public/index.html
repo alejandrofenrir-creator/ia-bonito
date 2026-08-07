@@ -897,8 +897,6 @@
             const showToast = useCallback((msg) => setToast({ show: true, msg }), []);
 
             // Form State
-            const [editingId, setEditingId] = useState(null);
-            const [formPosIndex, setFormPosIndex] = useState(-1);
             const [form, setForm] = useState({ name: '', photo: null, skillMoves: 3, weakFoot: 3,
                 currentPos: { position: 'DC', notes: '', psGold: [], psSilver: [], attributes: getDefaultAttrs() }
             });
@@ -916,7 +914,6 @@
 
             // Squad Filters
             const [filters, setFilters] = useState({ posGroup: 'all', minSkill: 0, minWF: 0, playstyle: '', sortBy: 'ovr-desc' });
-            const [selectedPlayer, setSelectedPlayer] = useState(null);
 
             useEffect(() => { if(toast.show) { const t = setTimeout(()=>setToast({show:false}), 3000); return ()=>clearTimeout(t); } }, [toast.show]);
             useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [chatHistory, isChatLoading]);
