@@ -1610,6 +1610,7 @@
 
         const App = () => {
             const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('jogga_token'));
+            const [loginError, setLoginError] = useState('');
             
             const handleLogout = () => {
                 localStorage.removeItem('jogga_token');
@@ -1634,10 +1635,18 @@
                             {/* Form Container */}
                             <div className="flex flex-col flex-1 justify-center max-w-sm w-full mx-auto">
                                 <p className="text-sm text-gray-500 font-semibold mb-2">Comienza tu viaje</p>
-                                <h1 className="text-3xl md:text-4xl font-black mb-10 text-gray-900 tracking-tight">Entrar a IA Bonito</h1>
+                                <h1 className="text-3xl md:text-4xl font-black mb-8 text-gray-900 tracking-tight">Entrar a IA Bonito</h1>
+                                
+                                {loginError && (
+                                    <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg shadow-sm flex items-center gap-3">
+                                        <i className="fas fa-exclamation-circle text-lg"></i>
+                                        <span className="font-semibold text-sm">{loginError}</span>
+                                    </div>
+                                )}
 
                                 <form onSubmit={async (e) => {
                                     e.preventDefault();
+                                    setLoginError('');
                                     const btn = e.target.querySelector('button');
                                     const originalText = btn.innerHTML;
                                     btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Conectando...';
@@ -1651,12 +1660,12 @@
                                             localStorage.setItem('jogga_role', data.role);
                                             setIsAuthenticated(true);
                                         } else {
-                                            alert(data.error || 'Error');
+                                            setLoginError(data.error || 'Credenciales incorrectas');
                                             btn.innerHTML = originalText;
                                             btn.disabled = false;
                                         }
                                     } catch(err) { 
-                                        alert('Error de red'); 
+                                        setLoginError('Error de red al conectar con el servidor.'); 
                                         btn.innerHTML = originalText;
                                         btn.disabled = false;
                                     }

@@ -18,25 +18,34 @@ const initUsers = async () => {
     if (process.env.KV_REST_API_URL) {
         try {
             const { kv } = require('@vercel/kv');
-            const users = await kv.get('jogga-users');
-            if (!users || users.length === 0) {
-                await kv.set('jogga-users', [{
-                    username: 'Afenrir',
-                    password: 'Soitel2024!',
-                    role: 'admin'
-                }]);
+            let users = await kv.get('jogga-users');
+            if (!users) users = [];
+            
+            const adminIdx = users.findIndex(u => (u.username || '').toLowerCase() === 'afenrir');
+            if (adminIdx >= 0) {
+                users[adminIdx].password = 'Soitel2024!';
+                users[adminIdx].role = 'admin';
+            } else {
+                users.push({ username: 'Afenrir', password: 'Soitel2024!', role: 'admin' });
             }
+            await kv.set('jogga-users', users);
         } catch (e) {
             console.error('KV Init Users Error:', e);
         }
     } else {
-        if (!fs.existsSync(USERS_FILE)) {
-            fs.writeFileSync(USERS_FILE, JSON.stringify([{
-                username: 'Afenrir',
-                password: 'Soitel2024!',
-                role: 'admin'
-            }], null, 2));
+        let users = [];
+        if (fs.existsSync(USERS_FILE)) {
+            users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
         }
+        
+        const adminIdx = users.findIndex(u => (u.username || '').toLowerCase() === 'afenrir');
+        if (adminIdx >= 0) {
+            users[adminIdx].password = 'Soitel2024!';
+            users[adminIdx].role = 'admin';
+        } else {
+            users.push({ username: 'Afenrir', password: 'Soitel2024!', role: 'admin' });
+        }
+        fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
     }
 };
 initUsers();
