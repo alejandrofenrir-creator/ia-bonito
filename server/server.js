@@ -152,7 +152,7 @@ app.post('/api/login', async (req, res) => {
             users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
         }
         
-        const user = users.find(u => u.username === username && u.password === password);
+        const user = users.find(u => (u.username || '').toLowerCase() === (username || '').toLowerCase() && u.password === password);
         
         if (user) {
             const token = jwt.sign({ username: user.username, role: user.role }, JWT_SECRET, { expiresIn: '24h' });
