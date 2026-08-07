@@ -1,7 +1,7 @@
 {
   "name": "jogga-backend",
   "version": "1.0.0",
-  "description": "Backend para IA Bonito - Club JoGGa Bonito | EA FC 26",
+  "description": "Backend para Jogga Bonito App - Club JoGGa Bonito | EA FC 26",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

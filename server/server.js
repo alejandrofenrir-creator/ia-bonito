@@ -145,7 +145,7 @@ const rateLimiter = (req, res, next) => {
 };
 
 app.get('/api/health', (_req, res) => {
-    res.json({ status: 'ok', service: 'IA Bonito Backend', timestamp: new Date().toISOString(), geminiConfigured: !!GEMINI_API_KEY });
+    res.json({ status: 'ok', service: 'Jogga Bonito App Backend', timestamp: new Date().toISOString(), geminiConfigured: !!GEMINI_API_KEY });
 });
 
 app.post('/api/login', async (req, res) => {
@@ -335,7 +335,7 @@ if (process.env.VERCEL) {
 } else {
     const server = app.listen(PORT, () => {
         console.log('');
-        console.log('  ⚽ IA Bonito Backend');
+        console.log('  ⚽ Jogga Bonito App Backend');
         console.log('  ────────────────────────────────');
         console.log(`  🌐 http://localhost:${PORT}`);
         console.log(`  🤖 Gemini Model: ${GEMINI_MODEL}`);

@@ -1,438 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jogga Bonito App - Club JoGGa Bonito | EA FC 26</title>
-    <meta name="description" content="Jogga Bonito App: Tu asistente táctico inteligente para EA Sports FC 26 Pro Clubs.">
-    <meta property="og:title" content="Jogga Bonito App - Club JoGGa Bonito">
-    <meta property="og:description" content="Asistente táctico IA para EA FC 26 Pro Clubs. Gestiona tu plantilla, genera tácticas y chatea con tu DT virtual.">
-    <meta property="og:type" content="website">
-    <meta name="theme-color" content="#0a0a0f">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>\n    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { 'sf': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'], 'orbitron': ['Orbitron', 'sans-serif'] },
-                    colors: {
-                        'ios': {
-                            'bg': '#F2F2F7', 'card': '#FFFFFF', 'blue': '#007AFF', 'green': '#34C759',
-                            'red': '#FF3B30', 'orange': '#FF9500', 'yellow': '#FFCC00', 'purple': '#AF52DE',
-                            'pink': '#FF2D55', 'teal': '#5AC8FA', 'indigo': '#5856D6',
-                            'gray1': '#8E8E93', 'gray2': '#AEAEB2', 'gray3': '#C7C7CC',
-                            'gray4': '#D1D1D6', 'gray5': '#E5E5EA', 'gray6': '#F2F2F7',
-                        }
-                    },
-                }
-            }
-        }
-    </script>
-
-    <style>
-        :root {
-            --bg-primary: #0a0a0f;
-            --bg-card: #12121a;
-            --bg-elevated: #1a1a25;
-            --text-primary: #FFFFFF;
-            --text-secondary: #EBEBF5;
-            --accent-blue: #0A84FF;
-            --accent-green: #32D74B;
-            --accent-gold: #FFD700;
-            --accent-purple: #BF5AF2;
-        }
-        body.light-mode {
-            --bg-primary: #f2f2f7;
-            --bg-card: #ffffff;
-            --bg-elevated: #e5e5ea;
-            --text-primary: #1c1c1e;
-            --text-secondary: #8e8e93;
-        }
-        body.light-mode .text-white { color: var(--text-primary) !important; }
-        body.light-mode .bg-black\/20 { background-color: rgba(0,0,0,0.05) !important; border-color: rgba(0,0,0,0.1) !important; }
-        body.light-mode .border-white\/10 { border-color: rgba(0,0,0,0.1) !important; }
-        body.light-mode .border-white\/5 { border-color: rgba(0,0,0,0.05) !important; }
-        body.light-mode .text-gray-300 { color: #48484a !important; }
-        body.light-mode .text-gray-400 { color: #636366 !important; }
-        body.light-mode .text-gray-500 { color: #8e8e93 !important; }
-        body.light-mode .bg-white\/5 { background-color: rgba(0,0,0,0.03) !important; }
-        body.light-mode .bg-white\/10 { background-color: rgba(0,0,0,0.08) !important; }
-        body.light-mode .ios-input { background: #ffffff !important; border-color: #d1d1d6 !important; color: #1c1c1e !important; }
-        body.light-mode .glass-header { background: rgba(255,255,255,0.8) !important; }
-        body.light-mode .ios-card { background: #ffffff !important; box-shadow: 0 4px 20px rgba(0,0,0,0.05) !important; }
-        body.light-mode .segmented-control { background: rgba(0,0,0,0.04) !important; border-color: rgba(0,0,0,0.08) !important; }
-        body.light-mode .segment-btn { color: rgba(0,0,0,0.5) !important; }
-        body.light-mode .segment-btn.active { background: #ffffff !important; color: #1c1c1e !important; box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important; }
-        body.light-mode .ios-btn-secondary { background: rgba(0,0,0,0.04) !important; color: #1c1c1e !important; border-color: rgba(0,0,0,0.1) !important; }
-        body.light-mode .ios-btn-secondary:hover { background: rgba(0,0,0,0.08) !important; }
-        body.light-mode .filter-pill { background: rgba(0,0,0,0.04) !important; border-color: rgba(0,0,0,0.1) !important; color: #1c1c1e !important; }
-        * { box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-primary);
-            background-image: radial-gradient(ellipse at 20% 0%, rgba(10,132,255,0.06) 0%, transparent 50%),
-                              radial-gradient(ellipse at 80% 100%, rgba(191,90,242,0.04) 0%, transparent 50%);
-            color: var(--text-primary);
-            margin: 0; padding: 0;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            min-height: 100vh;
-        }
-
-        /* Cards Base */
-        .ios-card {
-            background: var(--bg-card);
-            border-radius: 1rem;
-            border: 1px solid rgba(255,255,255,0.06);
-            box-shadow: 0 4px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03) inset;
-        }
-
-        .ios-input {
-            background: rgba(255,255,255,0.05);
-            border-radius: 0.6rem;
-            border: 1px solid rgba(255,255,255,0.08);
-            padding: 0.65rem 0.9rem;
-            font-size: 0.9rem;
-            color: white;
-            width: 100%;
-            transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
-        }
-        .ios-input:focus { outline: none; border-color: var(--accent-blue); background: rgba(10,132,255,0.08); box-shadow: 0 0 0 3px rgba(10,132,255,0.15); }
-        .ios-input:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .ios-btn {
-            background: linear-gradient(135deg, #0A84FF 0%, #0055D4 100%);
-            color: white; font-weight: 700; border-radius: 0.75rem;
-            padding: 0.8rem 1.5rem; border: none; cursor: pointer;
-            transition: transform 0.15s, box-shadow 0.3s;
-            position: relative; overflow: hidden;
-        }
-        .ios-btn::after {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
-            opacity: 0; transition: opacity 0.2s;
-        }
-        .ios-btn:hover:not(:disabled) { box-shadow: 0 0 25px rgba(10,132,255,0.4), 0 4px 15px rgba(0,0,0,0.3); transform: translateY(-2px); }
-        .ios-btn:hover:not(:disabled)::after { opacity: 1; }
-        .ios-btn:active:not(:disabled) { transform: scale(0.97); }
-        .ios-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-        .ios-btn-secondary {
-            background: rgba(255,255,255,0.06); color: white;
-            border: 1px solid rgba(255,255,255,0.12); font-weight: 600;
-            border-radius: 0.75rem; padding: 0.8rem 1.5rem; cursor: pointer;
-            transition: background 0.2s, border-color 0.2s;
-        }
-        .ios-btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
-
-        .segmented-control {
-            background: rgba(255,255,255,0.04); padding: 0.25rem;
-            border-radius: 0.7rem; display: flex; overflow-x: auto;
-            scrollbar-width: none; border: 1px solid rgba(255,255,255,0.06);
-        }
-        .segmented-control::-webkit-scrollbar { display: none; }
-        .segment-btn {
-            flex: 1; min-width: 70px; text-align: center;
-            padding: 0.55rem 0.4rem; font-size: 0.75rem; font-weight: 600;
-            color: rgba(255,255,255,0.4); border-radius: 0.5rem;
-            cursor: pointer; white-space: nowrap;
-            transition: color 0.2s, background 0.2s; user-select: none;
-        }
-        .segment-btn.active {
-            color: white; background: rgba(255,255,255,0.12);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-
-        .glass-header {
-            background: rgba(10,10,15,0.8);
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-
-        /* ===== FUT CARD STYLES ===== */
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 1.5rem;
-            padding: 1rem 0;
-        }
-        @media (max-width: 640px) {
-            .card-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-        }
-
-        .fut-card {
-            position: relative;
-            aspect-ratio: 0.70;
-            border-radius: 4px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s;
-            transform-style: preserve-3d;
-            perspective: 1000px;
-            /* Premium FUT Shield shape */
-            clip-path: polygon(10% 0, 90% 0, 100% 10%, 100% 85%, 50% 100%, 0 85%, 0 10%);
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-        }
-        .fut-card:hover {
-            transform: translateY(-10px) scale(1.05) rotateY(5deg);
-            filter: drop-shadow(0 25px 25px rgba(0,0,0,0.6));
-            z-index: 10;
-        }
-
-        .fut-card-inner {
-            position: relative; width: 100%; height: 100%;
-            display: flex; flex-direction: column;
-            padding: 12px 10px;
-            background-size: cover;
-            background-position: center;
-        }
-
-        /* Card tiers */
-        .card-gold .fut-card-inner {
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23FFF5B8"/><stop offset="30%" stop-color="%23C5943B"/><stop offset="50%" stop-color="%23FFD700"/><stop offset="70%" stop-color="%238C611B"/><stop offset="100%" stop-color="%23FFE373"/></linearGradient></defs><rect width="100" height="150" fill="url(%23g)"/><path d="M0 0 L100 150 M100 0 L0 150" stroke="rgba(255,255,255,0.1)" stroke-width="20" fill="none"/></svg>');
-            background-size: cover;
-            border: 2px solid #FFD700;
-        }
-        .card-rare .fut-card-inner {
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150"><defs><linearGradient id="r" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23533887"/><stop offset="50%" stop-color="%231a103c"/><stop offset="100%" stop-color="%232c1c5e"/></linearGradient></defs><rect width="100" height="150" fill="url(%23r)"/><circle cx="50" cy="75" r="40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="10"/></svg>');
-            background-size: cover;
-            border: 2px solid #8e6ee3;
-        }
-        .card-base .fut-card-inner {
-            background: linear-gradient(135deg, #2b2b36 0%, #1a1a24 50%, #111118 100%);
-            border: 2px solid #4a4a5a;
-        }
-        
-        .fut-card-inner::after {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.85) 85%);
-            pointer-events: none;
-        }
-
-        /* Holographic shine */
-        .fut-card::after {
-            content: ''; position: absolute; inset: -20%; z-index: 5;
-            background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.4) 25%, rgba(255,255,255,0.8) 30%, transparent 35%);
-            transform: translateX(-150%);
-            transition: transform 0.6s ease;
-            pointer-events: none;
-        }
-        .fut-card:hover::after {
-            transform: translateX(150%);
-        }
-
-        .card-ovr {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900; font-size: 2.2rem; line-height: 0.9;
-            text-shadow: 2px 2px 0 rgba(0,0,0,0.4);
-            letter-spacing: -2px;
-        }
-        .card-pos {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700; font-size: 0.75rem;
-            letter-spacing: 0.05em; text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
-        }
-        .card-photo {
-            width: 60%; aspect-ratio: 1; margin: 0 auto;
-            border-radius: 50%; overflow: hidden;
-            border: 2px solid rgba(255,255,255,0.15);
-            background: rgba(0,0,0,0.4);
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-        }
-        .card-photo img { width: 100%; height: 100%; object-fit: cover; }
-        .card-name {
-            font-weight: 900; font-size: 0.7rem;
-            text-transform: uppercase; letter-spacing: 0.12em;
-            text-align: center; margin-top: 4px;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-        }
-        .card-stats-grid {
-            display: grid; grid-template-columns: 1fr 1fr;
-            gap: 1px 8px; margin-top: auto; padding-top: 4px;
-        }
-        .card-stat-row {
-            display: flex; justify-content: space-between;
-            align-items: center; padding: 0.5px 0;
-        }
-        .card-stat-label {
-            font-size: 0.5rem; font-weight: 800;
-            letter-spacing: 0.08em; opacity: 0.55;
-            text-transform: uppercase;
-        }
-        .card-stat-val {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.6rem; font-weight: 800;
-        }
-        .card-badges {
-            display: flex; justify-content: center;
-            gap: 3px; margin-top: 3px; flex-wrap: wrap;
-        }
-        .card-stars {
-            display: flex; align-items: center; gap: 4px;
-            justify-content: center; margin-top: 2px;
-        }
-        .card-stars span { font-size: 0.45rem; opacity: 0.6; letter-spacing: 0.05em; font-weight: 700; }
-
-        /* Gold stat color */
-        .card-gold .card-stat-val { color: #FFD700; }
-        .card-gold .card-ovr { color: #FFD700; }
-        .card-gold .card-name { color: #FFE566; }
-        .card-rare .card-stat-val { color: #a78bfa; }
-        .card-rare .card-ovr { color: #c4b5fd; }
-        .card-rare .card-name { color: #ddd6fe; }
-        .card-base .card-stat-val { color: #a1a1aa; }
-        .card-base .card-ovr { color: #d4d4d8; }
-        .card-base .card-name { color: #e4e4e7; }
-
-        /* Filter Bar */
-        .filter-bar {
-            display: flex; flex-wrap: wrap; gap: 0.5rem;
-            align-items: center; margin-bottom: 1rem;
-        }
-        .filter-pill {
-            padding: 0.4rem 0.8rem; border-radius: 2rem;
-            font-size: 0.7rem; font-weight: 700;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.04);
-            color: rgba(255,255,255,0.5);
-            cursor: pointer; transition: all 0.2s;
-            user-select: none; white-space: nowrap;
-        }
-        .filter-pill:hover { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); }
-        .filter-pill.active {
-            border-color: var(--accent-blue);
-            background: rgba(10,132,255,0.15);
-            color: white;
-            box-shadow: 0 0 12px rgba(10,132,255,0.15);
-        }
-        .filter-select {
-            padding: 0.4rem 0.6rem; border-radius: 0.5rem;
-            font-size: 0.7rem; font-weight: 600;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.04);
-            color: rgba(255,255,255,0.7);
-            cursor: pointer; transition: all 0.2s;
-            outline: none;
-        }
-        .filter-select:focus { border-color: var(--accent-blue); }
-        .filter-select option { background: #1a1a25; color: white; }
-        .filter-divider {
-            width: 1px; height: 20px;
-            background: rgba(255,255,255,0.1);
-            margin: 0 0.25rem;
-        }
-
-        /* ===== DETAIL MODAL ===== */
-        .modal-backdrop {
-            position: fixed; inset: 0; z-index: 100;
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            display: flex; align-items: center; justify-content: center;
-            padding: 1rem;
-            animation: fadeIn 0.2s ease-out;
-        }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .modal-content {
-            background: var(--bg-elevated);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 1.25rem;
-            max-width: 600px; width: 100%;
-            max-height: 90vh; overflow-y: auto;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.7);
-            animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Pitch */
-        .pitch-container { width: 100%; aspect-ratio: 2/3; max-width: 340px; margin: 0 auto; background: linear-gradient(180deg, #0A2E16 0%, #0E4720 30%, #115927 60%, #0A2E16 100%); border: 2px solid rgba(255,255,255,0.2); border-radius: 8px; position: relative; overflow: hidden; }
-        .pitch-line { position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: rgba(255,255,255,0.3); transform: translateY(-50%); }
-        .pitch-circle { position: absolute; top: 50%; left: 50%; width: 70px; height: 70px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; transform: translate(-50%,-50%); }
-        .pitch-dot { position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; background: rgba(255,255,255,0.3); border-radius: 50%; transform: translate(-50%,-50%); }
-        .pitch-box-t { position: absolute; top: 0; left: 22%; width: 56%; height: 14%; border: 2px solid rgba(255,255,255,0.3); border-top: none; }
-        .pitch-box-b { position: absolute; bottom: 0; left: 22%; width: 56%; height: 14%; border: 2px solid rgba(255,255,255,0.3); border-bottom: none; }
-        .player-dot { position: absolute; width: 34px; height: 34px; border-radius: 50%; transform: translate(-50%,-50%); display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: white; z-index: 2; transition: top 0.3s, left 0.3s; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.9); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        .player-dot.empty { border: 1px dashed rgba(255,255,255,0.4); background: rgba(0,0,0,0.5); }
-        .player-dot .pos-label { position: absolute; bottom: -18px; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px; font-size: 8px; white-space: nowrap; pointer-events: none; }
-
-        /* Chat */
-        .chat-container { display: flex; flex-direction: column; height: 600px; }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 1rem; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
-        .chat-bubble { max-width: 85%; padding: 0.75rem 1rem; border-radius: 1rem; font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.75rem; word-break: break-word; animation: fadeInUp 0.25s ease-out; }
-        .chat-bubble-user { background: #0A84FF; color: white; margin-left: auto; border-bottom-right-radius: 0.2rem; }
-        .chat-bubble-ai { background: rgba(255,255,255,0.07); color: white; margin-right: auto; border-bottom-left-radius: 0.2rem; border: 1px solid rgba(255,255,255,0.05); }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-        .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-100px); z-index: 10000; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: none; }
-        .toast.show { transform: translateX(-50%) translateY(0); }
-
-        /* Stats Grid (scouting) */
-        .stat-grid-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
-        .stat-grid-item:last-child { border-bottom: none; }
-        .stat-label { font-size: 0.8rem; font-weight: 600; color: rgba(255,255,255,0.7); flex: 1; }
-        .stat-val-input { width: 60px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: white; text-align: center; border-radius: 6px; padding: 4px 6px; font-size: 0.9rem; font-weight: 800; -moz-appearance: textfield; transition: 0.2s; }
-        .stat-val-input::-webkit-outer-spin-button, .stat-val-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        .stat-val-input:focus { border-color: #0A84FF; outline: none; background: rgba(10,132,255,0.15); box-shadow: 0 0 0 2px rgba(10,132,255,0.2); }
-
-        /* PlayStyle slots */
-        .ps-slot { width: 36px; height: 36px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.4); cursor: pointer; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; position: relative; margin: 8px; user-select: none; }
-        .ps-slot.gold { border-color: #FFD700; box-shadow: 0 0 12px rgba(255,215,0,0.25); background: rgba(255,215,0,0.08); }
-        .ps-slot.silver { border-color: #C0C0C0; background: rgba(192,192,192,0.08); }
-        .ps-slot > i { transform: rotate(-45deg); font-size: 14px; }
-        .ps-slot:hover { transform: rotate(45deg) scale(1.1); }
-
-        .arch-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.25rem 0.6rem; border-radius: 0.3rem; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.15); }
-
-        /* Typing indicator */
-        .typing-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); margin: 0 2px; animation: typingBounce 1.4s infinite ease-in-out both; }
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes typingBounce { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
-
-        .ovr-elite { color: #32D74B; }
-        .ovr-good { color: #FFD60A; }
-        .ovr-avg { color: #FF9F0A; }
-        .ovr-low { color: #FF453A; }
-
-        .skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 0.5rem; }
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-        .stat-bar { height: 3px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; margin-top: 2px; }
-        .stat-bar-fill { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
-
-        /* Detail modal stat bars */
-        .detail-stat-bar { height: 5px; border-radius: 3px; background: rgba(255,255,255,0.08); overflow: hidden; flex: 1; }
-        .detail-stat-bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
-
-        /* Empty state */
-        .empty-state {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 4rem 2rem; text-align: center;
-            background: var(--bg-card); border-radius: 1rem;
-            border: 1px dashed rgba(255,255,255,0.1);
-        }
-    </style>
-</head>
-<body>
-    <div id="root"></div>
-
-    <script type="text/babel">
         const { useState, useEffect, useCallback, useMemo, useRef, memo } = React;
 
         // ===== API PROXY =====
@@ -898,7 +464,7 @@
             useEffect(() => {
                 document.body.classList.toggle('light-mode', isLight);
             }, [isLight]);
-            const [chatHistory, setChatHistory] = useLocalStorage('jogga-chat-v2', [{ role: 'model', text: 'Bienvenido, Míster. Soy Jogga Bonito App. Conozco las notas y stats detallados de toda tu plantilla. ¿Qué planeamos para hoy?' }]);
+            const [chatHistory, setChatHistory] = useLocalStorage('jogga-chat-v2', [{ role: 'model', text: 'Bienvenido, Míster. Soy IA Bonito. Conozco las notas y stats detallados de toda tu plantilla. ¿Qué planeamos para hoy?' }]);
             const [toast, setToast] = useState({ show: false, msg: '' });
             const showToast = useCallback((msg) => setToast({ show: true, msg }), []);
 
@@ -1082,7 +648,7 @@
                 const ctx = act.map(p => `Jugador: ${p.name}\n` + p.positions.map(pos =>
                     `- Pos: ${pos.position} (OVR ${pos.report.ovr}, Arquetipo: ${pos.report.archetype})\n  PlayStyles+: ${pos.psGold.join(', ') || 'Ninguno'}\n  Notas del DT: ${pos.notes || 'Ninguna'}`
                 ).join('\n')).join('\n\n');
-                const sys = `Eres Jogga Bonito App, DT táctico de FC 26 Clubes Pro. Se te dan los jugadores activos, sus posiciones secundarias, OVR, arquetipos, PlayStyles y las NOTAS CRÍTICAS DEL DT.\nMisión: Generar 3 planes (Plan A: Balance, Plan B: Ataque, Plan C: Defensa). Para cada plan, elige una formación y asigna a TODOS los jugadores.\nResponde ESTRICTAMENTE en formato JSON array, sin markdown, sin texto extra:\n[{"planName":"Plan A","formation":"4-2-3-1","reasoning":"...","assignments":[{"name":"...","spot":"MCO"}]},...]`;
+                const sys = `Eres IA Bonito, DT táctico de FC 26 Clubes Pro. Se te dan los jugadores activos, sus posiciones secundarias, OVR, arquetipos, PlayStyles y las NOTAS CRÍTICAS DEL DT.\nMisión: Generar 3 planes (Plan A: Balance, Plan B: Ataque, Plan C: Defensa). Para cada plan, elige una formación y asigna a TODOS los jugadores.\nResponde ESTRICTAMENTE en formato JSON array, sin markdown, sin texto extra:\n[{"planName":"Plan A","formation":"4-2-3-1","reasoning":"...","assignments":[{"name":"...","spot":"MCO"}]},...]`;
                 const pr = `Genera 3 planes tácticos:\n${ctx}\nFormaciones: 4-2-3-1, 4-3-3, 5-3-2. Los 'spot' deben coincidir exactamente con las posiciones de la formación.`;
                 const res = await callIA(sys, pr);
                 if (res) {
@@ -1102,7 +668,7 @@
                 setChatHistory(p => [...p, {role:'user', text:uMsg}]);
                 setIsChatLoading(true);
                 const ctx = players.map(p => `${p.name}: ` + p.positions.map(pos => `[${pos.position}] OVR ${pos.report.ovr}. Notas: ${pos.notes || 'N/A'}`).join(' | ')).join('\n');
-                const sys = `Eres Jogga Bonito App, asistente táctico de Club JoGGa Bonito en FC 26 Pro Clubs. Responde de forma concisa, útil y con personalidad futbolística. Contexto plantilla:\n${ctx}`;
+                const sys = `Eres IA Bonito, asistente táctico de Club JoGGa Bonito en FC 26 Pro Clubs. Responde de forma concisa, útil y con personalidad futbolística. Contexto plantilla:\n${ctx}`;
                 const reply = await callIA(sys, uMsg);
                 setChatHistory(p => [...p, {role:'model', text: reply||'Error al conectar con el servidor. Inténtalo de nuevo.'}]);
                 setIsChatLoading(false);
@@ -1188,7 +754,7 @@
                                     <i className="fas fa-futbol text-white"></i>
                                 </div>
                                 <div>
-                                    <h1 className="text-xl font-black text-white leading-tight tracking-wide font-orbitron">Jogga Bonito App</h1>
+                                    <h1 className="text-xl font-black text-white leading-tight tracking-wide font-orbitron">IA BONITO</h1>
                                     <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">JoGGa Bonito · FC 26</p>
                                 </div>
                             </div>
@@ -1487,7 +1053,7 @@
                                                             </div>
                                                         )}
                                                         <div className="bg-black/30 p-4 rounded-xl border border-white/5 mb-4">
-                                                            <h4 className="text-[10px] text-gray-400 font-bold uppercase mb-2"><i className={`fas ${plan.isManual ? 'fa-user' : 'fa-comment-dots'} text-ios-purple mr-1`}></i>{plan.isManual ? 'Notas' : 'Análisis de Jogga Bonito App'}</h4>
+                                                            <h4 className="text-[10px] text-gray-400 font-bold uppercase mb-2"><i className={`fas ${plan.isManual ? 'fa-user' : 'fa-comment-dots'} text-ios-purple mr-1`}></i>{plan.isManual ? 'Notas' : 'Análisis de IA Bonito'}</h4>
                                                             <p className="text-sm text-gray-200 leading-relaxed">{plan.reasoning}</p>
                                                         </div>
                                                         <div className="flex justify-between items-center mb-2">
@@ -1560,7 +1126,7 @@
                                     <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between" style={{background:'rgba(0,0,0,0.3)'}}>
                                         <div className="flex items-center gap-3">
                                             <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{background:'linear-gradient(135deg, #0A84FF, #BF5AF2)'}}><i className="fas fa-robot text-white"></i></div>
-                                            <div><h3 className="font-black text-white">Jogga Bonito App</h3><p className="text-[10px] text-green-400 font-bold">{isChatLoading ? 'Pensando...' : 'Online'}</p></div>
+                                            <div><h3 className="font-black text-white">IA Bonito</h3><p className="text-[10px] text-green-400 font-bold">{isChatLoading ? 'Pensando...' : 'Online'}</p></div>
                                         </div>
                                         <button onClick={clearChat} className="text-gray-500 hover:text-red-400 transition-colors text-xs" title="Limpiar chat"><i className="fas fa-trash-can"></i></button>
                                     </div>
@@ -1616,7 +1182,6 @@
 
         const App = () => {
             const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('jogga_token'));
-            const [loginError, setLoginError] = useState('');
             
             const handleLogout = () => {
                 localStorage.removeItem('jogga_token');
@@ -1626,95 +1191,71 @@
 
             if (!isAuthenticated) {
                 return (
-                    <div className="flex min-h-screen w-full bg-white font-sans text-gray-900">
-                        {/* Left Panel - Form */}
-                        <div className="w-full md:w-[45%] flex flex-col relative px-8 py-10 md:px-16 lg:px-24">
-                            
-                            {/* Logo Top Left */}
-                            <div className="flex items-center gap-3 mb-20">
-                                <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                                    <i className="fas fa-futbol text-white text-sm"></i>
-                                </div>
-                                <span className="font-orbitron font-bold text-xl tracking-wide text-gray-900">Jogga Bonito App</span>
+                    <div className="login-wrapper" style={{
+                        minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: '#0a0a0f', backgroundImage: 'radial-gradient(ellipse at center top, rgba(10, 46, 22, 0.4) 0%, transparent 70%), radial-gradient(ellipse at bottom, rgba(212,175,55,0.15) 0%, transparent 60%)',
+                        fontFamily: 'Inter, sans-serif'
+                    }}>
+                        {/* Background Pitch lines effect */}
+                        <div style={{ position:'absolute', inset:0, backgroundSize:'100px 100px', backgroundImage:'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)', pointerEvents:'none', opacity:0.5 }}></div>
+                        
+                        <div style={{
+                            background: 'rgba(18, 18, 26, 0.7)', padding: '50px 40px', borderRadius: '24px',
+                            backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+                            boxShadow: '0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,175,55,0.2) inset',
+                            width: '90%', maxWidth: '420px', textAlign: 'center', position: 'relative', overflow: 'hidden',
+                            zIndex: 10
+                        }}>
+                            <div style={{
+                                width: '90px', height: '90px', margin: '0 auto 24px', background: 'linear-gradient(135deg, #1f1f28, #101015)',
+                                borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                border: '2px solid rgba(212,175,55,0.5)', boxShadow: '0 10px 25px rgba(212,175,55,0.2), inset 0 4px 10px rgba(0,0,0,0.5)',
+                                position: 'relative'
+                            }}>
+                                <i className="fas fa-futbol" style={{ fontSize: '42px', background: '-webkit-linear-gradient(45deg, #FFD700, #DAA520)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }}></i>
+                                <div style={{ position:'absolute', inset:'-5px', borderRadius:'50%', border:'1px solid rgba(212,175,55,0.2)', animation:'spin 10s linear infinite' }}></div>
                             </div>
-
-                            {/* Form Container */}
-                            <div className="flex flex-col flex-1 justify-center max-w-sm w-full mx-auto">
-                                <p className="text-sm text-gray-500 font-semibold mb-2">Comienza tu viaje</p>
-                                <h1 className="text-3xl md:text-4xl font-black mb-8 text-gray-900 tracking-tight">Entrar a Jogga Bonito App</h1>
-                                
-                                {loginError && (
-                                    <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg shadow-sm flex items-center gap-3">
-                                        <i className="fas fa-exclamation-circle text-lg"></i>
-                                        <span className="font-semibold text-sm">{loginError}</span>
-                                    </div>
-                                )}
-
-                                <form onSubmit={async (e) => {
-                                    e.preventDefault();
-                                    setLoginError('');
-                                    const btn = e.target.querySelector('button');
-                                    const originalText = btn.innerHTML;
-                                    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Conectando...';
-                                    btn.disabled = true;
-                                    const u = e.target.u.value; const p = e.target.p.value;
-                                    try {
-                                        const res = await fetch('/api/login', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({username:u,password:p}) });
-                                        const data = await res.json();
-                                        if(data.success) {
-                                            localStorage.setItem('jogga_token', data.token);
-                                            localStorage.setItem('jogga_role', data.role);
-                                            setIsAuthenticated(true);
-                                        } else {
-                                            setLoginError(data.error || 'Credenciales incorrectas');
-                                            btn.innerHTML = originalText;
-                                            btn.disabled = false;
-                                        }
-                                    } catch(err) { 
-                                        setLoginError('Error de red al conectar con el servidor.'); 
+                            
+                            <h2 style={{ margin: '0 0 8px 0', color: '#ffffff', fontWeight: '900', fontSize: '28px', letterSpacing: '0.05em', fontFamily: 'Orbitron, sans-serif' }}>IA BONITO</h2>
+                            <p style={{ margin: '0 0 35px 0', color: '#D4AF37', fontSize: '12px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.15em' }}>Acceso al Vestuario</p>
+                            
+                            <form onSubmit={async (e) => {
+                                e.preventDefault();
+                                const btn = e.target.querySelector('button');
+                                const originalText = btn.innerHTML;
+                                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
+                                btn.disabled = true;
+                                const u = e.target.u.value; const p = e.target.p.value;
+                                try {
+                                    const res = await fetch('/api/login', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({username:u,password:p}) });
+                                    const data = await res.json();
+                                    if(data.success) {
+                                        localStorage.setItem('jogga_token', data.token);
+                                        localStorage.setItem('jogga_role', data.role);
+                                        setIsAuthenticated(true);
+                                    } else {
+                                        alert(data.error || 'Error');
                                         btn.innerHTML = originalText;
                                         btn.disabled = false;
                                     }
-                                }} className="flex flex-col gap-6">
-                                    
-                                    {/* Email/User Input */}
-                                    <div className="relative group">
-                                        <label className="absolute -top-2.5 left-3 bg-white px-1 text-xs font-semibold text-blue-500 transition-colors">Usuario</label>
-                                        <input name="u" type="text" placeholder="gamertag" className="w-full p-3.5 pl-4 border-2 border-gray-200 rounded-lg outline-none focus:border-blue-500 bg-transparent text-gray-800 transition-all font-medium placeholder-gray-300" required />
-                                        <i className="fas fa-user absolute right-4 top-1/2 -translate-y-1/2 text-gray-300"></i>
-                                    </div>
-
-                                    {/* Password Input */}
-                                    <div className="relative group">
-                                        <label className="absolute -top-2.5 left-3 bg-white px-1 text-xs font-semibold text-gray-400 group-focus-within:text-blue-500 transition-colors">Contraseña</label>
-                                        <input name="p" type="password" placeholder="••••••••" className="w-full p-3.5 pl-4 border-2 border-gray-200 rounded-lg outline-none focus:border-blue-500 bg-transparent text-gray-800 transition-all font-medium placeholder-gray-300" required />
-                                        <i className="fas fa-eye absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 cursor-pointer hover:text-gray-500"></i>
-                                    </div>
-
-                                    <button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3.5 rounded-lg mt-2 transition-all shadow-lg shadow-blue-500/20 active:scale-[0.98]">
-                                        Entrar al Vestuario
-                                    </button>
-                                </form>
-                                
-                                <div className="mt-8 text-center text-sm text-gray-500">
-                                    ¿No tienes una cuenta? <span className="text-blue-500 font-bold cursor-pointer hover:underline">Pide a un Capitán</span>
+                                } catch(err) { 
+                                    alert('Error de red'); 
+                                    btn.innerHTML = originalText;
+                                    btn.disabled = false;
+                                }
+                            }} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                                <div style={{ position: 'relative' }}>
+                                    <i className="fas fa-user" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.5)' }}></i>
+                                    <input name="u" type="text" placeholder="GAMERTAG" style={{ width: '100%', padding: '15px 15px 15px 48px', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '13px', outline: 'none', color: 'white', fontWeight: '600', letterSpacing: '0.05em', transition: '0.2s' }} onFocus={(e)=>e.target.style.borderColor='#D4AF37'} onBlur={(e)=>e.target.style.borderColor='rgba(255,255,255,0.1)'} required />
                                 </div>
-                            </div>
+                                <div style={{ position: 'relative' }}>
+                                    <i className="fas fa-lock" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.5)' }}></i>
+                                    <input name="p" type="password" placeholder="CONTRASEÑA" style={{ width: '100%', padding: '15px 15px 15px 48px', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '13px', outline: 'none', color: 'white', fontWeight: '600', letterSpacing: '0.05em', transition: '0.2s' }} onFocus={(e)=>e.target.style.borderColor='#D4AF37'} onBlur={(e)=>e.target.style.borderColor='rgba(255,255,255,0.1)'} required />
+                                </div>
+                                <button type="submit" style={{ background: 'linear-gradient(135deg, #FFD700, #B8860B)', color: '#000', border: 'none', padding: '16px', borderRadius: '12px', fontSize: '14px', fontWeight: '900', cursor: 'pointer', marginTop: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: '0 8px 20px rgba(212,175,55,0.3)', transition: 'transform 0.1s' }} onMouseDown={(e)=>e.target.style.transform='scale(0.97)'} onMouseUp={(e)=>e.target.style.transform='scale(1)'}>Saltar al Campo</button>
+                            </form>
                         </div>
-
-                        {/* Right Panel - Image */}
-                        <div className="hidden md:block md:w-[55%] relative overflow-hidden bg-gray-900">
-                            <div className="absolute inset-0 bg-cover bg-center transition-transform duration-[20s] hover:scale-110" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1518605368461-1e1850123514?auto=format&fit=crop&w=2000&q=80')" }}></div>
-                            <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-transparent opacity-20"></div>
-                            <div className="absolute inset-0 bg-blue-900/10 mix-blend-overlay"></div>
-                            
-                            {/* Decorative Elements */}
-                            <div className="absolute bottom-10 right-10 flex gap-2">
-                                <div className="w-2 h-2 rounded-full bg-white opacity-50"></div>
-                                <div className="w-6 h-2 rounded-full bg-white"></div>
-                                <div className="w-2 h-2 rounded-full bg-white opacity-50"></div>
-                            </div>
-                        </div>
+                        <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
                     </div>
                 );
             }
@@ -1723,6 +1264,4 @@
         };
 
         ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-    </script>
-</body>
-</html>
+    
