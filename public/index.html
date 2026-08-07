@@ -427,9 +427,10 @@
             try {
                 const body = { system, prompt };
                 if (base64Image) body.image = base64Image;
+                const token = localStorage.getItem('jogga_token');
                 const res = await fetch('/api/ai', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify(body)
                 });
                 const data = await res.json();
@@ -531,7 +532,8 @@
             
             useEffect(() => {
                 if(key === 'jogga-players-v42') {
-                    fetch('/api/players').then(r => r.json()).then(data => {
+                    const token = localStorage.getItem('jogga_token');
+                    fetch('/api/players', { headers: { 'Authorization': `Bearer ${token}` } }).then(r => r.json()).then(data => {
                         if(Array.isArray(data) && data.length > 0) {
                             setVal(data);
                             try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) {}
@@ -545,7 +547,8 @@
                     const nv = v instanceof Function ? v(prev) : v;
                     try { localStorage.setItem(key, JSON.stringify(nv)); } catch(e) { console.warn('localStorage full', e); }
                     if(key === 'jogga-players-v42') {
-                        fetch('/api/players', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(nv) }).catch(e => console.error("Error saving to DB", e));
+                        const token = localStorage.getItem('jogga_token');
+                        fetch('/api/players', { method: 'POST', headers: {'Content-Type':'application/json', 'Authorization': `Bearer ${token}`}, body: JSON.stringify(nv) }).catch(e => console.error("Error saving to DB", e));
                     }
                     return nv;
                 });
@@ -850,9 +853,67 @@
 
         // ===== APP COMPONENT =====
         const App = () => {
+            const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('jogga_token'));
+            const role = localStorage.getItem('jogga_role');
+            
             const [activeTab, setActiveTab] = useState('squad');
             const [players, setPlayers] = useLocalStorage('jogga-players-v42', []);
             const [chatHistory, setChatHistory] = useLocalStorage('jogga-chat-v2', [{ role: 'model', text: 'Bienvenido, Míster. Soy IA Bonito. Conozco las notas y stats detallados de toda tu plantilla. ¿Qué planeamos para hoy?' }]);
+
+            const handleLogout = () => {
+                localStorage.removeItem('jogga_token');
+                localStorage.removeItem('jogga_role');
+                setIsAuthenticated(false);
+            };
+
+            if (!isAuthenticated) {
+                return (
+                    <div className="login-wrapper" style={{
+                        minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: '#f8f9fa', backgroundImage: 'radial-gradient(ellipse at center, rgba(212,175,55,0.15) 0%, transparent 70%)',
+                    }}>
+                        <div style={{
+                            background: '#ffffff', padding: '40px', borderRadius: '20px',
+                            boxShadow: '0 10px 40px rgba(0,0,0,0.08), 0 0 0 1px rgba(212,175,55,0.2) inset',
+                            width: '90%', maxWidth: '400px', textAlign: 'center', position: 'relative', overflow: 'hidden'
+                        }}>
+                            <div style={{
+                                width: '80px', height: '80px', margin: '0 auto 20px', background: 'linear-gradient(135deg, #f8f9fa, #ffffff)',
+                                borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                border: '2px solid #D4AF37', boxShadow: '0 4px 15px rgba(212,175,55,0.3)'
+                            }}>
+                                <i className="fas fa-futbol" style={{ fontSize: '36px', color: '#D4AF37' }}></i>
+                            </div>
+                            <h2 style={{ margin: '0 0 5px 0', color: '#1a1a1a', fontWeight: '900', fontSize: '24px' }}>IA Bonito</h2>
+                            <p style={{ margin: '0 0 30px 0', color: '#666', fontSize: '14px', fontWeight: '500' }}>Acceso Autorizado</p>
+                            
+                            <form onSubmit={async (e) => {
+                                e.preventDefault();
+                                const u = e.target.u.value; const p = e.target.p.value;
+                                try {
+                                    const res = await fetch('/api/login', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({username:u,password:p}) });
+                                    const data = await res.json();
+                                    if(data.success) {
+                                        localStorage.setItem('jogga_token', data.token);
+                                        localStorage.setItem('jogga_role', data.role);
+                                        setIsAuthenticated(true);
+                                    } else alert(data.error || 'Error');
+                                } catch(err) { alert('Error de red'); }
+                            }} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                                <div style={{ position: 'relative' }}>
+                                    <i className="fas fa-user" style={{ position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', color: '#D4AF37' }}></i>
+                                    <input name="u" type="text" placeholder="Usuario" style={{ width: '100%', padding: '12px 15px 12px 45px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '10px', fontSize: '15px', outline: 'none' }} required />
+                                </div>
+                                <div style={{ position: 'relative' }}>
+                                    <i className="fas fa-lock" style={{ position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', color: '#D4AF37' }}></i>
+                                    <input name="p" type="password" placeholder="Contraseña" style={{ width: '100%', padding: '12px 15px 12px 45px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '10px', fontSize: '15px', outline: 'none' }} required />
+                                </div>
+                                <button type="submit" style={{ background: 'linear-gradient(135deg, #D4AF37, #B8860B)', color: '#fff', border: 'none', padding: '14px', borderRadius: '10px', fontSize: '16px', fontWeight: '700', cursor: 'pointer', marginTop: '10px' }}>Entrar al Club</button>
+                            </form>
+                        </div>
+                    </div>
+                );
+            }
             const [toast, setToast] = useState({ show: false, msg: '' });
             const showToast = useCallback((msg) => setToast({ show: true, msg }), []);
 
@@ -1150,13 +1211,22 @@
                                 </div>
                             </div>
                             <div className="segmented-control w-full sm:w-auto">
-                                {[{id:'squad',i:'fa-id-card',label:'Plantilla'},{id:'scouting',i:'fa-user-plus',label:'Scouting'},{id:'tactics',i:'fa-chess-board',label:'Táctica'},{id:'chat',i:'fa-robot',label:'IA Chat'}].map(t => (
+                                {[
+                                    {id:'squad',i:'fa-id-card',label:'Plantilla'},
+                                    {id:'scouting',i:'fa-user-plus',label:'Scouting'},
+                                    {id:'tactics',i:'fa-chess-board',label:'Táctica'},
+                                    {id:'chat',i:'fa-robot',label:'IA Chat'},
+                                    ...(role === 'admin' ? [{id:'admin',i:'fa-user-shield',label:'Admin'}] : [])
+                                ].map(t => (
                                     <div key={t.id} className={`segment-btn ${activeTab===t.id?'active':''}`} onClick={()=>{setActiveTab(t.id);if(t.id==='scouting' && !editingId) resetForm(); else if(t.id!=='scouting') setEditingId(null);}}>
                                         <i className={`fas ${t.i} text-base mr-1.5`}></i>
                                         <span className="hidden sm:inline text-xs">{t.label}</span>
                                     </div>
                                 ))}
                             </div>
+                            <button onClick={handleLogout} className="ios-btn !py-2 !px-3 !bg-red-500/20 hover:!bg-red-500/40 !text-red-400 !border-red-500/30" title="Cerrar sesión">
+                                <i className="fas fa-sign-out-alt"></i>
+                            </button>
                         </div>
                     </header>
 
@@ -1428,6 +1498,35 @@
                                         <input type="text" value={chatInp} onChange={e=>setChatInp(e.target.value)} onKeyDown={e=>{if(e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }}} className="ios-input flex-1" placeholder="Pregunta sobre tu equipo..." disabled={isChatLoading} maxLength="500" />
                                         <button onClick={sendChat} disabled={isChatLoading || !chatInp.trim()} className="ios-btn !px-4"><i className={`fas ${isChatLoading?'fa-spinner fa-spin':'fa-paper-plane'}`}></i></button>
                                     </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* ===== ADMIN TAB ===== */}
+                        {activeTab === 'admin' && role === 'admin' && (
+                            <div className="ios-card overflow-hidden p-6">
+                                <h3 className="text-xl font-bold mb-4 text-white"><i className="fas fa-users-cog mr-2 text-yellow-500"></i>Panel de Administración</h3>
+                                <div className="max-w-md bg-white/5 p-4 rounded-xl border border-white/10">
+                                    <h4 className="font-semibold mb-3 text-sm text-gray-300">Crear Nuevo Usuario</h4>
+                                    <form onSubmit={async (e) => {
+                                        e.preventDefault();
+                                        const u = e.target.newUser.value; const p = e.target.newPass.value; const r = e.target.newRole.value;
+                                        try {
+                                            const token = localStorage.getItem('jogga_token');
+                                            const res = await fetch('/api/users', { method: 'POST', headers: {'Content-Type':'application/json', 'Authorization': `Bearer ${token}`}, body: JSON.stringify({username:u,password:p,role:r}) });
+                                            const data = await res.json();
+                                            if(data.success) { alert('Usuario creado exitosamente'); e.target.reset(); }
+                                            else alert(data.error || 'Error al crear');
+                                        } catch(err) { alert('Error de red'); }
+                                    }} className="flex flex-col gap-3">
+                                        <input name="newUser" type="text" placeholder="Nombre de usuario" className="ios-input" required />
+                                        <input name="newPass" type="password" placeholder="Contraseña" className="ios-input" required />
+                                        <select name="newRole" className="ios-input" defaultValue="user">
+                                            <option value="user">Usuario (Jugador)</option>
+                                            <option value="admin">Administrador</option>
+                                        </select>
+                                        <button type="submit" className="ios-btn mt-2">Crear Usuario</button>
+                                    </form>
                                 </div>
                             </div>
                         )}

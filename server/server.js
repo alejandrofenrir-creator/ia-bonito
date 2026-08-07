@@ -2,12 +2,40 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
 const IS_DEV = process.env.NODE_ENV !== 'production';
+const JWT_SECRET = process.env.JWT_SECRET || 'jogga-super-secret-key';
+const USERS_FILE = path.join(__dirname, 'users.json');
+
+const initUsers = () => {
+    if (!fs.existsSync(USERS_FILE)) {
+        fs.writeFileSync(USERS_FILE, JSON.stringify([{
+            username: 'Afenrir',
+            password: 'Soitel2024!',
+            role: 'admin'
+        }], null, 2));
+    }
+};
+initUsers();
+
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    
+    if (!token) return res.status(401).json({ error: 'Acceso denegado' });
+    
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) return res.status(403).json({ error: 'Token inválido o expirado' });
+        req.user = user;
+        next();
+    });
+};
 
 // 10. Startup validation
 if (!GEMINI_API_KEY) {
@@ -94,9 +122,44 @@ app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok', service: 'IA Bonito Backend', timestamp: new Date().toISOString(), geminiConfigured: !!GEMINI_API_KEY });
 });
 
-app.get('/api/players', async (req, res) => {
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    if (!fs.existsSync(USERS_FILE)) return res.status(500).json({ error: 'DB error' });
+    
+    const users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+    const user = users.find(u => u.username === username && u.password === password);
+    
+    if (user) {
+        const token = jwt.sign({ username: user.username, role: user.role }, JWT_SECRET, { expiresIn: '24h' });
+        res.json({ success: true, token, role: user.role });
+    } else {
+        res.status(401).json({ error: 'Credenciales incorrectas' });
+    }
+});
+
+app.post('/api/users', authenticateToken, (req, res) => {
+    if (req.user.role !== 'admin') return res.status(403).json({ error: 'No autorizado' });
+    const { username, password, role } = req.body;
+    if (!username || !password) return res.status(400).json({ error: 'Faltan datos' });
+    
+    const users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+    if (users.find(u => u.username === username)) return res.status(400).json({ error: 'El usuario ya existe' });
+    
+    users.push({ username, password, role: role || 'user' });
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+    res.json({ success: true });
+});
+
+app.get('/api/players', authenticateToken, async (req, res) => {
     try {
-        if (!process.env.KV_REST_API_URL) return res.status(500).json({ error: 'KV DB no configurada en Vercel.' });
+        if (!process.env.KV_REST_API_URL) {
+            const playersFile = path.join(__dirname, 'players.json');
+            if (fs.existsSync(playersFile)) {
+                const data = fs.readFileSync(playersFile, 'utf8');
+                return res.json(JSON.parse(data));
+            }
+            return res.json([]);
+        }
         const { kv } = require('@vercel/kv');
         const players = await kv.get('jogga-players');
         res.json(players || []);
@@ -106,14 +169,19 @@ app.get('/api/players', async (req, res) => {
     }
 });
 
-app.post('/api/players', async (req, res) => {
+app.post('/api/players', authenticateToken, async (req, res) => {
     try {
-        if (!process.env.KV_REST_API_URL) return res.status(500).json({ error: 'KV DB no configurada en Vercel.' });
-        const { kv } = require('@vercel/kv');
         const players = req.body;
         if (!Array.isArray(players)) return res.status(400).json({ error: 'Se esperaba un array' });
         if (players.length > 500) return res.status(400).json({ error: 'Límite de jugadores excedido' });
         
+        if (!process.env.KV_REST_API_URL) {
+            const playersFile = path.join(__dirname, 'players.json');
+            fs.writeFileSync(playersFile, JSON.stringify(players, null, 2));
+            return res.json({ success: true });
+        }
+        
+        const { kv } = require('@vercel/kv');
         await kv.set('jogga-players', players);
         res.json({ success: true });
     } catch (err) {
@@ -138,7 +206,7 @@ setInterval(() => {
     }
 }, 5 * 60 * 1000).unref();
 
-app.post('/api/ai', rateLimiter, async (req, res) => {
+app.post('/api/ai', authenticateToken, rateLimiter, async (req, res) => {
     if (!GEMINI_API_KEY) return res.status(500).json({ error: 'GEMINI_API_KEY no configurada.' });
     
     let { system, prompt, image } = req.body;
