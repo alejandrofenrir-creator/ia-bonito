@@ -14,13 +14,29 @@ const IS_DEV = process.env.NODE_ENV !== 'production';
 const JWT_SECRET = process.env.JWT_SECRET || 'jogga-super-secret-key';
 const USERS_FILE = path.join(__dirname, 'users.json');
 
-const initUsers = () => {
-    if (!fs.existsSync(USERS_FILE)) {
-        fs.writeFileSync(USERS_FILE, JSON.stringify([{
-            username: 'Afenrir',
-            password: 'Soitel2024!',
-            role: 'admin'
-        }], null, 2));
+const initUsers = async () => {
+    if (process.env.KV_REST_API_URL) {
+        try {
+            const { kv } = require('@vercel/kv');
+            const users = await kv.get('jogga-users');
+            if (!users || users.length === 0) {
+                await kv.set('jogga-users', [{
+                    username: 'Afenrir',
+                    password: 'Soitel2024!',
+                    role: 'admin'
+                }]);
+            }
+        } catch (e) {
+            console.error('KV Init Users Error:', e);
+        }
+    } else {
+        if (!fs.existsSync(USERS_FILE)) {
+            fs.writeFileSync(USERS_FILE, JSON.stringify([{
+                username: 'Afenrir',
+                password: 'Soitel2024!',
+                role: 'admin'
+            }], null, 2));
+        }
     }
 };
 initUsers();
@@ -123,32 +139,60 @@ app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok', service: 'IA Bonito Backend', timestamp: new Date().toISOString(), geminiConfigured: !!GEMINI_API_KEY });
 });
 
-app.post('/api/login', (req, res) => {
-    const { username, password } = req.body;
-    if (!fs.existsSync(USERS_FILE)) return res.status(500).json({ error: 'DB error' });
-    
-    const users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
-    const user = users.find(u => u.username === username && u.password === password);
-    
-    if (user) {
-        const token = jwt.sign({ username: user.username, role: user.role }, JWT_SECRET, { expiresIn: '24h' });
-        res.json({ success: true, token, role: user.role });
-    } else {
-        res.status(401).json({ error: 'Credenciales incorrectas' });
+app.post('/api/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        let users = [];
+
+        if (process.env.KV_REST_API_URL) {
+            const { kv } = require('@vercel/kv');
+            users = await kv.get('jogga-users') || [];
+        } else {
+            if (!fs.existsSync(USERS_FILE)) return res.status(500).json({ error: 'DB error' });
+            users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+        }
+        
+        const user = users.find(u => u.username === username && u.password === password);
+        
+        if (user) {
+            const token = jwt.sign({ username: user.username, role: user.role }, JWT_SECRET, { expiresIn: '24h' });
+            res.json({ success: true, token, role: user.role });
+        } else {
+            res.status(401).json({ error: 'Credenciales incorrectas' });
+        }
+    } catch (err) {
+        console.error('Login Error:', err);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 
-app.post('/api/users', authenticateToken, (req, res) => {
-    if (req.user.role !== 'admin') return res.status(403).json({ error: 'No autorizado' });
-    const { username, password, role } = req.body;
-    if (!username || !password) return res.status(400).json({ error: 'Faltan datos' });
-    
-    const users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
-    if (users.find(u => u.username === username)) return res.status(400).json({ error: 'El usuario ya existe' });
-    
-    users.push({ username, password, role: role || 'user' });
-    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-    res.json({ success: true });
+app.post('/api/users', authenticateToken, async (req, res) => {
+    try {
+        if (req.user.role !== 'admin') return res.status(403).json({ error: 'No autorizado' });
+        const { username, password, role } = req.body;
+        if (!username || !password) return res.status(400).json({ error: 'Faltan datos' });
+        
+        let users = [];
+        if (process.env.KV_REST_API_URL) {
+            const { kv } = require('@vercel/kv');
+            users = await kv.get('jogga-users') || [];
+            if (users.find(u => u.username === username)) return res.status(400).json({ error: 'El usuario ya existe' });
+            
+            users.push({ username, password, role: role || 'user' });
+            await kv.set('jogga-users', users);
+        } else {
+            users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+            if (users.find(u => u.username === username)) return res.status(400).json({ error: 'El usuario ya existe' });
+            
+            users.push({ username, password, role: role || 'user' });
+            fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+        }
+        
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Create User Error:', err);
+        res.status(500).json({ error: 'Error interno del servidor al crear usuario' });
+    }
 });
 
 app.get('/api/players', authenticateToken, async (req, res) => {
