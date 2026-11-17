@@ -2,31 +2,33 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jogga Bonito App - Club JoGGa Bonito | EA FC 26</title>
-    <meta name="description" content="Jogga Bonito App: Tu asistente táctico inteligente para EA Sports FC 26 Pro Clubs.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogga Bonito App - Club JoGGa Bonito | FC 27</title>
+    <meta name="description" content="Jogga Bonito App: Tu asistente táctico inteligente para EA Sports FC 27 Pro Clubs.">
     <meta property="og:title" content="Jogga Bonito App - Club JoGGa Bonito">
-    <meta property="og:description" content="Asistente táctico IA para EA FC 26 Pro Clubs. Gestiona tu plantilla, genera tácticas y chatea con tu DT virtual.">
+    <meta property="og:description" content="Asistente táctico IA para EA FC 27 Pro Clubs. Gestiona tu plantilla, genera tácticas y chatea con tu DT virtual.">
     <meta property="og:type" content="website">
-    <meta name="theme-color" content="#0a0a0f">
+    <meta name="theme-color" content="#04060d">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;0,900;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>\n    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { 'sf': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'], 'orbitron': ['Orbitron', 'sans-serif'] },
+                    fontFamily: { 'sf': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'], 'display': ['Barlow Condensed', 'Arial Narrow', 'sans-serif'] },
                     colors: {
+                        // La paleta "emerald" pasa a ser el verde lima de la marca.
+                        'emerald': { 300:'#e2ff8a', 400:'#d4ff5c', 500:'#c6ff3d', 600:'#a9e01f', 700:'#7fae10', 800:'#4f6f0a', 900:'#2b3d06', 950:'#172003' },
                         'ios': {
-                            'bg': '#F2F2F7', 'card': '#FFFFFF', 'blue': '#007AFF', 'green': '#34C759',
+                            'bg': '#04060d', 'card': '#0a1020', 'blue': '#c6ff3d', 'green': '#34C759',
                             'red': '#FF3B30', 'orange': '#FF9500', 'yellow': '#FFCC00', 'purple': '#AF52DE',
                             'pink': '#FF2D55', 'teal': '#5AC8FA', 'indigo': '#5856D6',
                             'gray1': '#8E8E93', 'gray2': '#AEAEB2', 'gray3': '#C7C7CC',
@@ -40,392 +42,576 @@
 
     <style>
         :root {
-            --bg-primary: #0a0a0f;
-            --bg-card: #12121a;
-            --bg-elevated: #1a1a25;
-            --text-primary: #FFFFFF;
-            --text-secondary: #EBEBF5;
-            --accent-blue: #0A84FF;
-            --accent-green: #32D74B;
-            --accent-gold: #FFD700;
-            --accent-purple: #BF5AF2;
+            --bg-primary: #04060d;
+            --bg-card: #0a1020;
+            --bg-elevated: #111a30;
+            --text-primary: #eaf0ff;
+            --text-secondary: #8d9bb8;
+            --accent-primary: #c6ff3d;
+            --accent-secondary: #ffd66b;
+            --accent-tertiary: #22e6ff;
+            --accent-danger: #ff4d5e;
+            --accent-purple: #a66bff;
+            --accent-pink: #ff3fd0;
+            --glow-primary: rgba(198,255,61,0.18);
+            --glow-secondary: rgba(255,214,107,0.14);
+            --line: rgba(255,255,255,0.08);
+            --ink-on-accent: #04110a;
+            --font-display: 'Barlow Condensed', 'Arial Narrow', 'Roboto Condensed', sans-serif;
         }
-        body.light-mode {
-            --bg-primary: #f2f2f7;
-            --bg-card: #ffffff;
-            --bg-elevated: #e5e5ea;
-            --text-primary: #1c1c1e;
-            --text-secondary: #8e8e93;
-        }
-        body.light-mode .text-white { color: var(--text-primary) !important; }
-        body.light-mode .bg-black\/20 { background-color: rgba(0,0,0,0.05) !important; border-color: rgba(0,0,0,0.1) !important; }
-        body.light-mode .border-white\/10 { border-color: rgba(0,0,0,0.1) !important; }
-        body.light-mode .border-white\/5 { border-color: rgba(0,0,0,0.05) !important; }
-        body.light-mode .text-gray-300 { color: #48484a !important; }
-        body.light-mode .text-gray-400 { color: #636366 !important; }
-        body.light-mode .text-gray-500 { color: #8e8e93 !important; }
-        body.light-mode .bg-white\/5 { background-color: rgba(0,0,0,0.03) !important; }
-        body.light-mode .bg-white\/10 { background-color: rgba(0,0,0,0.08) !important; }
-        body.light-mode .ios-input { background: #ffffff !important; border-color: #d1d1d6 !important; color: #1c1c1e !important; }
-        body.light-mode .glass-header { background: rgba(255,255,255,0.8) !important; }
-        body.light-mode .ios-card { background: #ffffff !important; box-shadow: 0 4px 20px rgba(0,0,0,0.05) !important; }
-        body.light-mode .segmented-control { background: rgba(0,0,0,0.04) !important; border-color: rgba(0,0,0,0.08) !important; }
-        body.light-mode .segment-btn { color: rgba(0,0,0,0.5) !important; }
-        body.light-mode .segment-btn.active { background: #ffffff !important; color: #1c1c1e !important; box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important; }
-        body.light-mode .ios-btn-secondary { background: rgba(0,0,0,0.04) !important; color: #1c1c1e !important; border-color: rgba(0,0,0,0.1) !important; }
-        body.light-mode .ios-btn-secondary:hover { background: rgba(0,0,0,0.08) !important; }
-        body.light-mode .filter-pill { background: rgba(0,0,0,0.04) !important; border-color: rgba(0,0,0,0.1) !important; color: #1c1c1e !important; }
+
         * { box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--bg-primary);
-            background-image: radial-gradient(ellipse at 20% 0%, rgba(10,132,255,0.06) 0%, transparent 50%),
-                              radial-gradient(ellipse at 80% 100%, rgba(191,90,242,0.04) 0%, transparent 50%);
+            background-color: var(--bg-primary);
+            background-image:
+                radial-gradient(900px 520px at 10% -8%, rgba(198,255,61,0.10), transparent 62%),
+                radial-gradient(820px 520px at 96% -4%, rgba(34,230,255,0.09), transparent 62%),
+                radial-gradient(760px 520px at 50% 112%, rgba(166,107,255,0.08), transparent 62%);
+            background-attachment: fixed;
             color: var(--text-primary);
             margin: 0; padding: 0;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             min-height: 100vh;
         }
+        /* Trama diagonal de estadio, muy sutil */
+        body::before {
+            content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background: repeating-linear-gradient(115deg, rgba(255,255,255,0.02) 0 2px, transparent 2px 16px);
+            -webkit-mask-image: linear-gradient(to bottom, #000, transparent 75%);
+                    mask-image: linear-gradient(to bottom, #000, transparent 75%);
+        }
+        :focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 2px; }
 
-        /* Cards Base */
+        .font-display, .fc-display { font-family: var(--font-display); }
+
+        /* ===== Sidebar ===== */
+        .sidebar {
+            position: fixed; left: 0; top: 0; bottom: 0;
+            width: 68px; background: linear-gradient(180deg, #070b16 0%, #04060d 100%);
+            border-right: 1px solid var(--line);
+            display: flex; flex-direction: column;
+            align-items: center; padding: 1rem 0;
+            z-index: 60;
+        }
+        .sidebar::after {
+            content: ''; position: absolute; top: 0; right: -1px; width: 2px; height: 160px;
+            background: linear-gradient(180deg, var(--accent-primary), transparent);
+        }
+        .sidebar-logo {
+            width: 42px; height: 42px;
+            background: linear-gradient(135deg, #d9ff6b, var(--accent-primary) 55%, #8fd400);
+            clip-path: polygon(0 0, 100% 0, 100% 68%, 68% 100%, 0 100%);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 2rem; font-size: 1.1rem;
+        }
+        .sidebar-logo i { color: var(--ink-on-accent) !important; }
+        .sidebar-nav { display: flex; flex-direction: column; gap: 0.4rem; flex: 1; }
+        .sidebar-item {
+            width: 46px; height: 46px; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-secondary); font-size: 1.1rem;
+            cursor: pointer; transition: color 0.2s, background 0.2s;
+            position: relative;
+        }
+        .sidebar-item:hover { color: #fff; background: rgba(255,255,255,0.06); }
+        .sidebar-item.active {
+            color: var(--accent-primary);
+            background: linear-gradient(90deg, rgba(198,255,61,0.18), rgba(198,255,61,0.02));
+        }
+        .sidebar-item.active::before {
+            content: ''; position: absolute; left: -11px;
+            width: 4px; height: 28px; border-radius: 0 3px 3px 0;
+            background: var(--accent-primary);
+            box-shadow: 0 0 14px rgba(198,255,61,0.7);
+        }
+        .sidebar-bottom {
+            margin-top: auto; display: flex; flex-direction: column;
+            align-items: center; gap: 0.5rem;
+        }
+        .main-content { margin-left: 68px; }
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .mobile-nav { display: flex !important; }
+            .main-content { margin-left: 0; }
+        }
+
+        /* ===== Hero ===== */
+        .hero-banner {
+            position: relative; width: 100%; height: 220px;
+            overflow: hidden; border-bottom: 1px solid var(--line);
+        }
+        .hero-banner img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: brightness(0.38) saturate(1.25);
+        }
+        .hero-banner::after {
+            content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-tertiary) 55%, transparent);
+        }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background:
+                linear-gradient(to top, var(--bg-primary) 0%, transparent 62%),
+                linear-gradient(100deg, rgba(4,6,13,0.92) 0%, rgba(4,6,13,0.35) 58%, transparent 100%);
+            display: flex; align-items: flex-end;
+            padding: 2rem;
+        }
+        .hero-overlay::before {
+            content: ''; position: absolute; top: 0; bottom: 0; left: 3%; width: 38%;
+            background: linear-gradient(100deg, rgba(198,255,61,0.16), transparent 75%);
+            transform: skewX(-22deg); pointer-events: none;
+        }
+        .hero-title {
+            position: relative;
+            font-family: var(--font-display);
+            font-style: italic; font-weight: 900; font-size: 3.6rem; line-height: 0.95;
+            letter-spacing: 0.01em; text-transform: uppercase; color: #fff;
+            text-shadow: 0 4px 24px rgba(0,0,0,0.6);
+        }
+        .hero-title span { color: var(--accent-primary); }
+        .hero-subtitle {
+            position: relative; display: flex; align-items: center; gap: 0.6rem;
+            font-size: 0.72rem; color: var(--text-secondary);
+            font-weight: 700; letter-spacing: 0.28em;
+            text-transform: uppercase; margin-top: 0.5rem;
+        }
+        .hero-subtitle::before { content: ''; width: 28px; height: 3px; background: var(--accent-primary); }
+        .hero-stats {
+            position: absolute; bottom: 1.5rem; right: 2rem;
+            display: flex; gap: 0.75rem;
+        }
+        .hero-stat-item {
+            text-align: center; min-width: 96px; padding: 0.55rem 1.1rem;
+            background: rgba(4,6,13,0.62); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            border-left: 3px solid var(--accent-primary);
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+        }
+        .hero-stat-value {
+            font-family: var(--font-display); font-style: italic;
+            font-size: 2.3rem; font-weight: 900; line-height: 1; color: #fff;
+        }
+        .hero-stat-label {
+            font-size: 0.62rem; color: var(--accent-primary);
+            text-transform: uppercase; font-weight: 800;
+            letter-spacing: 0.18em; margin-top: 0.15rem;
+        }
+        @media (max-width: 768px) {
+            .hero-banner { height: 150px; }
+            .hero-overlay { padding: 1.25rem; }
+            .hero-title { font-size: 2.4rem; }
+            .hero-stats { display: none; }
+        }
+
+        /* ===== Navegación móvil ===== */
+        .mobile-nav {
+            display: none;
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(4,6,13,0.94);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--line);
+            padding: 0.4rem 0.5rem calc(0.4rem + env(safe-area-inset-bottom));
+            z-index: 60;
+            justify-content: space-around;
+        }
+        .mobile-nav-item {
+            position: relative;
+            display: flex; flex-direction: column;
+            align-items: center; gap: 0.15rem;
+            color: var(--text-secondary); font-size: 0.62rem;
+            font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+            padding: 0.45rem 0.8rem; border-radius: 6px;
+            transition: color 0.2s;
+        }
+        .mobile-nav-item i { font-size: 1.1rem; }
+        .mobile-nav-item.active { color: var(--accent-primary); }
+        .mobile-nav-item.active::before {
+            content: ''; position: absolute; top: -0.4rem; left: 20%; right: 20%; height: 3px;
+            background: var(--accent-primary); box-shadow: 0 0 12px rgba(198,255,61,0.7);
+        }
+
+        /* ===== Superficies y controles ===== */
         .ios-card {
-            background: var(--bg-card);
-            border-radius: 1rem;
-            border: 1px solid rgba(255,255,255,0.06);
-            box-shadow: 0 4px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03) inset;
+            position: relative;
+            background-color: rgba(12,19,38,0.92);
+            border-radius: 6px;
+            border: 1px solid var(--line);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+        }
+        .ios-card::before {
+            content: ''; position: absolute; top: -1px; left: -1px; width: 22px; height: 22px;
+            border-top: 2px solid var(--accent-primary); border-left: 2px solid var(--accent-primary);
+            border-top-left-radius: 6px; pointer-events: none;
         }
 
         .ios-input {
-            background: rgba(255,255,255,0.05);
-            border-radius: 0.6rem;
-            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(6,10,22,0.85);
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.12);
             padding: 0.65rem 0.9rem;
             font-size: 0.9rem;
-            color: white;
+            color: #fff;
             width: 100%;
             transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
         }
-        .ios-input:focus { outline: none; border-color: var(--accent-blue); background: rgba(10,132,255,0.08); box-shadow: 0 0 0 3px rgba(10,132,255,0.15); }
+        .ios-input::placeholder { color: rgba(141,155,184,0.7); }
+        .ios-input:focus { outline: none; border-color: var(--accent-primary); background: rgba(198,255,61,0.05); box-shadow: 0 0 0 3px rgba(198,255,61,0.16); }
         .ios-input:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .ios-btn {
-            background: linear-gradient(135deg, #0A84FF 0%, #0055D4 100%);
-            color: white; font-weight: 700; border-radius: 0.75rem;
-            padding: 0.8rem 1.5rem; border: none; cursor: pointer;
-            transition: transform 0.15s, box-shadow 0.3s;
+            background: linear-gradient(135deg, #d9ff6b 0%, var(--accent-primary) 45%, #9be000 100%);
+            color: var(--ink-on-accent);
+            font-family: var(--font-display); font-weight: 800; font-style: italic;
+            text-transform: uppercase; letter-spacing: 0.06em; font-size: 1.05rem;
+            padding: 0.75rem 1.6rem; border: none; cursor: pointer;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 11px), calc(100% - 11px) 100%, 0 100%);
+            transition: transform 0.15s, filter 0.2s;
             position: relative; overflow: hidden;
         }
         .ios-btn::after {
             content: ''; position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
-            opacity: 0; transition: opacity 0.2s;
+            background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.55) 50%, transparent 70%);
+            transform: translateX(-120%); transition: transform 0.55s;
         }
-        .ios-btn:hover:not(:disabled) { box-shadow: 0 0 25px rgba(10,132,255,0.4), 0 4px 15px rgba(0,0,0,0.3); transform: translateY(-2px); }
-        .ios-btn:hover:not(:disabled)::after { opacity: 1; }
-        .ios-btn:active:not(:disabled) { transform: scale(0.97); }
-        .ios-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .ios-btn:hover:not(:disabled) { filter: brightness(1.08) saturate(1.1); transform: translateY(-1px); }
+        .ios-btn:hover:not(:disabled)::after { transform: translateX(120%); }
+        .ios-btn:active:not(:disabled) { transform: scale(0.98); }
+        .ios-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
         .ios-btn-secondary {
-            background: rgba(255,255,255,0.06); color: white;
-            border: 1px solid rgba(255,255,255,0.12); font-weight: 600;
-            border-radius: 0.75rem; padding: 0.8rem 1.5rem; cursor: pointer;
-            transition: background 0.2s, border-color 0.2s;
+            background: rgba(255,255,255,0.04); color: #fff;
+            border: 1px solid rgba(255,255,255,0.18);
+            font-family: var(--font-display); font-weight: 700; font-style: italic;
+            text-transform: uppercase; letter-spacing: 0.06em; font-size: 1.05rem;
+            border-radius: 4px; padding: 0.75rem 1.5rem; cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
         }
-        .ios-btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+        .ios-btn-secondary:hover { background: rgba(198,255,61,0.08); border-color: var(--accent-primary); color: var(--accent-primary); }
 
         .segmented-control {
             background: rgba(255,255,255,0.04); padding: 0.25rem;
-            border-radius: 0.7rem; display: flex; overflow-x: auto;
-            scrollbar-width: none; border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 4px; display: flex; overflow-x: auto;
+            scrollbar-width: none; border: 1px solid var(--line);
         }
         .segmented-control::-webkit-scrollbar { display: none; }
         .segment-btn {
             flex: 1; min-width: 70px; text-align: center;
-            padding: 0.55rem 0.4rem; font-size: 0.75rem; font-weight: 600;
-            color: rgba(255,255,255,0.4); border-radius: 0.5rem;
+            padding: 0.5rem 0.6rem; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.04em;
+            color: rgba(255,255,255,0.5); border-radius: 3px;
             cursor: pointer; white-space: nowrap;
             transition: color 0.2s, background 0.2s; user-select: none;
         }
-        .segment-btn.active {
-            color: white; background: rgba(255,255,255,0.12);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
+        .segment-btn:hover { color: #fff; }
+        .segment-btn.active { color: var(--ink-on-accent); background: var(--accent-primary); }
 
         .glass-header {
-            background: rgba(10,10,15,0.8);
+            background: rgba(4,6,13,0.8);
             backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            border-bottom: 1px solid var(--line);
         }
 
-        /* ===== FUT CARD STYLES ===== */
+        /* ===== Rejilla de tarjetas ===== */
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(176px, 1fr));
+            gap: 1.5rem 1.25rem;
+            justify-items: center;
             padding: 1rem 0;
         }
         @media (max-width: 640px) {
-            .card-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+            .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 0.75rem; }
         }
 
-        .fut-card {
-            position: relative;
-            aspect-ratio: 0.70;
-            border-radius: 4px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s;
-            transform-style: preserve-3d;
-            perspective: 1000px;
-            /* Premium FUT Shield shape */
-            clip-path: polygon(10% 0, 90% 0, 100% 10%, 100% 85%, 50% 100%, 0 85%, 0 10%);
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        /* ===== TARJETA DE JUGADOR (estilo FC 27) ===== */
+        .fc-card {
+            --rim-a: #fff0b0; --rim-b: #b98724;
+            --body-a: #f3d676; --body-b: #a97a1c;
+            --ink: #2b1c00; --ink-soft: rgba(43,28,0,0.62);
+            position: relative; width: 100%; max-width: 232px;
+            aspect-ratio: 5 / 7.1;
+            container-type: inline-size;
+            cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
+            color: var(--ink);
+            filter: drop-shadow(0 12px 18px rgba(0,0,0,0.55));
+            transform: perspective(800px) rotateX(var(--ry, 0deg)) rotateY(var(--rx, 0deg));
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.3s;
+            will-change: transform;
         }
-        .fut-card:hover {
-            transform: translateY(-10px) scale(1.05) rotateY(5deg);
-            filter: drop-shadow(0 25px 25px rgba(0,0,0,0.6));
-            z-index: 10;
+        .fc-card:hover {
+            transform: perspective(800px) rotateX(var(--ry, 0deg)) rotateY(var(--rx, 0deg)) translateY(-5px) scale(1.035);
+            transition: transform 0.08s linear, filter 0.3s;
+            filter: drop-shadow(0 18px 26px rgba(0,0,0,0.65)) drop-shadow(0 0 14px var(--glow, rgba(255,214,107,0.35)));
         }
+        .fc-card:focus-visible { outline: none; filter: drop-shadow(0 0 0 #000) drop-shadow(0 0 3px var(--accent-primary)) drop-shadow(0 0 12px var(--accent-primary)); }
 
-        .fut-card-inner {
-            position: relative; width: 100%; height: 100%;
-            display: flex; flex-direction: column;
-            padding: 12px 10px;
-            background-size: cover;
-            background-position: center;
+        .fc-shape, .fc-shape::before {
+            position: absolute; inset: 0;
+            clip-path: polygon(10% 0%, 90% 0%, 100% 4.5%, 100% 88%, 50% 100%, 0% 88%, 0% 4.5%);
         }
+        .fc-shape { background: linear-gradient(155deg, var(--rim-a), var(--rim-b)); overflow: hidden; }
+        .fc-shape::before {
+            content: ''; inset: 2.4cqw;
+            background:
+                radial-gradient(90% 60% at 72% 12%, rgba(255,255,255,0.35), transparent 60%),
+                linear-gradient(170deg, var(--body-a), var(--body-b));
+        }
+        .fc-foil, .fc-shine { position: absolute; inset: 0; pointer-events: none; clip-path: inherit; }
+        .fc-foil {
+            inset: 2.4cqw;
+            background:
+                repeating-linear-gradient(125deg, rgba(255,255,255,0.07) 0 1.2cqw, transparent 1.2cqw 3.6cqw);
+            mix-blend-mode: soft-light;
+        }
+        .fc-shine {
+            background: radial-gradient(circle at var(--mx, 30%) var(--my, 15%), rgba(255,255,255,0.55), transparent 42%);
+            mix-blend-mode: overlay; opacity: 0; transition: opacity 0.25s;
+        }
+        .fc-card:hover .fc-shine { opacity: 1; }
 
-        /* Card tiers */
-        .card-gold .fut-card-inner {
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23FFF5B8"/><stop offset="30%" stop-color="%23C5943B"/><stop offset="50%" stop-color="%23FFD700"/><stop offset="70%" stop-color="%238C611B"/><stop offset="100%" stop-color="%23FFE373"/></linearGradient></defs><rect width="100" height="150" fill="url(%23g)"/><path d="M0 0 L100 150 M100 0 L0 150" stroke="rgba(255,255,255,0.1)" stroke-width="20" fill="none"/></svg>');
-            background-size: cover;
-            border: 2px solid #FFD700;
+        .fc-photo {
+            position: absolute; top: 8cqw; right: 7cqw; width: 60cqw; height: 56cqw;
+            display: flex; align-items: flex-end; justify-content: center; overflow: hidden;
+            -webkit-mask-image: radial-gradient(ellipse 58% 60% at 50% 42%, #000 58%, transparent 100%);
+                    mask-image: radial-gradient(ellipse 58% 60% at 50% 42%, #000 58%, transparent 100%);
         }
-        .card-rare .fut-card-inner {
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150"><defs><linearGradient id="r" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23533887"/><stop offset="50%" stop-color="%231a103c"/><stop offset="100%" stop-color="%232c1c5e"/></linearGradient></defs><rect width="100" height="150" fill="url(%23r)"/><circle cx="50" cy="75" r="40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="10"/></svg>');
-            background-size: cover;
-            border: 2px solid #8e6ee3;
-        }
-        .card-base .fut-card-inner {
-            background: linear-gradient(135deg, #2b2b36 0%, #1a1a24 50%, #111118 100%);
-            border: 2px solid #4a4a5a;
-        }
-        
-        .fut-card-inner::after {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.85) 85%);
-            pointer-events: none;
-        }
+        .fc-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+        .fc-photo i { font-size: 34cqw; color: var(--ink-soft); opacity: 0.45; }
 
-        /* Holographic shine */
-        .fut-card::after {
-            content: ''; position: absolute; inset: -20%; z-index: 5;
-            background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.4) 25%, rgba(255,255,255,0.8) 30%, transparent 35%);
-            transform: translateX(-150%);
-            transition: transform 0.6s ease;
-            pointer-events: none;
+        .fc-left {
+            position: absolute; top: 10cqw; left: 11cqw; width: 22cqw;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
         }
-        .fut-card:hover::after {
-            transform: translateX(150%);
-        }
+        .fc-rating { font-family: var(--font-display); font-weight: 800; font-size: 25cqw; line-height: 0.82; letter-spacing: -0.01em; }
+        .fc-pos { font-family: var(--font-display); font-weight: 700; font-size: 10.5cqw; line-height: 1; margin-top: 1.2cqw; letter-spacing: 0.04em; text-transform: uppercase; }
+        .fc-sep { width: 13cqw; height: 0.7cqw; background: currentColor; opacity: 0.35; margin: 3cqw 0; }
+        .fc-arch { font-size: 9cqw; opacity: 0.8; }
 
-        .card-ovr {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900; font-size: 2.2rem; line-height: 0.9;
-            text-shadow: 2px 2px 0 rgba(0,0,0,0.4);
-            letter-spacing: -2px;
+        .fc-name {
+            position: absolute; top: 64cqw; left: 8cqw; right: 8cqw; text-align: center;
+            font-family: var(--font-display); font-weight: 800; font-size: 10.5cqw; line-height: 1.1; letter-spacing: 0.03em;
+            text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            padding-bottom: 1.4cqw; border-bottom: 0.7cqw solid color-mix(in srgb, currentColor 30%, transparent);
         }
-        .card-pos {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700; font-size: 0.75rem;
-            letter-spacing: 0.05em; text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+        .fc-stats {
+            position: absolute; top: 78.5cqw; left: 17cqw; right: 17cqw;
+            display: grid; grid-template-columns: 1fr 1fr; column-gap: 7cqw; row-gap: 0;
         }
-        .card-photo {
-            width: 60%; aspect-ratio: 1; margin: 0 auto;
-            border-radius: 50%; overflow: hidden;
-            border: 2px solid rgba(255,255,255,0.15);
-            background: rgba(0,0,0,0.4);
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        .fc-stats::before {
+            content: ''; position: absolute; left: 50%; top: 1cqw; bottom: 1cqw; width: 0.7cqw;
+            background: currentColor; opacity: 0.22; transform: translateX(-50%);
         }
-        .card-photo img { width: 100%; height: 100%; object-fit: cover; }
-        .card-name {
-            font-weight: 900; font-size: 0.7rem;
-            text-transform: uppercase; letter-spacing: 0.12em;
-            text-align: center; margin-top: 4px;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        .fc-stat { display: flex; align-items: baseline; justify-content: center; gap: 2cqw; font-family: var(--font-display); line-height: 1.05; }
+        .fc-stat b { font-weight: 800; font-size: 10cqw; }
+        .fc-stat span { font-weight: 600; font-size: 7.6cqw; opacity: 0.72; letter-spacing: 0.03em; }
+        .fc-foot {
+            position: absolute; top: 113cqw; left: 0; right: 0;
+            display: flex; justify-content: center; gap: 4.5cqw;
+            font-size: 6.2cqw; font-weight: 800; letter-spacing: 0.06em; color: var(--ink-soft);
         }
-        .card-stats-grid {
-            display: grid; grid-template-columns: 1fr 1fr;
-            gap: 1px 8px; margin-top: auto; padding-top: 4px;
-        }
-        .card-stat-row {
-            display: flex; justify-content: space-between;
-            align-items: center; padding: 0.5px 0;
-        }
-        .card-stat-label {
-            font-size: 0.5rem; font-weight: 800;
-            letter-spacing: 0.08em; opacity: 0.55;
-            text-transform: uppercase;
-        }
-        .card-stat-val {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.6rem; font-weight: 800;
-        }
-        .card-badges {
-            display: flex; justify-content: center;
-            gap: 3px; margin-top: 3px; flex-wrap: wrap;
-        }
-        .card-stars {
-            display: flex; align-items: center; gap: 4px;
-            justify-content: center; margin-top: 2px;
-        }
-        .card-stars span { font-size: 0.45rem; opacity: 0.6; letter-spacing: 0.05em; font-weight: 700; }
+        .fc-foot b { color: var(--ink); margin: 0 0.6cqw 0 1cqw; }
+        .fc-foot i { font-size: 5.2cqw; }
 
-        /* Gold stat color */
-        .card-gold .card-stat-val { color: #FFD700; }
-        .card-gold .card-ovr { color: #FFD700; }
-        .card-gold .card-name { color: #FFE566; }
-        .card-rare .card-stat-val { color: #a78bfa; }
-        .card-rare .card-ovr { color: #c4b5fd; }
-        .card-rare .card-name { color: #ddd6fe; }
-        .card-base .card-stat-val { color: #a1a1aa; }
-        .card-base .card-ovr { color: #d4d4d8; }
-        .card-base .card-name { color: #e4e4e7; }
+        .fc-card.rarity-bronze { --rim-a: #f0c598; --rim-b: #7b4a22; --body-a: #d29761; --body-b: #85512a; --ink: #2a1608; --ink-soft: rgba(42,22,8,0.62); --glow: rgba(210,151,97,0.4); }
+        .fc-card.rarity-silver { --rim-a: #ffffff; --rim-b: #8d9bb0; --body-a: #dbe3ee; --body-b: #8996ab; --ink: #111a2a; --ink-soft: rgba(17,26,42,0.6); --glow: rgba(200,215,235,0.4); }
+        .fc-card.rarity-gold   { --rim-a: #fff3b8; --rim-b: #c4902a; --body-a: #f6d878; --body-b: #ac7c1b; --ink: #2b1c00; --ink-soft: rgba(43,28,0,0.62); --glow: rgba(255,214,107,0.45); }
 
-        /* Filter Bar */
-        .filter-bar {
-            display: flex; flex-wrap: wrap; gap: 0.5rem;
-            align-items: center; margin-bottom: 1rem;
+        /* Holográfica: la rareza top (OVR 85+) */
+        .fc-card.rarity-holo {
+            --rim-a: #22e6ff; --rim-b: #ff3fd0;
+            --body-a: #1b1f5e; --body-b: #070a24;
+            --ink: #ffffff; --ink-soft: rgba(255,255,255,0.7); --glow: rgba(34,230,255,0.55);
         }
+        .fc-card.rarity-holo .fc-shape { background: conic-gradient(from 210deg at 50% 50%, #22e6ff, #8b5cf6, #ff3fd0, #ffd66b, #c6ff3d, #22e6ff); }
+        .fc-card.rarity-holo .fc-shape::before {
+            background:
+                radial-gradient(70% 45% at 78% 8%, rgba(34,230,255,0.45), transparent 65%),
+                radial-gradient(60% 40% at 8% 70%, rgba(255,63,208,0.28), transparent 70%),
+                linear-gradient(170deg, var(--body-a), var(--body-b));
+        }
+        .fc-card.rarity-holo .fc-foil {
+            background:
+                linear-gradient(115deg, transparent 18%, rgba(34,230,255,0.5) 34%, rgba(255,63,208,0.5) 50%, rgba(255,214,107,0.5) 66%, transparent 82%);
+            background-size: 260% 100%; background-position: var(--sx, 0%) 0;
+            mix-blend-mode: color-dodge; opacity: 0.55;
+            animation: holoSweep 6s ease-in-out infinite alternate;
+        }
+        .fc-card.rarity-holo .fc-rating { text-shadow: 0 0 14px rgba(34,230,255,0.75); }
+        .fc-card.rarity-holo .fc-name,
+        .fc-card.rarity-holo .fc-stats::before { color: #fff; }
+        .fc-card.rarity-holo .fc-photo i { color: #fff; opacity: 0.25; }
+        @keyframes holoSweep { from { background-position: 0% 0; } to { background-position: 100% 0; } }
+        .fc-card.rarity-holo:hover .fc-foil { animation: none; opacity: 0.85; }
+
+        /* ===== Filtros ===== */
+        .filter-bar { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 1rem; }
         .filter-pill {
-            padding: 0.4rem 0.8rem; border-radius: 2rem;
-            font-size: 0.7rem; font-weight: 700;
-            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.35rem 0.85rem; border-radius: 3px;
+            font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+            border: 1px solid rgba(255,255,255,0.12);
             background: rgba(255,255,255,0.04);
-            color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.55);
             cursor: pointer; transition: all 0.2s;
             user-select: none; white-space: nowrap;
         }
-        .filter-pill:hover { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); }
+        .filter-pill:hover { border-color: rgba(255,255,255,0.28); color: #fff; }
         .filter-pill.active {
-            border-color: var(--accent-blue);
-            background: rgba(10,132,255,0.15);
-            color: white;
-            box-shadow: 0 0 12px rgba(10,132,255,0.15);
+            border-color: var(--accent-primary);
+            background: var(--accent-primary);
+            color: var(--ink-on-accent);
         }
         .filter-select {
-            padding: 0.4rem 0.6rem; border-radius: 0.5rem;
-            font-size: 0.7rem; font-weight: 600;
-            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.4rem 0.6rem; border-radius: 3px;
+            font-size: 0.72rem; font-weight: 700;
+            border: 1px solid rgba(255,255,255,0.12);
             background: rgba(255,255,255,0.04);
-            color: rgba(255,255,255,0.7);
-            cursor: pointer; transition: all 0.2s;
-            outline: none;
+            color: rgba(255,255,255,0.8);
+            cursor: pointer; transition: all 0.2s; outline: none;
         }
-        .filter-select:focus { border-color: var(--accent-blue); }
-        .filter-select option { background: #1a1a25; color: white; }
-        .filter-divider {
-            width: 1px; height: 20px;
-            background: rgba(255,255,255,0.1);
-            margin: 0 0.25rem;
-        }
+        .filter-select:focus { border-color: var(--accent-primary); }
+        .filter-select option { background: #0b1222; color: white; }
+        .filter-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.12); margin: 0 0.25rem; }
 
-        /* ===== DETAIL MODAL ===== */
+        /* ===== Modal de detalle ===== */
         .modal-backdrop {
             position: fixed; inset: 0; z-index: 100;
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            background: radial-gradient(70% 60% at 50% 30%, rgba(198,255,61,0.06), transparent 70%), rgba(2,4,10,0.82);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             display: flex; align-items: center; justify-content: center;
             padding: 1rem;
             animation: fadeIn 0.2s ease-out;
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .modal-content {
-            background: var(--bg-elevated);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 1.25rem;
-            max-width: 600px; width: 100%;
+            background: #0b1222;
+            border: 1px solid var(--line);
+            border-top: 3px solid var(--accent-primary);
+            border-radius: 8px;
+            max-width: 620px; width: 100%;
             max-height: 90vh; overflow-y: auto;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.7);
+            box-shadow: 0 30px 90px rgba(0,0,0,0.75), 0 0 70px rgba(198,255,61,0.07);
             animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-head { background: linear-gradient(135deg, rgba(198,255,61,0.10), rgba(34,230,255,0.06) 60%, transparent); }
+        .modal-avatar {
+            width: 72px; height: 72px; flex-shrink: 0; overflow: hidden;
+            background: linear-gradient(160deg, #1b2a4a, #0a1020);
+            clip-path: polygon(0 0, 100% 0, 100% 72%, 72% 100%, 0 100%);
+            display: flex; align-items: center; justify-content: center;
+            border-bottom: 3px solid var(--accent-primary);
+        }
+        .modal-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+        .modal-name { font-family: var(--font-display); font-style: italic; font-weight: 900; font-size: 2rem; line-height: 1; text-transform: uppercase; letter-spacing: 0.01em; }
 
-        /* Pitch */
-        .pitch-container { width: 100%; aspect-ratio: 2/3; max-width: 340px; margin: 0 auto; background: linear-gradient(180deg, #0A2E16 0%, #0E4720 30%, #115927 60%, #0A2E16 100%); border: 2px solid rgba(255,255,255,0.2); border-radius: 8px; position: relative; overflow: hidden; }
-        .pitch-line { position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: rgba(255,255,255,0.3); transform: translateY(-50%); }
-        .pitch-circle { position: absolute; top: 50%; left: 50%; width: 70px; height: 70px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; transform: translate(-50%,-50%); }
-        .pitch-dot { position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; background: rgba(255,255,255,0.3); border-radius: 50%; transform: translate(-50%,-50%); }
-        .pitch-box-t { position: absolute; top: 0; left: 22%; width: 56%; height: 14%; border: 2px solid rgba(255,255,255,0.3); border-top: none; }
-        .pitch-box-b { position: absolute; bottom: 0; left: 22%; width: 56%; height: 14%; border: 2px solid rgba(255,255,255,0.3); border-bottom: none; }
-        .player-dot { position: absolute; width: 34px; height: 34px; border-radius: 50%; transform: translate(-50%,-50%); display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: white; z-index: 2; transition: top 0.3s, left 0.3s; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.9); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        /* ===== Campo ===== */
+        .pitch-container {
+            width: 100%; aspect-ratio: 2/3; max-width: 340px; margin: 0 auto; position: relative; overflow: hidden;
+            background:
+                repeating-linear-gradient(180deg, rgba(255,255,255,0.035) 0 8.33%, transparent 8.33% 16.66%),
+                linear-gradient(180deg, #06260f 0%, #0b3d1b 35%, #0e4a21 60%, #06260f 100%);
+            border: 2px solid rgba(198,255,61,0.35); border-radius: 6px;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
+        }
+        .pitch-line { position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: rgba(255,255,255,0.35); transform: translateY(-50%); }
+        .pitch-circle { position: absolute; top: 50%; left: 50%; width: 70px; height: 70px; border: 2px solid rgba(255,255,255,0.35); border-radius: 50%; transform: translate(-50%,-50%); }
+        .pitch-dot { position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; background: rgba(255,255,255,0.35); border-radius: 50%; transform: translate(-50%,-50%); }
+        .pitch-box-t { position: absolute; top: 0; left: 22%; width: 56%; height: 14%; border: 2px solid rgba(255,255,255,0.35); border-top: none; }
+        .pitch-box-b { position: absolute; bottom: 0; left: 22%; width: 56%; height: 14%; border: 2px solid rgba(255,255,255,0.35); border-bottom: none; }
+        .player-dot { position: absolute; width: 36px; height: 36px; border-radius: 50%; transform: translate(-50%,-50%); display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: white; z-index: 2; transition: top 0.3s, left 0.3s; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.95); box-shadow: 0 4px 10px rgba(0,0,0,0.55); }
         .player-dot.empty { border: 1px dashed rgba(255,255,255,0.4); background: rgba(0,0,0,0.5); }
-        .player-dot .pos-label { position: absolute; bottom: -18px; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px; font-size: 8px; white-space: nowrap; pointer-events: none; }
+        .player-dot .pos-label { position: absolute; bottom: -18px; background: rgba(4,6,13,0.9); padding: 2px 6px; border-radius: 3px; font-size: 8px; font-weight: 800; letter-spacing: 0.05em; white-space: nowrap; pointer-events: none; }
 
-        /* Chat */
-        .chat-container { display: flex; flex-direction: column; height: 600px; }
+        /* ===== Chat ===== */
+        .chat-container { display: flex; flex-direction: column; height: calc(100vh - 220px); min-height: 400px; max-height: 800px; }
         .chat-messages { flex: 1; overflow-y: auto; padding: 1rem; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
-        .chat-bubble { max-width: 85%; padding: 0.75rem 1rem; border-radius: 1rem; font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.75rem; word-break: break-word; animation: fadeInUp 0.25s ease-out; }
-        .chat-bubble-user { background: #0A84FF; color: white; margin-left: auto; border-bottom-right-radius: 0.2rem; }
-        .chat-bubble-ai { background: rgba(255,255,255,0.07); color: white; margin-right: auto; border-bottom-left-radius: 0.2rem; border: 1px solid rgba(255,255,255,0.05); }
+        .chat-bubble { max-width: 85%; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.75rem; word-break: break-word; animation: fadeInUp 0.25s ease-out; }
+        .chat-bubble-user { background: linear-gradient(135deg, #d9ff6b, var(--accent-primary)); color: var(--ink-on-accent); font-weight: 600; margin-left: auto; border-bottom-right-radius: 0; }
+        .chat-bubble-ai { background: rgba(255,255,255,0.05); color: #fff; margin-right: auto; border-bottom-left-radius: 0; border: 1px solid var(--line); border-left: 3px solid var(--accent-primary); }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-100px); z-index: 10000; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: none; }
-        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-200px); opacity: 0; z-index: 10000; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s; pointer-events: none; }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .toast > div { border-radius: 6px !important; border-left: 4px solid var(--accent-primary) !important; box-shadow: 0 14px 40px rgba(0,0,0,0.6); }
 
-        /* Stats Grid (scouting) */
-        .stat-grid-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        /* ===== Atributos (scouting) ===== */
+        .stat-grid-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .stat-grid-item:last-child { border-bottom: none; }
-        .stat-label { font-size: 0.8rem; font-weight: 600; color: rgba(255,255,255,0.7); flex: 1; }
-        .stat-val-input { width: 60px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: white; text-align: center; border-radius: 6px; padding: 4px 6px; font-size: 0.9rem; font-weight: 800; -moz-appearance: textfield; transition: 0.2s; }
+        .stat-label { font-size: 0.8rem; font-weight: 600; color: rgba(255,255,255,0.72); flex: 1; }
+        .stat-val-input { width: 60px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.18); color: white; text-align: center; border-radius: 4px; padding: 4px 6px; font-size: 0.9rem; font-weight: 800; -moz-appearance: textfield; transition: 0.2s; }
         .stat-val-input::-webkit-outer-spin-button, .stat-val-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        .stat-val-input:focus { border-color: #0A84FF; outline: none; background: rgba(10,132,255,0.15); box-shadow: 0 0 0 2px rgba(10,132,255,0.2); }
+        .stat-val-input:focus { border-color: var(--accent-primary); outline: none; background: rgba(198,255,61,0.1); box-shadow: 0 0 0 2px rgba(198,255,61,0.2); }
 
-        /* PlayStyle slots */
-        .ps-slot { width: 36px; height: 36px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.4); cursor: pointer; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; position: relative; margin: 8px; user-select: none; }
-        .ps-slot.gold { border-color: #FFD700; box-shadow: 0 0 12px rgba(255,215,0,0.25); background: rgba(255,215,0,0.08); }
-        .ps-slot.silver { border-color: #C0C0C0; background: rgba(192,192,192,0.08); }
+        /* PlayStyles */
+        .ps-slot { width: 36px; height: 36px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.18); background: rgba(0,0,0,0.45); cursor: pointer; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; position: relative; margin: 8px; user-select: none; }
+        .ps-slot.gold { border-color: var(--accent-secondary); box-shadow: 0 0 14px rgba(255,214,107,0.3); background: rgba(255,214,107,0.1); }
+        .ps-slot.silver { border-color: #c8d3e3; background: rgba(200,211,227,0.09); }
         .ps-slot > i { transform: rotate(-45deg); font-size: 14px; }
         .ps-slot:hover { transform: rotate(45deg) scale(1.1); }
 
-        .arch-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.25rem 0.6rem; border-radius: 0.3rem; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.15); }
+        .arch-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.25rem 0.6rem; border-radius: 3px; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.15); }
 
-        /* Typing indicator */
-        .typing-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); margin: 0 2px; animation: typingBounce 1.4s infinite ease-in-out both; }
+        .typing-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-primary); opacity: 0.6; margin: 0 2px; animation: typingBounce 1.4s infinite ease-in-out both; }
         .typing-dot:nth-child(1) { animation-delay: -0.32s; }
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
         @keyframes typingBounce { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
 
-        .ovr-elite { color: #32D74B; }
-        .ovr-good { color: #FFD60A; }
-        .ovr-avg { color: #FF9F0A; }
-        .ovr-low { color: #FF453A; }
+        .ovr-elite { color: var(--accent-primary); }
+        .ovr-good { color: var(--accent-secondary); }
+        .ovr-avg { color: #ff9d3d; }
+        .ovr-low { color: var(--accent-danger); }
 
-        .skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 0.5rem; }
+        .skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.04) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
         .stat-bar { height: 3px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; margin-top: 2px; }
         .stat-bar-fill { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
+        .detail-stat-bar { height: 6px; border-radius: 1px; background: rgba(255,255,255,0.08); overflow: hidden; flex: 1; transform: skewX(-20deg); }
+        .detail-stat-bar-fill { height: 100%; transition: width 0.4s ease; box-shadow: 0 0 10px currentColor; }
 
-        /* Detail modal stat bars */
-        .detail-stat-bar { height: 5px; border-radius: 3px; background: rgba(255,255,255,0.08); overflow: hidden; flex: 1; }
-        .detail-stat-bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+        ::-webkit-scrollbar-thumb { background: rgba(198,255,61,0.25); border-radius: 2px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(198,255,61,0.45); }
 
-        /* Empty state */
         .empty-state {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             padding: 4rem 2rem; text-align: center;
-            background: var(--bg-card); border-radius: 1rem;
-            border: 1px dashed rgba(255,255,255,0.1);
+            background: var(--bg-card); border-radius: 6px;
+            border: 1px dashed rgba(198,255,61,0.25);
+        }
+
+        /* ===== Login ===== */
+        .login-bg { position: absolute; inset: 0; background:
+            radial-gradient(700px 480px at 15% 0%, rgba(198,255,61,0.18), transparent 65%),
+            radial-gradient(700px 480px at 90% 10%, rgba(34,230,255,0.14), transparent 65%),
+            linear-gradient(180deg, rgba(4,6,13,0.82), rgba(4,6,13,0.95)); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+        .login-logo {
+            width: 68px; height: 68px; margin: 0 auto 1rem;
+            background: linear-gradient(135deg, #d9ff6b, var(--accent-primary) 55%, #8fd400);
+            clip-path: polygon(0 0, 100% 0, 100% 68%, 68% 100%, 0 100%);
+            display: flex; align-items: center; justify-content: center; font-size: 1.7rem; color: var(--ink-on-accent);
+        }
+        .login-title { font-family: var(--font-display); font-style: italic; font-weight: 900; font-size: 3.4rem; line-height: 0.95; text-transform: uppercase; color: #fff; letter-spacing: 0.01em; }
+        .login-title span { color: var(--accent-primary); }
+        .login-kicker { color: var(--accent-primary); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.32em; text-transform: uppercase; margin-top: 0.6rem; }
+        .login-card {
+            position: relative; padding: 2rem;
+            background: rgba(7,12,24,0.9); border: 1px solid var(--line); border-radius: 6px;
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+        }
+        .login-card::before, .login-card::after {
+            content: ''; position: absolute; width: 26px; height: 26px; pointer-events: none;
+            border: 2px solid var(--accent-primary);
+        }
+        .login-card::before { top: -1px; left: -1px; border-right: none; border-bottom: none; border-top-left-radius: 6px; }
+        .login-card::after { bottom: -1px; right: -1px; border-left: none; border-top: none; border-bottom-right-radius: 6px; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .fc-card, .fc-card:hover { transform: none !important; transition: none; }
+            .fc-card.rarity-holo .fc-foil { animation: none; }
+            .modal-content, .modal-backdrop, .chat-bubble { animation: none; }
         }
     </style>
 </head>
@@ -435,19 +621,66 @@
     <script type="text/babel">
         const { useState, useEffect, useCallback, useMemo, useRef, memo } = React;
 
+        // ===== SESIÓN Y API =====
+        const AUTH_EXPIRED_EVENT = 'jogga:auth-expired';
+        const TOAST_EVENT = 'jogga:toast';
+
+        // Lee la sesión desde el token (el rol viene firmado en el token, no de un valor editable).
+        const getSession = () => {
+            try {
+                const t = localStorage.getItem('jogga_token');
+                if (!t) return null;
+                const b64 = t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                const payload = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(b64), c => c.charCodeAt(0))));
+                if (!payload.exp || payload.exp * 1000 <= Date.now()) return null;
+                return payload;
+            } catch { return null; }
+        };
+        const getRole = () => { const s = getSession(); return s ? s.role : null; };
+        const clearSession = () => { localStorage.removeItem('jogga_token'); localStorage.removeItem('jogga_role'); };
+        const notify = (msg) => window.dispatchEvent(new CustomEvent(TOAST_EVENT, { detail: msg }));
+
+        // fetch con token; si el servidor responde 401 la sesión caducó y se vuelve al login.
+        const apiFetch = async (url, options = {}) => {
+            const headers = { ...(options.headers || {}) };
+            const token = localStorage.getItem('jogga_token');
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+            if (options.body !== undefined && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
+            const res = await fetch(url, { ...options, headers });
+            if (res.status === 401) { clearSession(); window.dispatchEvent(new Event(AUTH_EXPIRED_EVENT)); }
+            return res;
+        };
+
+        // Reduce y recomprime una imagen (JPEG) antes de enviarla; Vercel rechaza cuerpos de más de 4,5 MB.
+        const compressImage = (file, maxSide = 1600, quality = 0.85) => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onerror = () => reject(new Error('No se pudo leer la imagen'));
+            reader.onload = () => {
+                const img = new Image();
+                img.onerror = () => reject(new Error('Imagen inválida'));
+                img.onload = () => {
+                    const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+                    const canvas = document.createElement('canvas');
+                    canvas.width = Math.max(1, Math.round(img.width * scale));
+                    canvas.height = Math.max(1, Math.round(img.height * scale));
+                    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                    resolve(canvas.toDataURL('image/jpeg', quality));
+                };
+                img.src = reader.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
         // ===== API PROXY =====
-        const callIA = async (system, prompt, base64Image = null) => {
+        const callIA = async (system, prompt, base64Image = null, { history = null, json = false } = {}) => {
             try {
                 const body = { system, prompt };
                 if (base64Image) body.image = base64Image;
-                const token = localStorage.getItem('jogga_token');
-                const res = await fetch('/api/ai', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify(body)
-                });
-                const data = await res.json();
-                if (!res.ok) { console.error('[API Error]', data); return null; }
+                if (history && history.length) body.history = history;
+                if (json) body.json = true;
+                const res = await apiFetch('/api/ai', { method: 'POST', body: JSON.stringify(body) });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) { console.error('[API Error]', res.status, data); return null; }
                 return data.text || null;
             } catch(e) { console.error(e); return null; }
         };
@@ -478,9 +711,15 @@
         const ALL_PLAYSTYLES = PLAYSTYLES_LIST.flatMap(c => c.list);
 
         const FORMATIONS = {
-            "4-2-3-1": { name: "4-2-3-1 (Balance)", pos: [{t:92,l:50,p:'POR'},{t:76,l:12,p:'LI'},{t:76,l:37,p:'DFC'},{t:76,l:63,p:'DFC'},{t:76,l:88,p:'LD'},{t:58,l:37,p:'MCD'},{t:58,l:63,p:'MCD'},{t:40,l:15,p:'MI'},{t:38,l:50,p:'MCO'},{t:40,l:85,p:'MD'},{t:18,l:50,p:'DC'}] },
-            "4-3-3": { name: "4-3-3 (Ofensiva)", pos: [{t:92,l:50,p:'POR'},{t:76,l:12,p:'LI'},{t:76,l:37,p:'DFC'},{t:76,l:63,p:'DFC'},{t:76,l:88,p:'LD'},{t:55,l:30,p:'MC'},{t:58,l:50,p:'MCD'},{t:55,l:70,p:'MC'},{t:24,l:15,p:'EI'},{t:18,l:50,p:'DC'},{t:24,l:85,p:'ED'}] },
-            "5-3-2": { name: "5-3-2 (Defensiva)", pos: [{t:92,l:50,p:'POR'},{t:76,l:8,p:'CAI'},{t:78,l:28,p:'DFC'},{t:78,l:50,p:'DFC'},{t:78,l:72,p:'DFC'},{t:76,l:92,p:'CAD'},{t:55,l:25,p:'MC'},{t:55,l:50,p:'MC'},{t:55,l:75,p:'MC'},{t:22,l:35,p:'DC'},{t:22,l:65,p:'DC'}] },
+            "4-2-3-1": { name: "4-2-3-1", pos: [{t:92,l:50,p:'POR'},{t:76,l:12,p:'LI'},{t:76,l:37,p:'DFC'},{t:76,l:63,p:'DFC'},{t:76,l:88,p:'LD'},{t:58,l:37,p:'MCD'},{t:58,l:63,p:'MCD'},{t:40,l:15,p:'MI'},{t:38,l:50,p:'MCO'},{t:40,l:85,p:'MD'},{t:18,l:50,p:'DC'}] },
+            "4-3-3": { name: "4-3-3", pos: [{t:92,l:50,p:'POR'},{t:76,l:12,p:'LI'},{t:76,l:37,p:'DFC'},{t:76,l:63,p:'DFC'},{t:76,l:88,p:'LD'},{t:55,l:30,p:'MC'},{t:58,l:50,p:'MCD'},{t:55,l:70,p:'MC'},{t:24,l:15,p:'EI'},{t:18,l:50,p:'DC'},{t:24,l:85,p:'ED'}] },
+            "4-4-2": { name: "4-4-2", pos: [{t:92,l:50,p:'POR'},{t:76,l:12,p:'LI'},{t:76,l:37,p:'DFC'},{t:76,l:63,p:'DFC'},{t:76,l:88,p:'LD'},{t:55,l:12,p:'MI'},{t:55,l:37,p:'MC'},{t:55,l:63,p:'MC'},{t:55,l:88,p:'MD'},{t:22,l:35,p:'DC'},{t:22,l:65,p:'DC'}] },
+            "4-1-2-1-2": { name: "4-1-2-1-2", pos: [{t:92,l:50,p:'POR'},{t:76,l:12,p:'LI'},{t:76,l:37,p:'DFC'},{t:76,l:63,p:'DFC'},{t:76,l:88,p:'LD'},{t:62,l:50,p:'MCD'},{t:48,l:30,p:'MC'},{t:48,l:70,p:'MC'},{t:35,l:50,p:'MCO'},{t:20,l:35,p:'DC'},{t:20,l:65,p:'DC'}] },
+            "3-5-2": { name: "3-5-2", pos: [{t:92,l:50,p:'POR'},{t:78,l:25,p:'DFC'},{t:78,l:50,p:'DFC'},{t:78,l:75,p:'DFC'},{t:55,l:8,p:'MI'},{t:55,l:35,p:'MC'},{t:55,l:50,p:'MCD'},{t:55,l:65,p:'MC'},{t:55,l:92,p:'MD'},{t:22,l:35,p:'DC'},{t:22,l:65,p:'DC'}] },
+            "4-2-2-2": { name: "4-2-2-2", pos: [{t:92,l:50,p:'POR'},{t:76,l:12,p:'LI'},{t:76,l:37,p:'DFC'},{t:76,l:63,p:'DFC'},{t:76,l:88,p:'LD'},{t:58,l:37,p:'MCD'},{t:58,l:63,p:'MCD'},{t:38,l:25,p:'MCO'},{t:38,l:75,p:'MCO'},{t:20,l:35,p:'DC'},{t:20,l:65,p:'DC'}] },
+            "4-3-2-1": { name: "4-3-2-1", pos: [{t:92,l:50,p:'POR'},{t:76,l:12,p:'LI'},{t:76,l:37,p:'DFC'},{t:76,l:63,p:'DFC'},{t:76,l:88,p:'LD'},{t:58,l:25,p:'MC'},{t:58,l:50,p:'MC'},{t:58,l:75,p:'MC'},{t:36,l:30,p:'MCO'},{t:36,l:70,p:'MCO'},{t:18,l:50,p:'DC'}] },
+            "5-3-2": { name: "5-3-2", pos: [{t:92,l:50,p:'POR'},{t:76,l:8,p:'CAI'},{t:78,l:28,p:'DFC'},{t:78,l:50,p:'DFC'},{t:78,l:72,p:'DFC'},{t:76,l:92,p:'CAD'},{t:55,l:25,p:'MC'},{t:55,l:50,p:'MC'},{t:55,l:75,p:'MC'},{t:22,l:35,p:'DC'},{t:22,l:65,p:'DC'}] },
+            "4-1-4-1": { name: "4-1-4-1", pos: [{t:92,l:50,p:'POR'},{t:76,l:12,p:'LI'},{t:76,l:37,p:'DFC'},{t:76,l:63,p:'DFC'},{t:76,l:88,p:'LD'},{t:62,l:50,p:'MCD'},{t:45,l:12,p:'MI'},{t:45,l:37,p:'MC'},{t:45,l:63,p:'MC'},{t:45,l:88,p:'MD'},{t:18,l:50,p:'DC'}] },
         };
 
         const ARCHETYPES = {
@@ -513,7 +752,6 @@
         };
 
         const getOvrClass = (ovr) => ovr >= 85 ? 'ovr-elite' : ovr >= 75 ? 'ovr-good' : ovr >= 65 ? 'ovr-avg' : 'ovr-low';
-        const getCardTier = (ovr) => ovr >= 85 ? 'card-gold' : ovr >= 75 ? 'card-rare' : 'card-base';
 
         const analyzePosition = (posData) => {
             const { pac, sho, pas, dri, def, phy } = calcMainStats(posData.attributes);
@@ -539,42 +777,106 @@
             return { archetype, role, ovr: Math.min(99, Math.max(1, ovr)), archData: ARCHETYPES[archetype] };
         };
 
+        // ===== IMPORTAR JUGADOR (validación) =====
+        const clampInt = (v, min, max, def) => { const n = parseInt(v, 10); return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : def; };
+        const cleanStr = (v, max) => (typeof v === 'string' ? v.slice(0, max) : '');
+        const sanitizeImportedPlayer = (raw) => {
+            if (!raw || typeof raw !== 'object' || typeof raw.name !== 'string' || !raw.name.trim()) throw new Error('Formato inválido');
+            if (!Array.isArray(raw.positions) || raw.positions.length === 0 || raw.positions.length > 15) throw new Error('Formato inválido');
+            const positions = raw.positions.map(p => {
+                if (!p || !POSITIONS.includes(p.position)) throw new Error('Posición inválida');
+                const attributes = getDefaultAttrs();
+                Object.keys(attributes).forEach(g => Object.keys(attributes[g]).forEach(f => {
+                    attributes[g][f] = clampInt(p.attributes && p.attributes[g] && p.attributes[g][f], 1, 99, 75);
+                }));
+                const clean = {
+                    position: p.position,
+                    notes: cleanStr(p.notes, 1000),
+                    rating: clampInt(p.rating, 0, 5, 0),
+                    pros: cleanStr(p.pros, 500),
+                    cons: cleanStr(p.cons, 500),
+                    psGold: Array.isArray(p.psGold) ? p.psGold.filter(x => ALL_PLAYSTYLES.includes(x)).slice(0, 4) : [],
+                    psSilver: Array.isArray(p.psSilver) ? p.psSilver.filter(x => ALL_PLAYSTYLES.includes(x)).slice(0, 10) : [],
+                    attributes
+                };
+                return { ...clean, report: analyzePosition(clean) };
+            });
+            const photo = (typeof raw.photo === 'string' && raw.photo.startsWith('data:image/') && raw.photo.length <= 400000) ? raw.photo : null;
+            return {
+                name: raw.name.trim().slice(0, 60),
+                photo,
+                skillMoves: clampInt(raw.skillMoves, 1, 5, 3),
+                weakFoot: clampInt(raw.weakFoot, 1, 5, 3),
+                positions
+            };
+        };
+
         // ===== HOOKS =====
+        const PLAYERS_KEY = 'jogga-players-v42';
         const useLocalStorage = (key, init) => {
             const [val, setVal] = useState(() => { try { const i = localStorage.getItem(key); return i ? JSON.parse(i) : init; } catch { return init; } });
-            
+            const valRef = useRef(val);
+            const versionRef = useRef(0);      // versión de la plantilla en el servidor
+            const syncedRef = useRef(key !== PLAYERS_KEY);
+            const debounceRef = useRef(null);
+
+            const cache = (nv) => { try { localStorage.setItem(key, JSON.stringify(nv)); } catch(e) { console.warn('localStorage full', e); } };
+            const adopt = (nv) => { valRef.current = nv; setVal(nv); cache(nv); };
+
+            // Al abrir: trae la plantilla del servidor (también cuando está vacía).
             useEffect(() => {
-                if(key === 'jogga-players-v42') {
-                    const token = localStorage.getItem('jogga_token');
-                    fetch('/api/players', { headers: { 'Authorization': `Bearer ${token}` } }).then(r => r.json()).then(data => {
-                        if(Array.isArray(data) && data.length > 0) {
-                            setVal(data);
-                            try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) {}
-                        }
-                    }).catch(e => console.error("Error fetching from DB", e));
+                if (key !== PLAYERS_KEY) return;
+                let cancelled = false;
+                apiFetch('/api/players').then(r => r.ok ? r.json() : null).then(data => {
+                    if (cancelled || !data) return;
+                    versionRef.current = Number.isInteger(data.version) ? data.version : 0;
+                    if (Array.isArray(data.players)) adopt(data.players);
+                }).catch(e => console.error('Error fetching from DB', e)).finally(() => { syncedRef.current = true; });
+                return () => { cancelled = true; };
+            }, [key]);
+
+            useEffect(() => () => { if (debounceRef.current) clearTimeout(debounceRef.current); }, []);
+
+            const persist = useCallback(async () => {
+                if (!syncedRef.current) { debounceRef.current = setTimeout(persist, 1000); return; }
+                const role = getRole();
+                if (role !== 'admin' && role !== 'capitan') {
+                    if (!window.__joggaReadOnlyWarned) { window.__joggaReadOnlyWarned = true; notify('Tu rol solo permite consultar la plantilla: los cambios no se guardan en el servidor.'); }
+                    return;
                 }
+                try {
+                    const res = await apiFetch('/api/players', { method: 'POST', body: JSON.stringify({ players: valRef.current, baseVersion: versionRef.current }) });
+                    const data = await res.json().catch(() => ({}));
+                    if (res.ok) { versionRef.current = data.version; return; }
+                    if (res.status === 409) {
+                        versionRef.current = Number.isInteger(data.version) ? data.version : versionRef.current;
+                        if (Array.isArray(data.players)) adopt(data.players);
+                        notify('⚠️ Otra persona actualizó la plantilla. Se cargó la última versión: repite tu cambio.');
+                    } else if (res.status !== 401) {
+                        notify(data.error ? `No se pudo guardar: ${data.error}` : 'No se pudo guardar la plantilla en el servidor.');
+                    }
+                } catch (e) { console.error('Error saving to DB', e); notify('Sin conexión: los cambios solo quedaron en este dispositivo.'); }
             }, [key]);
 
             const set = useCallback((v) => {
-                setVal(prev => {
-                    const nv = v instanceof Function ? v(prev) : v;
-                    try { localStorage.setItem(key, JSON.stringify(nv)); } catch(e) { console.warn('localStorage full', e); }
-                    if(key === 'jogga-players-v42') {
-                        const token = localStorage.getItem('jogga_token');
-                        fetch('/api/players', { method: 'POST', headers: {'Content-Type':'application/json', 'Authorization': `Bearer ${token}`}, body: JSON.stringify(nv) }).catch(e => console.error("Error saving to DB", e));
-                    }
-                    return nv;
-                });
-            }, [key]);
+                const nv = v instanceof Function ? v(valRef.current) : v;
+                valRef.current = nv;
+                setVal(nv);
+                cache(nv);
+                if (key === PLAYERS_KEY) {
+                    if (debounceRef.current) clearTimeout(debounceRef.current);
+                    debounceRef.current = setTimeout(persist, 2000);
+                }
+            }, [key, persist]);
             return [val, set];
         };
 
         // ===== COMPONENTS =====
         const Toast = memo(({ msg, show }) => (
             <div className={`toast ${show?'show':''}`}>
-                <div className="ios-card px-5 py-3 flex items-center gap-3 shadow-lg border border-white/10" style={{background:'rgba(18,18,26,0.95)'}}>
-                    <i className="fas fa-check-circle text-ios-green text-lg"></i>
-                    <span className="text-sm font-bold text-white">{msg}</span>
+                <div className="px-5 py-3 flex items-center gap-3 shadow-lg rounded-2xl border" style={{background:'var(--bg-card)', borderColor:'var(--bg-elevated)'}}>
+                    <i className="fas fa-check-circle text-emerald-500 text-lg"></i>
+                    <span className="text-sm font-bold" style={{color:'var(--text-primary)'}}>{msg}</span>
                 </div>
             </div>
         ));
@@ -610,71 +912,161 @@
             </span>
         ));
 
-        // ===== FUT CARD COMPONENT =====
-        const FutCard = memo(({ player, posIndex = 0, onClick }) => {
+        // SVG Radar Chart
+        const RadarChart = memo(({ stats, size = 64 }) => {
+            const keys = ['pac', 'sho', 'pas', 'dri', 'def', 'phy'];
+            const cx = size / 2, cy = size / 2, r = size / 2 - 4;
+            const angleStep = (Math.PI * 2) / 6;
+            
+            const getPoint = (index, value) => {
+                const angle = angleStep * index - Math.PI / 2;
+                const dist = (value / 99) * r;
+                return [cx + dist * Math.cos(angle), cy + dist * Math.sin(angle)];
+            };
+            
+            const bgPoints = keys.map((_, i) => getPoint(i, 99).join(',')).join(' ');
+            const midPoints = keys.map((_, i) => getPoint(i, 50).join(',')).join(' ');
+            const dataPoints = keys.map((k, i) => getPoint(i, stats[k] || 50).join(',')).join(' ');
+            
+            return (
+                <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+                    <polygon points={bgPoints} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+                    <polygon points={midPoints} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="0.5" />
+                    {keys.map((_, i) => {
+                        const [x, y] = getPoint(i, 99);
+                        return <line key={i} x1={cx} y1={cy} x2={x} y2={y} stroke="rgba(255,255,255,0.05)" strokeWidth="0.5" />;
+                    })}
+                    <polygon points={dataPoints} fill="rgba(198,255,61,0.22)" stroke="#c6ff3d" strokeWidth="1.5" strokeLinejoin="round" />
+                </svg>
+            );
+        });
+
+        // ===== TARJETA DE JUGADOR (estilo FC 27) =====
+        // Rareza según OVR: 85+ holográfica, 75+ oro, 65+ plata, resto bronce.
+        const rarityOf = (ovr) => ovr >= 85 ? 'holo' : ovr >= 75 ? 'gold' : ovr >= 65 ? 'silver' : 'bronze';
+        const CARD_STATS = [['pac','RIT'],['dri','REG'],['sho','TIR'],['def','DEF'],['pas','PAS'],['phy','FIS']];
+        const PlayerCard = memo(({ player, posIndex = 0, onClick }) => {
             const pos = player.positions[posIndex];
             if (!pos) return null;
             const stats = calcMainStats(pos.attributes);
             const ovr = pos.report.ovr;
-            const tier = getCardTier(ovr);
+
+            // Inclinación y brillo holográfico que siguen al puntero (solo CSS vars, sin re-render).
+            const onMove = (e) => {
+                const el = e.currentTarget, r = el.getBoundingClientRect();
+                const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+                el.style.setProperty('--mx', `${(x * 100).toFixed(1)}%`);
+                el.style.setProperty('--my', `${(y * 100).toFixed(1)}%`);
+                el.style.setProperty('--sx', `${(x * 100).toFixed(1)}%`);
+                el.style.setProperty('--rx', `${((x - 0.5) * 14).toFixed(1)}deg`);
+                el.style.setProperty('--ry', `${(-(y - 0.5) * 14).toFixed(1)}deg`);
+            };
+            const onLeave = (e) => { e.currentTarget.style.removeProperty('--rx'); e.currentTarget.style.removeProperty('--ry'); };
 
             return (
-                <div className={`fut-card ${tier}`} onClick={() => onClick(player)}>
-                    <div className="fut-card-inner">
-                        {/* OVR + Position */}
-                        <div className="flex justify-between items-start" style={{zIndex:2, position:'relative'}}>
-                            <div>
-                                <div className="card-ovr">{ovr}</div>
-                                <div className="card-pos">{pos.position}</div>
-                            </div>
-                            <div className="card-stars flex-col items-end gap-0.5" style={{display:'flex'}}>
-                                <div className="flex items-center gap-1">
-                                    <span style={{fontSize:'0.4rem',opacity:0.4,fontWeight:700}}>SM</span>
-                                    <Stars count={player.skillMoves} max={5} size="text-[6px]" />
-                                </div>
-                                <div className="flex items-center gap-1">
-                                    <span style={{fontSize:'0.4rem',opacity:0.4,fontWeight:700}}>PM</span>
-                                    <Stars count={player.weakFoot} max={5} size="text-[6px]" />
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Photo */}
-                        <div className="card-photo" style={{zIndex:2, position:'relative'}}>
-                            {player.photo
-                                ? <img src={player.photo} alt={player.name} loading="lazy" />
-                                : <i className="fas fa-user text-2xl text-white/20"></i>
-                            }
-                        </div>
-
-                        {/* Name */}
-                        <div className="card-name" style={{zIndex:2, position:'relative'}}>{player.name}</div>
-
-                        {/* Divider */}
-                        <div style={{height:'1px', background:'rgba(255,255,255,0.1)', margin:'4px 0', zIndex:2, position:'relative'}}></div>
-
-                        {/* Stats grid */}
-                        <div className="card-stats-grid" style={{zIndex:2, position:'relative'}}>
-                            {Object.entries(DETAILED_STATS).map(([key, data]) => (
-                                <div key={key} className="card-stat-row">
-                                    <span className="card-stat-label">{key}</span>
-                                    <span className="card-stat-val">{stats[key]}</span>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* PlayStyle badges */}
-                        {(pos.psGold.length > 0 || pos.psSilver.length > 0) && (
-                            <div className="card-badges" style={{zIndex:2, position:'relative'}}>
-                                {pos.psGold.slice(0,3).map(g => (
-                                    <span key={g} style={{fontSize:'0.4rem',fontWeight:800,background:'rgba(255,215,0,0.2)',color:'#FFD700',border:'1px solid rgba(255,215,0,0.3)',padding:'1px 4px',borderRadius:'3px',display:'flex',alignItems:'center',gap:'2px'}}>
-                                        <i className="fas fa-star" style={{fontSize:'0.35rem'}}></i>{g.length > 10 ? g.substring(0,8)+'…' : g}
-                                    </span>
-                                ))}
-                                {pos.psGold.length > 3 && <span style={{fontSize:'0.4rem',opacity:0.4}}>+{pos.psGold.length-3}</span>}
-                            </div>
-                        )}
+                <div className={`fc-card rarity-${rarityOf(ovr)}`} role="button" tabIndex={0}
+                     aria-label={`${player.name}, ${ovr}, ${pos.position}`}
+                     onClick={() => onClick(player)}
+                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(player); } }}
+                     onMouseMove={onMove} onMouseLeave={onLeave}>
+                    <div className="fc-shape"><div className="fc-foil"></div><div className="fc-shine"></div></div>
+                    <div className="fc-photo">
+                        {player.photo ? <img src={player.photo} alt="" loading="lazy" /> : <i className="fas fa-user"></i>}
                     </div>
+                    <div className="fc-left">
+                        <div className="fc-rating">{ovr}</div>
+                        <div className="fc-pos">{pos.position}</div>
+                        <div className="fc-sep"></div>
+                        <i className={`fas ${pos.report.archData.icon} fc-arch`} title={pos.report.archetype}></i>
+                    </div>
+                    <div className="fc-name">{player.name}</div>
+                    <div className="fc-stats">
+                        {CARD_STATS.map(([k, label]) => (
+                            <div key={k} className="fc-stat"><b>{stats[k]}</b><span>{label}</span></div>
+                        ))}
+                    </div>
+                    <div className="fc-foot">
+                        <span>SM<b>{player.skillMoves}</b><i className="fas fa-star"></i></span>
+                        <span>PM<b>{player.weakFoot}</b><i className="fas fa-star"></i></span>
+                        {pos.psGold.length > 0 && <span title="PlayStyles+"><i className="fas fa-bolt"></i><b>{pos.psGold.length}</b></span>}
+                    </div>
+                </div>
+            );
+        });
+
+        // Hero Banner Component
+        const HeroBanner = memo(({ players }) => {
+            const avgOvr = players.length > 0 ? Math.round(players.reduce((sum, p) => sum + Math.max(...p.positions.map(pos => pos.report.ovr)), 0) / players.length) : 0;
+            return (
+                <div className="hero-banner">
+                    <img src="fondo.jpg" alt="Stadium" />
+                    <div className="hero-overlay">
+                        <div>
+                            <div className="hero-title">JOGGA <span>BONITO</span></div>
+                            <div className="hero-subtitle">Squad Hub · Pro Clubs</div>
+                        </div>
+                        <div className="hero-stats">
+                            <div className="hero-stat-item">
+                                <div className="hero-stat-value">{players.length}</div>
+                                <div className="hero-stat-label">Jugadores</div>
+                            </div>
+                            <div className="hero-stat-item">
+                                <div className="hero-stat-value">{avgOvr}</div>
+                                <div className="hero-stat-label">Media OVR</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        });
+
+        // Sidebar Component
+        const Sidebar = memo(({ activeTab, setActiveTab, role, onLogout }) => {
+            const tabs = [
+                {id:'squad',i:'fa-id-card',title:'Plantilla'},
+                {id:'scouting',i:'fa-user-plus',title:'Scouting'},
+                {id:'tactics',i:'fa-chess-board',title:'Táctica'},
+                {id:'chat',i:'fa-robot',title:'IA Chat'},
+                ...(role === 'admin' ? [{id:'admin',i:'fa-user-shield',title:'Admin'}] : [])
+            ];
+            
+            return (
+                <div className="sidebar">
+                    <div className="sidebar-logo"><i className="fas fa-futbol text-white"></i></div>
+                    <div className="sidebar-nav">
+                        {tabs.map(t => (
+                            <div key={t.id} className={`sidebar-item ${activeTab === t.id ? 'active' : ''}`} onClick={() => setActiveTab(t.id)} title={t.title}>
+                                <i className={`fas ${t.i}`}></i>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="sidebar-bottom">
+                        <div className="sidebar-item" onClick={onLogout} title="Cerrar sesión">
+                            <i className="fas fa-sign-out-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            );
+        });
+
+        // Mobile Nav Component
+        const MobileNav = memo(({ activeTab, setActiveTab, role }) => {
+            const tabs = [
+                {id:'squad',i:'fa-id-card',title:'Plantilla'},
+                {id:'scouting',i:'fa-user-plus',title:'Scouting'},
+                {id:'tactics',i:'fa-chess-board',title:'Táctica'},
+                {id:'chat',i:'fa-robot',title:'Chat'},
+                ...(role === 'admin' ? [{id:'admin',i:'fa-user-shield',title:'Admin'}] : [])
+            ];
+            
+            return (
+                <div className="mobile-nav">
+                    {tabs.map(t => (
+                        <div key={t.id} className={`mobile-nav-item ${activeTab === t.id ? 'active' : ''}`} onClick={() => setActiveTab(t.id)}>
+                            <i className={`fas ${t.i}`}></i>
+                            <span>{t.title}</span>
+                        </div>
+                    ))}
                 </div>
             );
         });
@@ -691,88 +1083,76 @@
                 <div className="modal-backdrop" onClick={onClose}>
                     <div className="modal-content" onClick={e => e.stopPropagation()}>
                         {/* Header */}
-                        <div className="p-5 border-b border-white/5" style={{background: 'linear-gradient(135deg, rgba(10,132,255,0.08), rgba(191,90,242,0.05))'}}>
+                        <div className="modal-head p-5 border-b border-white/5">
                             <div className="flex justify-between items-start mb-4">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-16 h-16 rounded-xl overflow-hidden border border-white/10 bg-black/30 flex-shrink-0">
-                                        {player.photo ? <img src={player.photo} className="w-full h-full object-cover" alt="" /> : <i className="fas fa-user text-2xl text-white/20 m-auto mt-4"></i>}
+                                <div className="flex gap-4 items-center">
+                                    <div className="modal-avatar">
+                                        {player.photo ? <img alt="" src={player.photo} /> : <i className="fas fa-user text-3xl text-white/30"></i>}
                                     </div>
                                     <div>
-                                        <h2 className="text-2xl font-black uppercase tracking-tight">{player.name}</h2>
-                                        <div className="flex gap-3 mt-1">
-                                            <div className="flex items-center gap-1"><span className="text-[10px] text-gray-500 font-bold">SM</span><Stars count={player.skillMoves} size="text-[9px]" /></div>
-                                            <div className="flex items-center gap-1"><span className="text-[10px] text-gray-500 font-bold">PM</span><Stars count={player.weakFoot} size="text-[9px]" /></div>
+                                        <h2 className="modal-name">{player.name}</h2>
+                                        <div className="flex items-center gap-3 mt-1">
+                                            <span className="flex items-center gap-1 text-xs text-gray-400"><span className="font-bold text-gray-300">SM</span> <Stars count={player.skillMoves}/></span>
+                                            <span className="flex items-center gap-1 text-xs text-gray-400"><span className="font-bold text-gray-300">PM</span> <Stars count={player.weakFoot}/></span>
                                         </div>
                                     </div>
                                 </div>
-                                <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition text-gray-400 hover:text-white">
-                                    <i className="fas fa-times"></i>
-                                </button>
+                                <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400"><i className="fas fa-times"></i></button>
                             </div>
-
-                            {/* Position tabs */}
-                            {player.positions.length > 1 && (
-                                <div className="segmented-control mb-0">
-                                    {player.positions.map((p, i) => (
-                                        <div key={i} className={`segment-btn ${activePosIdx===i?'active':''}`} onClick={() => setActivePosIdx(i)}>
-                                            {p.position} ({p.report.ovr})
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+                            
+                            <div className="segmented-control">
+                                {player.positions.map((p, idx) => (
+                                    <div key={idx} className={`segment-btn ${activePosIdx === idx ? 'active' : ''}`} onClick={() => setActivePosIdx(idx)}>
+                                        {p.position} ({p.report.ovr})
+                                    </div>
+                                ))}
+                            </div>
                         </div>
 
                         {/* Body */}
-                        <div className="p-5 space-y-4">
-                            {/* OVR + Archetype + Rating */}
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <span className={`text-4xl font-black font-orbitron ${getOvrClass(ovr)}`}>{ovr}</span>
-                                    <div>
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <span className="text-xl font-black bg-white/10 px-2 py-0.5 rounded leading-none">{pos.position}</span>
-                                            {(pos.rating > 0 && (localStorage.getItem('jogga_role') === 'admin' || localStorage.getItem('jogga_role') === 'capitan')) && (
-                                                <span className="text-yellow-400 text-sm"><i className="fas fa-star"></i> {pos.rating}/5</span>
-                                            )}
+                        <div className="p-5 space-y-6">
+                            {/* Analysis */}
+                            <div className="flex flex-col sm:flex-row gap-4 items-start">
+                                <div className="w-full sm:w-1/3">
+                                    <div className="ios-card p-4 text-center h-full flex flex-col justify-center">
+                                        <div className={`text-6xl font-black font-display italic leading-none ${getOvrClass(ovr)} mb-1`}>{ovr}</div>
+                                        <div className="text-xs font-bold text-gray-400 uppercase tracking-widest">{pos.position}</div>
+                                        <div className="mt-3 inline-block">
+                                            <span className={`arch-badge ${pos.report.archData.bg}`}>
+                                                <i className={`fas ${pos.report.archData.icon}`}></i> {pos.report.archetype}
+                                            </span>
                                         </div>
-                                        <span className={`arch-badge ${pos.report.archData.bg}`}>
-                                            <i className={`fas ${pos.report.archData.icon} text-[8px]`}></i>{pos.report.archetype}
-                                        </span>
+                                        <div className="text-[10px] text-gray-500 mt-2 font-semibold">Rol: {pos.report.role}</div>
+                                        <div className="mt-3 flex justify-center"><RadarChart stats={stats} size={96} /></div>
+                                        { (getRole() === 'admin' || getRole() === 'capitan') && pos.rating > 0 && (
+                                            <div className="mt-3 flex justify-center">
+                                                <Stars count={pos.rating} max={5} size="text-sm" />
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
-                            </div>
-
-                            {/* Detailed stats */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {Object.entries(DETAILED_STATS).map(([grp, data]) => {
-                                    const main = stats[grp];
-                                    return (
-                                        <div key={grp} className="bg-black/20 p-3 rounded-lg border border-white/5">
-                                            <div className="flex justify-between items-center mb-2">
-                                                <span className="text-[10px] font-bold uppercase tracking-wider" style={{color: data.color}}>{data.label}</span>
-                                                <span className={`text-lg font-black font-orbitron ${getOvrClass(main)}`}>{main}</span>
+                                <div className="w-full sm:w-2/3 ios-card p-4">
+                                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 border-b border-white/5 pb-2">Atributos Principales</h3>
+                                    <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                                        {Object.entries(DETAILED_STATS).map(([k, d]) => (
+                                            <div key={k}>
+                                                <div className="flex justify-between text-xs font-bold mb-1">
+                                                    <span className="text-gray-400">{d.label}</span>
+                                                    <span style={{color: d.color}}>{stats[k]}</span>
+                                                </div>
+                                                <div className="detail-stat-bar">
+                                                    <div className="detail-stat-bar-fill" style={{width: `${stats[k]}%`, background: d.color, color: d.color}}></div>
+                                                </div>
                                             </div>
-                                            {Object.entries(data.fields).map(([f, label]) => {
-                                                const v = pos.attributes[grp][f];
-                                                return (
-                                                    <div key={f} className="flex items-center gap-2 mb-1">
-                                                        <span className="text-[10px] text-gray-500 w-24 truncate">{label}</span>
-                                                        <div className="detail-stat-bar">
-                                                            <div className="detail-stat-bar-fill" style={{width:`${v}%`, background: data.color}}></div>
-                                                        </div>
-                                                        <span className="text-[11px] font-bold w-6 text-right">{v}</span>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    );
-                                })}
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
 
                             {/* PlayStyles */}
                             {(pos.psGold.length > 0 || pos.psSilver.length > 0) && (
-                                <div className="bg-black/20 p-3 rounded-lg border border-white/5">
-                                    <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">PlayStyles</h4>
+                                <div className="ios-card p-4 border border-yellow-500/20">
+                                    <h3 className="text-xs font-bold text-yellow-500 uppercase tracking-widest mb-3 flex items-center gap-2"><i className="fas fa-bolt"></i> PlayStyles</h3>
                                     <div className="flex flex-wrap gap-1.5">
                                         {pos.psGold.map(g => <span key={g} className="text-[9px] font-bold bg-yellow-600/20 text-yellow-300 border border-yellow-500/40 px-2 py-0.5 rounded flex items-center gap-1"><i className="fas fa-star text-[7px]"></i>{g}</span>)}
                                         {pos.psSilver.map(s => <span key={s} className="text-[9px] font-bold bg-gray-600/20 text-gray-300 border border-gray-500/40 px-2 py-0.5 rounded">{s}</span>)}
@@ -781,7 +1161,7 @@
                             )}
 
                             {/* Notes, Pros, Cons */}
-                            {(localStorage.getItem('jogga_role') === 'admin' || localStorage.getItem('jogga_role') === 'capitan') && (
+                            {(getRole() === 'admin' || getRole() === 'capitan') && (
                                 <div className="space-y-2">
                                     {pos.pros && (
                                         <div className="bg-green-900/15 p-3 rounded-lg border border-green-500/20">
@@ -796,8 +1176,8 @@
                                         </div>
                                     )}
                                     {pos.notes && (
-                                        <div className="bg-blue-900/15 p-3 rounded-lg border border-blue-500/20">
-                                            <h4 className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1"><i className="fas fa-clipboard mr-1"></i>Nota Privada del DT</h4>
+                                        <div className="bg-emerald-900/15 p-3 rounded-lg border border-emerald-500/20">
+                                            <h4 className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-1"><i className="fas fa-clipboard mr-1"></i>Nota Privada del DT</h4>
                                             <p className="text-sm text-gray-300">{pos.notes}</p>
                                         </div>
                                     )}
@@ -885,19 +1265,75 @@
             );
         });
 
+        const CustomPositionSelect = ({ value, onChange }) => {
+            const [isOpen, setIsOpen] = useState(false);
+            const ref = useRef(null);
+
+            useEffect(() => {
+                const handleClickOutside = (event) => {
+                    if (ref.current && !ref.current.contains(event.target)) {
+                        setIsOpen(false);
+                    }
+                };
+                document.addEventListener('mousedown', handleClickOutside);
+                return () => document.removeEventListener('mousedown', handleClickOutside);
+            }, []);
+
+            const groups = [
+                { id: 'attack', label: 'DEL', color: 'text-blue-400', bg: 'bg-blue-400/10' },
+                { id: 'midfield', label: 'MED', color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
+                { id: 'defense', label: 'DEF', color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
+                { id: 'gk', label: 'POR', color: 'text-orange-400', bg: 'bg-orange-400/10' }
+            ];
+
+            return (
+                <div className="relative" ref={ref}>
+                    <div 
+                        className="ios-input font-black text-3xl py-4 bg-black/40 text-center border-emerald-500/50 cursor-pointer hover:bg-black/60 transition-colors flex items-center justify-center gap-2 relative z-10"
+                        onClick={() => setIsOpen(!isOpen)}
+                    >
+                        <span className="text-emerald-400">{value}</span>
+                        <i className={`fas fa-chevron-${isOpen ? 'up' : 'down'} text-gray-500 text-sm absolute right-4`}></i>
+                    </div>
+
+                    {isOpen && (
+                        <div className="absolute top-full left-0 right-0 mt-2 p-4 bg-[#0b1222] border border-white/10 rounded-xl shadow-2xl z-50 animate-fade-in" style={{boxShadow: '0 20px 50px rgba(0,0,0,0.8)'}}>
+                            <div className="flex flex-col gap-4">
+                                {groups.map(g => (
+                                    <div key={g.id}>
+                                        <div className={`text-[10px] font-bold ${g.color} uppercase tracking-widest mb-2 px-1 flex items-center gap-2`}>
+                                            <div className={`w-2 h-2 rounded-full ${g.bg} border border-current`}></div>
+                                            {g.label}
+                                        </div>
+                                        <div className="grid grid-cols-4 gap-2">
+                                            {POS_GROUPS[g.id].map(pos => (
+                                                <div 
+                                                    key={pos}
+                                                    className={`py-2.5 text-center rounded-lg cursor-pointer text-sm font-black transition-all ${value === pos ? 'bg-emerald-500 text-[#04110a] shadow-[0_0_15px_rgba(198,255,61,0.4)]' : 'bg-black/40 text-gray-400 border border-white/5 hover:bg-white/10 hover:text-white'}`}
+                                                    onClick={() => { onChange(pos); setIsOpen(false); }}
+                                                >
+                                                    {pos}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
         // ===== MAIN APP COMPONENT =====
         const MainApp = ({ onLogout }) => {
-            const role = localStorage.getItem('jogga_role');
+            const role = getRole();
             const [activeTab, setActiveTab] = useState('squad');
             const [players, setPlayers] = useLocalStorage('jogga-players-v42', []);
             const [selectedPlayer, setSelectedPlayer] = useState(null);
             const [editingId, setEditingId] = useState(null);
             const [formPosIndex, setFormPosIndex] = useState(-1);
-            const [isLight, setIsLight] = useState(false);
 
-            useEffect(() => {
-                document.body.classList.toggle('light-mode', isLight);
-            }, [isLight]);
             const [chatHistory, setChatHistory] = useLocalStorage('jogga-chat-v2', [{ role: 'model', text: 'Bienvenido, Míster. Soy Jogga Bonito App. Conozco las notas y stats detallados de toda tu plantilla. ¿Qué planeamos para hoy?' }]);
             const [toast, setToast] = useState({ show: false, msg: '' });
             const showToast = useCallback((msg) => setToast({ show: true, msg }), []);
@@ -920,8 +1356,14 @@
 
             // Squad Filters
             const [filters, setFilters] = useState({ posGroup: 'all', minSkill: 0, minWF: 0, playstyle: '', sortBy: 'ovr-desc' });
+            const [searchQuery, setSearchQuery] = useState('');
 
             useEffect(() => { if(toast.show) { const t = setTimeout(()=>setToast({show:false}), 3000); return ()=>clearTimeout(t); } }, [toast.show]);
+            useEffect(() => {
+                const onToast = (e) => showToast(e.detail);
+                window.addEventListener(TOAST_EVENT, onToast);
+                return () => window.removeEventListener(TOAST_EVENT, onToast);
+            }, [showToast]);
             useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [chatHistory, isChatLoading]);
 
             const handleImageUpload = useCallback((e) => {
@@ -948,7 +1390,7 @@
 
             const resetForm = useCallback(() => {
                 setEditingId(null); setFormPosIndex(-1);
-                setForm({ name: '', photo: null, skillMoves: 3, weakFoot: 3, currentPos: { position: 'DC', notes: '', psGold: [], psSilver: [], attributes: getDefaultAttrs() } });
+                setForm({ name: '', photo: null, skillMoves: 3, weakFoot: 3, currentPos: { position: 'DC', notes: '', rating: 0, pros: '', cons: '', psGold: [], psSilver: [], attributes: getDefaultAttrs() } });
             }, []);
 
             // Form Handlers
@@ -969,9 +1411,12 @@
                 });
             }, []);
 
-            const saveForm = useCallback((e) => {
+            const saveForm = useCallback((e, continueAdding = false) => {
                 e.preventDefault();
-                if (!form.name.trim()) return;
+                if (!form.name.trim()) {
+                    showToast('⚠️ El nombre del jugador es obligatorio');
+                    return;
+                }
                 const r = analyzePosition(form.currentPos);
                 const posToSave = { ...form.currentPos, report: r };
                 const playerData = { name: form.name.trim(), photo: form.photo, skillMoves: Math.min(5, Math.max(1, parseInt(form.skillMoves)||3)), weakFoot: Math.min(5, Math.max(1, parseInt(form.weakFoot)||3)) };
@@ -989,9 +1434,13 @@
                 } else {
                     setPlayers(prev => [{ id: Date.now().toString(), ...playerData, positions: [posToSave] }, ...prev]);
                 }
-                showToast('Datos guardados');
-                setActiveTab('squad');
-                resetForm();
+                showToast('✅ Datos guardados');
+                if (continueAdding) {
+                    resetForm();
+                } else {
+                    setActiveTab('squad');
+                    resetForm();
+                }
             }, [form, editingId, formPosIndex, setPlayers, showToast, resetForm]);
 
             const startEdit = useCallback((player, posIdx = 0) => {
@@ -1037,10 +1486,8 @@
                 try {
                     const base64Str = code.replace(/^JOGGA-/, '');
                     const jsonStr = decodeURIComponent(atob(base64Str));
-                    const playerData = JSON.parse(jsonStr);
-                    
-                    if (!playerData.name || !playerData.positions) throw new Error("Formato inválido");
-                    
+                    if (jsonStr.length > 600000) throw new Error('Código demasiado grande');
+                    const playerData = sanitizeImportedPlayer(JSON.parse(jsonStr));
                     playerData.id = Date.now().toString(); // Asignar nuevo ID
                     setPlayers(prev => [playerData, ...prev]);
                     showToast(`¡${playerData.name} importado con éxito!`);
@@ -1052,26 +1499,32 @@
             const OCR = useCallback(async (e) => {
                 const file = e.target.files[0]; if(!file) return;
                 e.target.value = '';
-                const reader = new FileReader();
-                reader.onloadend = async () => {
-                    showToast('Analizando imagen con IA...');
-                    const sys = "Extrae los 6 atributos principales (PAC, SHO, PAS, DRI, DEF, PHY) de esta pantalla de FC. Devuelve SOLO JSON: {pac:80,sho:80...}";
-                    const res = await callIA(sys, "Extrae atributos", reader.result);
+                showToast('Analizando imagen con IA...');
+                let imageData;
+                try { imageData = await compressImage(file, 2000, 0.85); } catch { showToast('No se pudo leer la imagen'); return; }
+                    const sys = `Extrae TODOS los atributos de esta pantalla de FC 25/26. Devuelve SOLO JSON con sub-stats: {"pac":{"acceleration":80,"sprintSpeed":85},"sho":{"attPosition":75,"finishing":82,"shotPower":80,"longShots":70,"volleys":65,"penalties":72},"pas":{"vision":80,"crossing":75,"fkAcc":65,"shortPass":82,"longPass":78,"curve":70},"dri":{"agility":80,"balance":75,"reactions":82,"ballControl":85,"dribbling":83,"composure":78},"def":{"interceptions":50,"headingAcc":60,"defAware":45,"standTackle":40,"slideTackle":35},"phy":{"jumping":70,"stamina":80,"strength":75,"aggression":65}}. Si no ves algún sub-stat individual, estima un valor razonable basado en el stat principal del grupo. SOLO devuelve JSON, nada más.`;
+                    const res = await callIA(sys, "Extrae atributos", imageData, { json: true });
                     if (res) {
                         try {
                             const stats = JSON.parse(res.replace(/```json/g,'').replace(/```/g,'').trim());
-                            if (stats.pac) {
+                            if (stats.pac || stats.sho) {
                                 setForm(p => {
                                     const c = JSON.parse(JSON.stringify(p.currentPos.attributes));
-                                    Object.keys(DETAILED_STATS).forEach(k => { if(stats[k]) { Object.keys(c[k]).forEach(sub => c[k][sub] = parseInt(stats[k])||75); } });
+                                    Object.keys(DETAILED_STATS).forEach(k => {
+                                        if(stats[k]) {
+                                            if (typeof stats[k] === 'object') {
+                                                Object.keys(c[k]).forEach(sub => { c[k][sub] = parseInt(stats[k][sub]) || c[k][sub]; });
+                                            } else {
+                                                Object.keys(c[k]).forEach(sub => c[k][sub] = parseInt(stats[k])||75);
+                                            }
+                                        }
+                                    });
                                     return {...p, currentPos: {...p.currentPos, attributes: c}};
                                 });
                                 showToast('Stats base actualizados');
                             }
                         } catch { showToast('Fallo al leer stats'); }
                     } else { showToast('Error al analizar la imagen'); }
-                };
-                reader.readAsDataURL(file);
             }, [showToast]);
 
             // Tactics Engine
@@ -1084,7 +1537,7 @@
                 ).join('\n')).join('\n\n');
                 const sys = `Eres Jogga Bonito App, DT táctico de FC 26 Clubes Pro. Se te dan los jugadores activos, sus posiciones secundarias, OVR, arquetipos, PlayStyles y las NOTAS CRÍTICAS DEL DT.\nMisión: Generar 3 planes (Plan A: Balance, Plan B: Ataque, Plan C: Defensa). Para cada plan, elige una formación y asigna a TODOS los jugadores.\nResponde ESTRICTAMENTE en formato JSON array, sin markdown, sin texto extra:\n[{"planName":"Plan A","formation":"4-2-3-1","reasoning":"...","assignments":[{"name":"...","spot":"MCO"}]},...]`;
                 const pr = `Genera 3 planes tácticos:\n${ctx}\nFormaciones: 4-2-3-1, 4-3-3, 5-3-2. Los 'spot' deben coincidir exactamente con las posiciones de la formación.`;
-                const res = await callIA(sys, pr);
+                const res = await callIA(sys, pr, null, { json: true });
                 if (res) {
                     try {
                         const plans = JSON.parse(res.replace(/```json/g,'').replace(/```/g,'').trim());
@@ -1099,14 +1552,15 @@
             const sendChat = useCallback(async () => {
                 if(!chatInp.trim() || isChatLoading) return;
                 const uMsg = chatInp.trim(); setChatInp('');
+                const prior = chatHistory.slice(-12).map(m => ({ role: m.role, text: m.text }));
                 setChatHistory(p => [...p, {role:'user', text:uMsg}]);
                 setIsChatLoading(true);
                 const ctx = players.map(p => `${p.name}: ` + p.positions.map(pos => `[${pos.position}] OVR ${pos.report.ovr}. Notas: ${pos.notes || 'N/A'}`).join(' | ')).join('\n');
                 const sys = `Eres Jogga Bonito App, asistente táctico de Club JoGGa Bonito en FC 26 Pro Clubs. Responde de forma concisa, útil y con personalidad futbolística. Contexto plantilla:\n${ctx}`;
-                const reply = await callIA(sys, uMsg);
+                const reply = await callIA(sys, uMsg, null, { history: prior });
                 setChatHistory(p => [...p, {role:'model', text: reply||'Error al conectar con el servidor. Inténtalo de nuevo.'}]);
                 setIsChatLoading(false);
-            }, [chatInp, isChatLoading, players, setChatHistory]);
+            }, [chatInp, isChatLoading, players, chatHistory, setChatHistory]);
 
             const clearChat = useCallback(() => {
                 if (window.confirm('¿Limpiar todo el historial de chat?')) {
@@ -1121,6 +1575,12 @@
             // ===== FILTERED + SORTED PLAYERS =====
             const filteredPlayers = useMemo(() => {
                 let result = [...players];
+
+                // Name search
+                if (searchQuery.trim()) {
+                    const q = searchQuery.trim().toLowerCase();
+                    result = result.filter(p => p.name.toLowerCase().includes(q));
+                }
 
                 // Position filter
                 if (filters.posGroup !== 'all') {
@@ -1166,7 +1626,7 @@
                 }
 
                 return result;
-            }, [players, filters]);
+            }, [players, filters, searchQuery]);
 
             // Get the best position index for display (based on filter)
             const getBestPosIndex = useCallback((player) => {
@@ -1177,56 +1637,33 @@
             }, [filters.posGroup]);
 
             return (
-                <div className="min-h-screen font-sf pb-16">
+                <div className="main-content min-h-screen font-sf pb-16">
                     <Toast msg={toast.msg} show={toast.show} />
                     {selectedPlayer && <PlayerDetailModal player={selectedPlayer} onClose={() => setSelectedPlayer(null)} onEdit={startEdit} onAddPos={startAddPos} onDelete={deletePlayer} onExport={exportPlayer} />}
+                    
+                    <Sidebar activeTab={activeTab} setActiveTab={(t) => {
+                        setActiveTab(t);
+                        if(t==='scouting' && !editingId) resetForm(); 
+                        else if(t!=='scouting') setEditingId(null);
+                    }} role={role} onLogout={onLogout} />
+                    <MobileNav activeTab={activeTab} setActiveTab={(t) => {
+                        setActiveTab(t);
+                        if(t==='scouting' && !editingId) resetForm(); 
+                        else if(t!=='scouting') setEditingId(null);
+                    }} role={role} />
+                    
+                    {activeTab === 'squad' && <HeroBanner players={players} />}
 
-                    <header className="glass-header sticky top-0 z-50 p-4">
-                        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full flex items-center justify-center border-2 border-white/10" style={{background:'linear-gradient(135deg, #0A84FF, #BF5AF2)'}}>
-                                    <i className="fas fa-futbol text-white"></i>
-                                </div>
-                                <div>
-                                    <h1 className="text-xl font-black text-white leading-tight tracking-wide font-orbitron">Jogga Bonito App</h1>
-                                    <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">JoGGa Bonito · FC 26</p>
-                                </div>
-                            </div>
-                            <div className="segmented-control w-full sm:w-auto">
-                                {[
-                                    {id:'squad',i:'fa-id-card',label:'Plantilla'},
-                                    {id:'scouting',i:'fa-user-plus',label:'Scouting'},
-                                    {id:'tactics',i:'fa-chess-board',label:'Táctica'},
-                                    {id:'chat',i:'fa-robot',label:'IA Chat'},
-                                    ...(role === 'admin' ? [{id:'admin',i:'fa-user-shield',label:'Admin'}] : [])
-                                ].map(t => (
-                                    <div key={t.id} className={`segment-btn ${activeTab===t.id?'active':''}`} onClick={()=>{setActiveTab(t.id);if(t.id==='scouting' && !editingId) resetForm(); else if(t.id!=='scouting') setEditingId(null);}}>
-                                        <i className={`fas ${t.i} text-base mr-1.5`}></i>
-                                        <span className="hidden sm:inline text-xs">{t.label}</span>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="flex gap-2">
-                                <button onClick={() => setIsLight(!isLight)} className="ios-btn !py-2 !px-3 !bg-gray-500/20 hover:!bg-gray-500/40 !text-gray-300" title="Alternar tema">
-                                    <i className={`fas ${isLight ? 'fa-moon' : 'fa-sun'}`}></i>
-                                </button>
-                                <button onClick={onLogout} className="ios-btn !py-2 !px-3 !bg-red-500/20 hover:!bg-red-500/40 !text-red-400 !border-red-500/30" title="Cerrar sesión">
-                                    <i className="fas fa-sign-out-alt"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </header>
-
-                    <main className="max-w-7xl mx-auto p-4">
+                    <main className="max-w-7xl mx-auto p-4 sm:p-6">
                         {/* ===== SQUAD TAB ===== */}
                         {activeTab === 'squad' && (
                             <div>
-                                <div className="flex justify-between items-center mb-4">
-                                    <div>
-                                        <h2 className="text-2xl font-black uppercase tracking-tight">Plantilla</h2>
-                                        <p className="text-xs text-gray-500 mt-0.5">{players.length} jugadores registrados</p>
-                                    </div>
-                                    <div className="flex gap-2">
+                                <div className="flex justify-between items-center mb-4 flex-wrap gap-3">
+                                    <div className="flex gap-2 items-center w-full sm:w-auto">
+                                        <div className="relative flex-1 sm:flex-none">
+                                            <i className="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
+                                            <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Buscar jugador..." className="ios-input !py-2 !pl-8 !pr-3 !text-sm w-full sm:!w-56" />
+                                        </div>
                                         <button onClick={importPlayer} className="ios-btn-secondary !py-2.5 !px-4 !text-sm" title="Importar desde código">
                                             <i className="fas fa-file-import md:mr-2"></i><span className="hidden md:inline">Importar</span>
                                         </button>
@@ -1260,7 +1697,7 @@
                                         ) : (
                                             <div className="card-grid">
                                                 {filteredPlayers.map(p => (
-                                                    <FutCard key={p.id} player={p} posIndex={getBestPosIndex(p)} onClick={setSelectedPlayer} />
+                                                    <PlayerCard key={p.id} player={p} posIndex={getBestPosIndex(p)} onClick={setSelectedPlayer} />
                                                 ))}
                                             </div>
                                         )}
@@ -1271,45 +1708,58 @@
 
                         {/* ===== SCOUTING TAB ===== */}
                         {activeTab === 'scouting' && (
-                            <form onSubmit={saveForm} className="space-y-4">
-                                <div className="ios-card p-5">
-                                    <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">{editingId ? (formPosIndex >= 0 ? '✏️ Editando Posición' : '➕ Nueva Posición') : '🆕 Nuevo Jugador'}</h2>
+                            <form onSubmit={saveForm} className="space-y-4 max-w-4xl mx-auto relative p-4 sm:p-6 rounded-2xl shadow-2xl">
+                                <div className="absolute inset-0 bg-cover bg-center bg-fixed rounded-2xl" style={{backgroundImage: "url('fondo.jpg')", filter: "blur(10px) brightness(0.4)", zIndex: 0}}></div>
+                                <div className="absolute inset-0 bg-emerald-900/10 z-0 border border-white/10 rounded-2xl"></div>
+                                <div className="relative z-10 space-y-4">
+                                    <div className="ios-card p-5 bg-black/40 backdrop-blur-md border-emerald-500/20">
+                                        <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">{editingId ? (formPosIndex >= 0 ? '✏️ Editando Posición' : '➕ Nueva Posición') : '🆕 Nuevo Jugador'}</h2>
                                     <div className="flex flex-col sm:flex-row gap-6 items-center">
                                         <div className="relative group">
-                                            <div className="w-24 h-24 rounded-full bg-gray-800 border-2 border-dashed border-gray-600 flex items-center justify-center overflow-hidden group-hover:border-ios-blue transition-colors">
-                                                {form.photo ? <img src={form.photo} className="w-full h-full object-cover"/> : <i className="fas fa-camera text-2xl text-gray-500"></i>}
+                                            <div className="w-24 h-24 rounded-full bg-gray-800 border-2 border-dashed border-gray-600 flex items-center justify-center overflow-hidden group-hover:border-emerald-500 transition-colors">
+                                                {form.photo ? <img alt="" src={form.photo} className="w-full h-full object-cover"/> : <i className="fas fa-camera text-2xl text-gray-500"></i>}
                                             </div>
                                             <input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 opacity-0 cursor-pointer"/>
                                         </div>
                                         <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
                                             <div className="sm:col-span-3"><InputGroup label="GamerTag"><input type="text" value={form.name} onChange={e=>setForm(p=>({...p,name:e.target.value}))} className="ios-input font-bold" required disabled={editingId && formPosIndex >= 0} placeholder="Nombre del jugador" /></InputGroup></div>
-                                            <InputGroup label="Skill Moves (1-5)"><input type="number" min="1" max="5" value={form.skillMoves} onChange={e=>setForm(p=>({...p,skillMoves:parseInt(e.target.value)||1}))} className="ios-input text-center"/></InputGroup>
-                                            <InputGroup label="Pierna Mala (1-5)"><input type="number" min="1" max="5" value={form.weakFoot} onChange={e=>setForm(p=>({...p,weakFoot:parseInt(e.target.value)||1}))} className="ios-input text-center"/></InputGroup>
+                                            <InputGroup label="Skill Moves">
+                                                <div className="flex gap-1 items-center">
+                                                    {[1,2,3,4,5].map(n => (
+                                                        <i key={n} onClick={() => setForm(p=>({...p,skillMoves:n}))} className={`fas fa-star cursor-pointer text-xl transition-all ${n <= form.skillMoves ? 'text-yellow-400 scale-110' : 'text-gray-600 hover:text-gray-400'}`}></i>
+                                                    ))}
+                                                </div>
+                                            </InputGroup>
+                                            <InputGroup label="Pierna Mala">
+                                                <div className="flex gap-1 items-center">
+                                                    {[1,2,3,4,5].map(n => (
+                                                        <i key={n} onClick={() => setForm(p=>({...p,weakFoot:n}))} className={`fas fa-star cursor-pointer text-xl transition-all ${n <= form.weakFoot ? 'text-emerald-400 scale-110' : 'text-gray-600 hover:text-gray-400'}`}></i>
+                                                    ))}
+                                                </div>
+                                            </InputGroup>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="ios-card p-5 border-2 border-ios-blue/20">
+                                <div className="ios-card p-5 border-2 border-emerald-500/20 bg-black/40 backdrop-blur-md">
                                     <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
-                                        <h2 className="text-sm font-bold text-ios-blue uppercase tracking-widest">2. Posición y Notas</h2>
+                                        <h2 className="text-sm font-bold text-emerald-400 uppercase tracking-widest">2. Posición y Notas</h2>
                                         <div className="relative">
                                             <button type="button" className="ios-btn-secondary !py-1.5 !px-3 !text-xs"><i className="fas fa-camera mr-2"></i>Leer Stats con IA</button>
                                             <input type="file" accept="image/*" onChange={OCR} className="absolute inset-0 opacity-0 cursor-pointer"/>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-4">
-                                        <div className="md:col-span-1">
+                                        <div className="md:col-span-1 relative z-50">
                                             <InputGroup label="Posición Principal">
-                                                <div className="relative">
-                                                    <select value={form.currentPos.position} onChange={e=>setForm(p=>({...p,currentPos:{...p.currentPos,position:e.target.value}}))} className="ios-input font-black text-2xl py-4 bg-black/40 text-center appearance-none border-ios-blue/50">
-                                                        {POSITIONS.map(p=><option key={p}>{p}</option>)}
-                                                    </select>
-                                                    <i className="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"></i>
-                                                </div>
+                                                <CustomPositionSelect 
+                                                    value={form.currentPos.position} 
+                                                    onChange={newPos => setForm(p=>({...p,currentPos:{...p.currentPos,position:newPos}}))} 
+                                                />
                                             </InputGroup>
                                         </div>
                                         <div className="md:col-span-3 space-y-4">
-                                            { (localStorage.getItem('jogga_role') === 'admin' || localStorage.getItem('jogga_role') === 'capitan') ? (
+                                            { (getRole() === 'admin' || getRole() === 'capitan') ? (
                                                 <>
                                                     <InputGroup label="Valoración (1 a 5 Estrellas)">
                                                         <div className="flex gap-2 items-center">
@@ -1327,7 +1777,7 @@
                                                         </InputGroup>
                                                     </div>
                                                     <InputGroup label="Notas Privadas del DT">
-                                                        <textarea value={form.currentPos.notes||''} onChange={e=>setForm(p=>({...p,currentPos:{...p.currentPos,notes:e.target.value}}))} className="ios-input resize-none border-blue-500/30 focus:border-blue-500" rows="2" placeholder="Ej: Usarlo solo en el segundo tiempo..." maxLength="300"></textarea>
+                                                        <textarea value={form.currentPos.notes||''} onChange={e=>setForm(p=>({...p,currentPos:{...p.currentPos,notes:e.target.value}}))} className="ios-input resize-none border-emerald-500/30 focus:border-emerald-500" rows="2" placeholder="Ej: Usarlo solo en el segundo tiempo..." maxLength="300"></textarea>
                                                     </InputGroup>
                                                 </>
                                             ) : (
@@ -1351,184 +1801,140 @@
                                                             const isSilver = form.currentPos.psSilver.includes(ps);
                                                             return (
                                                                 <div key={ps} className="flex flex-col items-center">
-                                                                    <div className={`ps-slot ${isGold?'gold':isSilver?'silver':''}`} onClick={() => cyclePS(ps)}>
-                                                                        {isGold ? <i className="fas fa-star text-yellow-400"></i> : isSilver ? <i className="fas fa-check text-gray-300"></i> : <i className={`fas ${cat.icon} text-white/20`}></i>}
+                                                                    <div onClick={() => cyclePS(ps)} className={`ps-slot ${isGold ? 'gold' : isSilver ? 'silver' : ''}`} title={ps}>
+                                                                        <i className={`fas ${cat.icon} ${isGold ? 'text-yellow-400' : isSilver ? 'text-gray-300' : 'text-gray-600'}`}></i>
                                                                     </div>
-                                                                    <span className="text-[8px] text-gray-400 text-center w-12 leading-tight">{ps}</span>
+                                                                    <span className="text-[7px] text-gray-500 text-center max-w-[40px] leading-tight mt-1">{ps}</span>
                                                                 </div>
                                                             );
                                                         })}
                                                     </div>
                                                 </div>
                                             ))}
-                                            <p className="text-[10px] text-gray-500 mt-2"><i className="fas fa-info-circle mr-1"></i>Clic para ciclar: <span className="text-gray-400">Vacío</span> → <span className="text-gray-300">Gris</span> → <span className="text-yellow-400">Dorado</span> → <span className="text-gray-400">Vacío</span></p>
                                         </div>
                                     </div>
 
-                                    {/* Stats Grid */}
-                                    <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Atributos Detallados</h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                        {Object.entries(DETAILED_STATS).map(([grp, data]) => {
-                                            const mainAvg = calcMainStats(form.currentPos.attributes)[grp];
-                                            return (
-                                                <div key={grp} className="bg-black/20 p-3 rounded-xl border border-white/5">
-                                                    <div className="flex justify-between items-end mb-2 border-b border-white/5 pb-2">
-                                                        <span className="text-[10px] font-bold uppercase tracking-wider" style={{color:data.color}}>{grp} - {data.label}</span>
-                                                        <span className={`text-lg font-black leading-none ${getOvrClass(mainAvg)}`}>{mainAvg}</span>
-                                                    </div>
-                                                    {Object.entries(data.fields).map(([f, label]) => (
-                                                        <div key={f} className="stat-grid-item">
-                                                            <span className="stat-label">{label}</span>
-                                                            <div className="flex items-center gap-2">
-                                                                <StatBar value={form.currentPos.attributes[grp][f]} color={data.color} />
-                                                                <input type="number" min="1" max="99" value={form.currentPos.attributes[grp][f]} onChange={e => handleAttrChange(grp, f, e.target.value)} className="stat-val-input" />
-                                                            </div>
+                                    {/* Stats Input Grid */}
+                                    <div>
+                                        <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex justify-between items-end">
+                                            <span>Atributos Detallados</span>
+                                            <span className="text-emerald-400">OVR Est: {analyzePosition(form.currentPos).ovr}</span>
+                                        </h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                            {Object.entries(DETAILED_STATS).map(([groupKey, groupData]) => {
+                                                const groupAvg = calcMainStats(form.currentPos.attributes)[groupKey];
+                                                return (
+                                                    <div key={groupKey} className="bg-black/20 p-3 rounded-xl border border-white/5">
+                                                        <div className="flex justify-between items-center mb-2">
+                                                            <span className="text-xs font-bold" style={{color: groupData.color}}>{groupData.label}</span>
+                                                            <span className="text-sm font-black" style={{color: groupData.color}}>{groupAvg}</span>
                                                         </div>
-                                                    ))}
-                                                </div>
-                                            );
-                                        })}
+                                                        <div className="space-y-1">
+                                                            {Object.entries(groupData.fields).map(([fieldKey, fieldLabel]) => (
+                                                                <div key={fieldKey} className="stat-grid-item">
+                                                                    <span className="stat-label">{fieldLabel}</span>
+                                                                    <input type="number" min="1" max="99" value={form.currentPos.attributes[groupKey][fieldKey]} onChange={(e) => handleAttrChange(groupKey, fieldKey, e.target.value)} className="stat-val-input" />
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="flex gap-3">
+                                <div className="flex gap-3 flex-wrap bg-black/40 p-4 rounded-xl backdrop-blur-md border border-white/5">
                                     {editingId && <button type="button" onClick={()=>{resetForm();setActiveTab('squad')}} className="ios-btn-secondary flex-1 text-lg"><i className="fas fa-times mr-2"></i>Cancelar</button>}
                                     <button type="submit" className="ios-btn flex-1 text-lg shadow-xl"><i className="fas fa-save mr-2"></i>{editingId ? 'Guardar Cambios' : 'Agregar Jugador'}</button>
+                                    {!editingId && <button type="button" onClick={(e) => saveForm(e, true)} className="ios-btn flex-1 text-lg shadow-xl !bg-gradient-to-r !from-green-600 !to-green-500"><i className="fas fa-plus mr-2"></i>Guardar y Crear Otro</button>}
+                                </div>
                                 </div>
                             </form>
                         )}
 
                         {/* ===== TACTICS TAB ===== */}
                         {activeTab === 'tactics' && (
-                            <div className="space-y-4">
-                                <div className="ios-card p-5">
-                                    <div className="flex justify-between items-center mb-4">
-                                        <h2 className="text-sm font-bold text-ios-blue uppercase tracking-widest"><i className="fas fa-users mr-2"></i>Roster Activo <span className="text-gray-500 font-normal">({activeIds.length}/{players.length})</span></h2>
-                                        {players.length > 0 && <button onClick={toggleAllPlayers} className="text-xs text-ios-blue hover:underline">{activeIds.length === players.length ? 'Deseleccionar todos' : 'Seleccionar todos'}</button>}
-                                    </div>
-                                    {players.length === 0 && <p className="text-gray-500 text-sm mb-4">No hay jugadores. Agrega jugadores desde Scouting primero.</p>}
-                                    <div className="flex flex-wrap gap-2 mb-4">
-                                        {players.map(p => (
-                                            <button key={p.id} onClick={() => setActiveIds(c => c.includes(p.id) ? c.filter(x=>x!==p.id) : [...c,p.id])}
-                                                className={`px-4 py-2 rounded-full border-2 text-sm font-bold transition-all flex items-center gap-2 ${activeIds.includes(p.id) ? 'border-ios-blue bg-blue-900/30 text-white shadow-[0_0_10px_rgba(10,132,255,0.2)]' : 'border-white/10 bg-transparent text-gray-500 hover:border-white/30'}`}>
-                                                {p.photo ? <img src={p.photo} className="w-6 h-6 rounded-full object-cover" loading="lazy" alt=""/> : <i className="fas fa-user"></i>} {p.name}
-                                            </button>
-                                        ))}
-                                    </div>
-                                    <div className="flex gap-3">
-                                        <button onClick={generateTactics} disabled={isTacticsLoading || activeIds.length < 2} className="ios-btn flex-1"><i className={`fas ${isTacticsLoading?'fa-spinner fa-spin':'fa-brain'} mr-2`}></i>{isTacticsLoading?'Analizando combinaciones...':'Plan IA'}</button>
-                                        <button onClick={() => {
-                                            const newPlan = { planName: 'Táctica Manual', formation: '4-3-3', reasoning: 'Táctica creada manualmente.', assignments: [], isManual: true };
-                                            setTacticalPlans(prev => prev ? [...prev, newPlan] : [newPlan]);
-                                            setSelectedPlanIdx(tacticalPlans ? tacticalPlans.length : 0);
-                                        }} className="ios-btn-secondary flex-1 border-ios-blue text-ios-blue hover:bg-ios-blue/10"><i className="fas fa-edit mr-2"></i>Manual</button>
+                            <div className="flex flex-col lg:flex-row gap-6">
+                                {/* Left column: Selection */}
+                                <div className="w-full lg:w-1/3">
+                                    <div className="ios-card p-4 mb-4">
+                                        <div className="flex justify-between items-center mb-4">
+                                            <h3 className="font-bold text-sm uppercase tracking-widest">1. Convocatoria</h3>
+                                            <span className="text-xs font-bold text-emerald-400 bg-emerald-900/20 px-2 py-1 rounded">{activeIds.length} Sel.</span>
+                                        </div>
+                                        <button onClick={toggleAllPlayers} className="ios-btn-secondary w-full mb-4 !text-xs !py-1.5"><i className="fas fa-check-double mr-2"></i>Seleccionar Todos</button>
+                                        <div className="max-h-[50vh] overflow-y-auto space-y-1 pr-2">
+                                            {players.map(p => {
+                                                const isActive = activeIds.includes(p.id);
+                                                const bestPos = p.positions.reduce((a,b)=>a.report.ovr>b.report.ovr?a:b);
+                                                return (
+                                                    <div key={p.id} onClick={() => setActiveIds(prev => isActive ? prev.filter(x=>x!==p.id) : [...prev, p.id])} className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors border ${isActive ? 'bg-emerald-900/20 border-emerald-500/30' : 'bg-transparent border-transparent hover:bg-white/5'}`}>
+                                                        <div className={`w-5 h-5 rounded flex items-center justify-center border ${isActive ? 'bg-emerald-500 border-emerald-400' : 'border-gray-500'}`}>
+                                                            {isActive && <i className="fas fa-check text-white text-[10px]"></i>}
+                                                        </div>
+                                                        {p.photo ? <img alt="" src={p.photo} className="w-8 h-8 rounded-full object-cover"/> : <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center"><i className="fas fa-user text-xs"></i></div>}
+                                                        <div className="flex-1 min-w-0">
+                                                            <div className="text-sm font-bold truncate">{p.name}</div>
+                                                            <div className="text-[10px] text-gray-500">{bestPos.position} {bestPos.report.ovr}</div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                        <button onClick={generateTactics} disabled={activeIds.length < 2 || isTacticsLoading} className="ios-btn w-full mt-4 !bg-gradient-to-r !from-emerald-600 !to-emerald-400">
+                                            {isTacticsLoading ? <><i className="fas fa-spinner fa-spin mr-2"></i>Analizando...</> : <><i className="fas fa-wand-magic-sparkles mr-2"></i>Generar Táctica IA</>}
+                                        </button>
                                     </div>
                                 </div>
 
-                                {tacticalPlans && (
-                                    <div className="ios-card p-5 border-2 border-ios-purple/20" style={{background:'linear-gradient(180deg, rgba(191,90,242,0.04), transparent)'}}>
-                                        <div className="segmented-control mb-6">
-                                            {tacticalPlans.map((pl, i) => (
-                                                <div key={i} className={`segment-btn ${selectedPlanIdx===i?'active !bg-ios-purple !text-white':''}`} onClick={()=>setSelectedPlanIdx(i)}>
-                                                    {pl.planName}
-                                                </div>
-                                            ))}
-                                        </div>
-
-                                        {tacticalPlans[selectedPlanIdx] && (() => {
-                                            const plan = tacticalPlans[selectedPlanIdx];
-                                            const formDef = FORMATIONS[plan.formation];
-                                            if(!formDef) return <p className="text-red-400">Formación "{plan.formation}" no reconocida.</p>;
-
-                                            const vis = formDef.pos.map(spot => {
-                                                const match = plan.assignments.find(a => a.spot === spot.p);
-                                                if (match) {
-                                                    const player = players.find(x=>x.name === match.name);
-                                                    if(player) {
-                                                        const posData = player.positions.find(x=>x.position===spot.p) || player.positions[0];
-                                                        return { ...spot, active:true, name:player.name, photo:player.photo, ovr:posData.report.ovr };
-                                                    }
-                                                }
-                                                return { ...spot, active:false };
-                                            });
-
-                                            return (
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                    <div>
-                                                        <div className="text-center mb-4"><h3 className="text-2xl font-black font-orbitron">{plan.formation}</h3><p className="text-ios-purple font-bold uppercase text-xs">{plan.planName}</p></div>
-                                                        <div className="pitch-container">
-                                                            <div className="pitch-line"></div><div className="pitch-circle"></div><div className="pitch-dot"></div>
-                                                            <div className="pitch-box-t"></div><div className="pitch-box-b"></div>
-                                                            {vis.map((p,i) => (
-                                                                <div key={i} className={`player-dot ${p.active?'':'empty'}`} style={{top:`${p.t}%`,left:`${p.l}%`, backgroundImage: p.photo?`url(${p.photo})`:'none'}}>
-                                                                    {!p.photo && p.active && <i className="fas fa-user"></i>}
-                                                                    {!p.active && <span className="opacity-30">{p.p}</span>}
-                                                                    {p.active && <div className="pos-label">{p.name} ({p.ovr})</div>}
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        {plan.isManual && (
-                                                            <div className="mb-4 flex items-center justify-between bg-black/20 p-3 rounded-lg border border-white/5">
-                                                                <span className="text-sm font-bold text-gray-400">Formación:</span>
-                                                                <select 
-                                                                    value={plan.formation} 
-                                                                    onChange={(e) => {
-                                                                        const newForm = e.target.value;
-                                                                        const newPlans = [...tacticalPlans];
-                                                                        newPlans[selectedPlanIdx].formation = newForm;
-                                                                        newPlans[selectedPlanIdx].assignments = [];
-                                                                        setTacticalPlans(newPlans);
-                                                                    }} 
-                                                                    className="ios-input !w-auto !py-1 !px-2 text-sm font-bold"
-                                                                >
-                                                                    {Object.keys(FORMATIONS).map(f => <option key={f} value={f}>{f}</option>)}
-                                                                </select>
+                                {/* Right column: Pitch */}
+                                <div className="w-full lg:w-2/3">
+                                    {tacticalPlans ? (
+                                        <div className="ios-card p-4 h-full flex flex-col">
+                                            <div className="segmented-control mb-4">
+                                                {tacticalPlans.map((plan, idx) => (
+                                                    <div key={idx} className={`segment-btn ${selectedPlanIdx === idx ? 'active' : ''}`} onClick={() => setSelectedPlanIdx(idx)}>{plan.planName}</div>
+                                                ))}
+                                            </div>
+                                            
+                                            {(() => {
+                                                const plan = tacticalPlans[selectedPlanIdx];
+                                                const formDef = FORMATIONS[plan.formation];
+                                                if (!formDef) return <div className="text-center p-4">Formación no reconocida por la IA.</div>;
+                                                
+                                                return (
+                                                    <div className="flex flex-col md:flex-row gap-6 flex-1">
+                                                        <div className="w-full md:w-1/2 flex items-center justify-center">
+                                                            <div className="pitch-container shadow-[0_0_20px_rgba(198,255,61,0.15)] border-emerald-500/20">
+                                                                <div className="pitch-line"></div>
+                                                                <div className="pitch-circle"></div>
+                                                                <div className="pitch-dot"></div>
+                                                                <div className="pitch-box-t"></div>
+                                                                <div className="pitch-box-b"></div>
+                                                                {formDef.pos.map((spot, i) => {
+                                                                    const assignment = plan.assignments.find(a => a.spot === spot.p);
+                                                                    const player = assignment ? players.find(x => x.name === assignment.name) : null;
+                                                                    return (
+                                                                        <div key={i} className={`player-dot ${player ? 'border-emerald-400 bg-emerald-900 shadow-[0_0_10px_rgba(198,255,61,0.5)]' : 'empty'}`} style={{ top: `${spot.t}%`, left: `${spot.l}%`, backgroundImage: player?.photo ? `url(${player.photo})` : 'none' }}>
+                                                                            {!player?.photo && <i className="fas fa-user text-[10px] opacity-50"></i>}
+                                                                            <div className="pos-label">{spot.p}</div>
+                                                                        </div>
+                                                                    );
+                                                                })}
                                                             </div>
-                                                        )}
-                                                        <div className="bg-black/30 p-4 rounded-xl border border-white/5 mb-4">
-                                                            <h4 className="text-[10px] text-gray-400 font-bold uppercase mb-2"><i className={`fas ${plan.isManual ? 'fa-user' : 'fa-comment-dots'} text-ios-purple mr-1`}></i>{plan.isManual ? 'Notas' : 'Análisis de Jogga Bonito App'}</h4>
-                                                            <p className="text-sm text-gray-200 leading-relaxed">{plan.reasoning}</p>
                                                         </div>
-                                                        <div className="flex justify-between items-center mb-2">
-                                                            <h4 className="text-[10px] text-gray-400 font-bold uppercase">Asignaciones:</h4>
-                                                            {plan.isManual && (
-                                                                <button onClick={() => {
-                                                                    const newPlans = [...tacticalPlans];
-                                                                    newPlans.splice(selectedPlanIdx, 1);
-                                                                    setTacticalPlans(newPlans.length ? newPlans : null);
-                                                                    setSelectedPlanIdx(0);
-                                                                }} className="text-xs text-red-400 hover:underline"><i className="fas fa-trash mr-1"></i>Eliminar Táctica</button>
-                                                            )}
-                                                        </div>
-                                                        <div className="space-y-2">
-                                                            {FORMATIONS[plan.formation].pos.map((spot, i) => {
-                                                                const assignment = plan.assignments.find(a => a.spot === spot.p);
-                                                                return (
-                                                                    <div key={i} className="flex justify-between items-center border-b border-white/5 pb-1.5">
-                                                                        <span className="text-xs bg-white/10 px-2 py-0.5 rounded text-ios-blue font-bold w-12 text-center">{spot.p}</span>
-                                                                        {plan.isManual ? (
-                                                                            <select 
-                                                                                className="ios-input !py-1 !px-2 text-xs flex-1 ml-3 bg-transparent border-white/10"
-                                                                                value={assignment ? assignment.name : ''}
-                                                                                onChange={(e) => {
-                                                                                    const playerName = e.target.value;
-                                                                                    const newPlans = [...tacticalPlans];
-                                                                                    const currPlan = newPlans[selectedPlanIdx];
-                                                                                    currPlan.assignments = currPlan.assignments.filter(a => a.spot !== spot.p);
-                                                                                    if (playerName) {
-                                                                                        currPlan.assignments = currPlan.assignments.filter(a => a.name !== playerName);
-                                                                                        currPlan.assignments.push({ name: playerName, spot: spot.p });
-                                                                                    }
-                                                                                    setTacticalPlans(newPlans);
-                                                                                }}
-                                                                            >
-                                                                                <option value="">-- Sin asignar --</option>
-                                                                                {players.filter(p => activeIds.includes(p.id)).map(p => (
-                                                                                    <option key={p.id} value={p.name}>{p.name}</option>
-                                                                                ))}
-                                                                            </select>
-                                                                        ) : (
+                                                        <div className="w-full md:w-1/2 flex flex-col">
+                                                            <div className="bg-emerald-900/10 border border-emerald-500/20 rounded-xl p-4 mb-4">
+                                                                <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-2"><i className="fas fa-brain mr-2"></i>Análisis del DT</h4>
+                                                                <p className="text-sm text-gray-200 leading-relaxed">{plan.reasoning}</p>
+                                                            </div>
+                                                            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Asignaciones ({plan.formation})</h4>
+                                                            <div className="grid grid-cols-2 gap-2 flex-1 overflow-y-auto pr-2">
+                                                                {formDef.pos.map((spot, i) => {
+                                                                    const assignment = plan.assignments.find(a => a.spot === spot.p);
+                                                                    return (
+                                                                        <div key={i} className="bg-white/5 border border-white/5 rounded-lg p-2 flex items-center justify-between">
+                                                                            <span className="text-[10px] font-bold text-amber-400 w-8">{spot.p}</span>
                                                                             <div className="flex items-center gap-2 flex-1 justify-end">
                                                                                 {assignment ? (
                                                                                     <>
@@ -1539,17 +1945,25 @@
                                                                                     <span className="text-gray-500 text-xs italic">Vacío</span>
                                                                                 )}
                                                                             </div>
-                                                                        )}
-                                                                    </div>
-                                                                );
-                                                            })}
+                                                                        </div>
+                                                                    );
+                                                                })}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            );
-                                        })()}
-                                    </div>
-                                )}
+                                                );
+                                            })()}
+                                        </div>
+                                    ) : (
+                                        <div className="ios-card h-full flex flex-col items-center justify-center p-8 text-center min-h-[400px]">
+                                            <div className="w-24 h-24 rounded-full bg-emerald-900/20 border border-emerald-500/30 flex items-center justify-center mb-4">
+                                                <i className="fas fa-chess text-4xl text-emerald-400"></i>
+                                            </div>
+                                            <h3 className="text-xl font-bold mb-2">Pizarra Táctica</h3>
+                                            <p className="text-gray-400 text-sm max-w-sm">Selecciona los jugadores disponibles y la IA de Jogga Bonito generará 3 planes tácticos analizando stats, PlayStyles y tus notas.</p>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         )}
 
@@ -1557,9 +1971,9 @@
                         {activeTab === 'chat' && (
                             <div className="ios-card overflow-hidden">
                                 <div className="chat-container">
-                                    <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between" style={{background:'rgba(0,0,0,0.3)'}}>
+                                    <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between" style={{background:'var(--bg-elevated)'}}>
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{background:'linear-gradient(135deg, #0A84FF, #BF5AF2)'}}><i className="fas fa-robot text-white"></i></div>
+                                            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{background:'linear-gradient(135deg, #c6ff3d, #8fd400)'}}><i className="fas fa-robot text-[#04110a]"></i></div>
                                             <div><h3 className="font-black text-white">Jogga Bonito App</h3><p className="text-[10px] text-green-400 font-bold">{isChatLoading ? 'Pensando...' : 'Online'}</p></div>
                                         </div>
                                         <button onClick={clearChat} className="text-gray-500 hover:text-red-400 transition-colors text-xs" title="Limpiar chat"><i className="fas fa-trash-can"></i></button>
@@ -1573,7 +1987,7 @@
                                         {isChatLoading && <TypingIndicator />}
                                         <div ref={chatEndRef}></div>
                                     </div>
-                                    <div className="p-3 border-t border-white/5 flex gap-2" style={{background:'rgba(0,0,0,0.3)'}}>
+                                    <div className="p-3 border-t border-white/5 flex gap-2" style={{background:'var(--bg-elevated)'}}>
                                         <input type="text" value={chatInp} onChange={e=>setChatInp(e.target.value)} onKeyDown={e=>{if(e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }}} className="ios-input flex-1" placeholder="Pregunta sobre tu equipo..." disabled={isChatLoading} maxLength="500" />
                                         <button onClick={sendChat} disabled={isChatLoading || !chatInp.trim()} className="ios-btn !px-4"><i className={`fas ${isChatLoading?'fa-spinner fa-spin':'fa-paper-plane'}`}></i></button>
                                     </div>
@@ -1591,17 +2005,17 @@
                                         e.preventDefault();
                                         const u = e.target.newUser.value; const p = e.target.newPass.value; const r = e.target.newRole.value;
                                         try {
-                                            const token = localStorage.getItem('jogga_token');
-                                            const res = await fetch('/api/users', { method: 'POST', headers: {'Content-Type':'application/json', 'Authorization': `Bearer ${token}`}, body: JSON.stringify({username:u,password:p,role:r}) });
-                                            const data = await res.json();
-                                            if(data.success) { alert('Usuario creado exitosamente'); e.target.reset(); }
-                                            else alert(data.error || 'Error al crear');
-                                        } catch(err) { alert('Error de red'); }
+                                            const res = await apiFetch('/api/users', { method: 'POST', body: JSON.stringify({username:u,password:p,role:r}) });
+                                            const data = await res.json().catch(() => ({}));
+                                            if(data.success) { showToast('Usuario creado exitosamente'); e.target.reset(); }
+                                            else showToast(data.error || 'Error al crear usuario');
+                                        } catch(err) { showToast('Error de red'); }
                                     }} className="flex flex-col gap-3">
-                                        <input name="newUser" type="text" placeholder="Nombre de usuario" className="ios-input" required />
-                                        <input name="newPass" type="password" placeholder="Contraseña" className="ios-input" required />
+                                        <input name="newUser" type="text" placeholder="Nombre de usuario (3-24 caracteres)" className="ios-input" required minLength={3} maxLength={24} autoComplete="off" />
+                                        <input name="newPass" type="password" placeholder="Contraseña (mínimo 8 caracteres)" className="ios-input" required minLength={8} maxLength={128} autoComplete="new-password" />
                                         <select name="newRole" className="ios-input" defaultValue="user">
                                             <option value="user">Usuario (Jugador)</option>
+                                            <option value="capitan">Capitán</option>
                                             <option value="admin">Administrador</option>
                                         </select>
                                         <button type="submit" className="ios-btn mt-2">Crear Usuario</button>
@@ -1615,104 +2029,92 @@
         };
 
         const App = () => {
-            const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('jogga_token'));
+            const [isAuthenticated, setIsAuthenticated] = useState(() => !!getSession());
             const [loginError, setLoginError] = useState('');
+            const [loginLoading, setLoginLoading] = useState(false);
+            const [showPass, setShowPass] = useState(false);
+
+            // El servidor respondió 401 (sesión caducada o inválida): volver al login.
+            useEffect(() => {
+                const onExpired = () => { setIsAuthenticated(false); setLoginError('Tu sesión expiró. Vuelve a iniciar sesión.'); };
+                window.addEventListener(AUTH_EXPIRED_EVENT, onExpired);
+                return () => window.removeEventListener(AUTH_EXPIRED_EVENT, onExpired);
+            }, []);
+
+            // Cierra la sesión sola cuando el token caduque con la app abierta.
+            useEffect(() => {
+                if (!isAuthenticated) return;
+                const session = getSession();
+                if (!session) { clearSession(); setIsAuthenticated(false); return; }
+                const ms = Math.min(session.exp * 1000 - Date.now(), 2147483647);
+                const t = setTimeout(() => { clearSession(); setIsAuthenticated(false); setLoginError('Tu sesión expiró. Vuelve a iniciar sesión.'); }, Math.max(ms, 0));
+                return () => clearTimeout(t);
+            }, [isAuthenticated]);
             
             const handleLogout = () => {
-                localStorage.removeItem('jogga_token');
-                localStorage.removeItem('jogga_role');
+                clearSession();
                 setIsAuthenticated(false);
             };
 
             if (!isAuthenticated) {
                 return (
-                    <div className="flex min-h-screen w-full bg-white font-sans text-gray-900">
-                        {/* Left Panel - Form */}
-                        <div className="w-full md:w-[45%] flex flex-col relative px-8 py-10 md:px-16 lg:px-24">
-                            
-                            {/* Logo Top Left */}
-                            <div className="flex items-center gap-3 mb-20">
-                                <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                                    <i className="fas fa-futbol text-white text-sm"></i>
-                                </div>
-                                <span className="font-orbitron font-bold text-xl tracking-wide text-gray-900">Jogga Bonito App</span>
+                    <div className="min-h-screen flex items-center justify-center font-sf relative" 
+                         style={{background: `url('fondo.jpg') center/cover no-repeat fixed`}}>
+                        <div className="login-bg"></div>
+                        <div className="relative z-10 w-full max-w-md mx-4">
+                            <div className="text-center mb-8">
+                                <div className="login-logo"><i className="fas fa-futbol"></i></div>
+                                <h1 className="login-title">JOGGA <span>BONITO</span></h1>
+                                <p className="login-kicker">FC 27 · Pro Clubs</p>
                             </div>
-
-                            {/* Form Container */}
-                            <div className="flex flex-col flex-1 justify-center max-w-sm w-full mx-auto">
-                                <p className="text-sm text-gray-500 font-semibold mb-2">Comienza tu viaje</p>
-                                <h1 className="text-3xl md:text-4xl font-black mb-8 text-gray-900 tracking-tight">Entrar a Jogga Bonito App</h1>
-                                
+                            <div className="login-card">
                                 {loginError && (
-                                    <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg shadow-sm flex items-center gap-3">
-                                        <i className="fas fa-exclamation-circle text-lg"></i>
-                                        <span className="font-semibold text-sm">{loginError}</span>
+                                    <div className="mb-4 p-3 rounded-lg flex items-center gap-2 text-sm font-bold" 
+                                         style={{background:'rgba(255,69,58,0.1)', border:'1px solid rgba(255,69,58,0.2)', color:'#FF6B6B'}}>
+                                        <i className="fas fa-exclamation-circle"></i>{loginError}
                                     </div>
                                 )}
-
                                 <form onSubmit={async (e) => {
                                     e.preventDefault();
+                                    if (loginLoading) return;
                                     setLoginError('');
-                                    const btn = e.target.querySelector('button');
-                                    const originalText = btn.innerHTML;
-                                    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Conectando...';
-                                    btn.disabled = true;
+                                    setLoginLoading(true);
                                     const u = e.target.u.value; const p = e.target.p.value;
                                     try {
                                         const res = await fetch('/api/login', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({username:u,password:p}) });
-                                        const data = await res.json();
+                                        const data = await res.json().catch(() => ({}));
                                         if(data.success) {
                                             localStorage.setItem('jogga_token', data.token);
-                                            localStorage.setItem('jogga_role', data.role);
+                                            localStorage.removeItem('jogga_role');
                                             setIsAuthenticated(true);
                                         } else {
                                             setLoginError(data.error || 'Credenciales incorrectas');
-                                            btn.innerHTML = originalText;
-                                            btn.disabled = false;
                                         }
-                                    } catch(err) { 
-                                        setLoginError('Error de red al conectar con el servidor.'); 
-                                        btn.innerHTML = originalText;
-                                        btn.disabled = false;
+                                    } catch(err) {
+                                        setLoginError('Error de red al conectar con el servidor.');
                                     }
-                                }} className="flex flex-col gap-6">
-                                    
-                                    {/* Email/User Input */}
-                                    <div className="relative group">
-                                        <label className="absolute -top-2.5 left-3 bg-white px-1 text-xs font-semibold text-blue-500 transition-colors">Usuario</label>
-                                        <input name="u" type="text" placeholder="gamertag" className="w-full p-3.5 pl-4 border-2 border-gray-200 rounded-lg outline-none focus:border-blue-500 bg-transparent text-gray-800 transition-all font-medium placeholder-gray-300" required />
-                                        <i className="fas fa-user absolute right-4 top-1/2 -translate-y-1/2 text-gray-300"></i>
+                                    setLoginLoading(false);
+                                }} className="flex flex-col gap-4">
+                                    <div>
+                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5 block">Usuario</label>
+                                        <input name="u" type="text" placeholder="gamertag" className="ios-input" required autoComplete="username" />
                                     </div>
-
-                                    {/* Password Input */}
-                                    <div className="relative group">
-                                        <label className="absolute -top-2.5 left-3 bg-white px-1 text-xs font-semibold text-gray-400 group-focus-within:text-blue-500 transition-colors">Contraseña</label>
-                                        <input name="p" type="password" placeholder="••••••••" className="w-full p-3.5 pl-4 border-2 border-gray-200 rounded-lg outline-none focus:border-blue-500 bg-transparent text-gray-800 transition-all font-medium placeholder-gray-300" required />
-                                        <i className="fas fa-eye absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 cursor-pointer hover:text-gray-500"></i>
+                                    <div>
+                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5 block">Contraseña</label>
+                                        <div className="relative">
+                                            <input name="p" id="loginPass" type={showPass ? 'text' : 'password'} placeholder="••••••••" className="ios-input" required autoComplete="current-password" />
+                                            <button type="button" aria-label={showPass ? 'Ocultar contraseña' : 'Mostrar contraseña'} onClick={() => setShowPass(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-400"><i className={`fas ${showPass ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
+                                        </div>
                                     </div>
-
-                                    <button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3.5 rounded-lg mt-2 transition-all shadow-lg shadow-blue-500/20 active:scale-[0.98]">
-                                        Entrar al Vestuario
+                                    <button type="submit" disabled={loginLoading} className="ios-btn w-full !text-base mt-2">
+                                        {loginLoading
+                                            ? <><i className="fas fa-spinner fa-spin mr-2"></i>Conectando...</>
+                                            : <><i className="fas fa-sign-in-alt mr-2"></i>Entrar al Vestuario</>}
                                     </button>
                                 </form>
-                                
-                                <div className="mt-8 text-center text-sm text-gray-500">
-                                    ¿No tienes una cuenta? <span className="text-blue-500 font-bold cursor-pointer hover:underline">Pide a un Capitán</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Right Panel - Image */}
-                        <div className="hidden md:block md:w-[55%] relative overflow-hidden bg-gray-900">
-                            <div className="absolute inset-0 bg-cover bg-center transition-transform duration-[20s] hover:scale-110" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1518605368461-1e1850123514?auto=format&fit=crop&w=2000&q=80')" }}></div>
-                            <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-transparent opacity-20"></div>
-                            <div className="absolute inset-0 bg-blue-900/10 mix-blend-overlay"></div>
-                            
-                            {/* Decorative Elements */}
-                            <div className="absolute bottom-10 right-10 flex gap-2">
-                                <div className="w-2 h-2 rounded-full bg-white opacity-50"></div>
-                                <div className="w-6 h-2 rounded-full bg-white"></div>
-                                <div className="w-2 h-2 rounded-full bg-white opacity-50"></div>
+                                <p className="text-center text-xs text-gray-600 mt-4">
+                                    ¿No tienes cuenta? <span className="text-emerald-500 font-bold cursor-pointer hover:underline">Pide una cuenta al Administrador</span>
+                                </p>
                             </div>
                         </div>
                     </div>

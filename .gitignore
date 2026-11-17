@@ -1,9 +1,14 @@
 # Dependencies
 node_modules/
-package-lock.json
 
-# Environment variables
+# Environment variables (nunca subir claves)
 .env
+.env.*
+!.env.example
+
+# Datos locales: contienen usuarios (hash de contraseñas) y la plantilla
+server/users.json
+server/players.json
 
 # OS files
 .DS_Store
@@ -12,3 +17,11 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+
+# Respaldos y archivos pendientes de borrar
+_backup*/
+_to_delete/
+
+# Removed files
+test.jsx
+extract.js
